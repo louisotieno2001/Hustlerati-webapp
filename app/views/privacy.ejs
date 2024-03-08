@@ -1,0 +1,78 @@
+<!-- views/blogs.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms&Conditions</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="icon" href="/res/logo1.png" type="image/x-icon">
+    <style>
+        #area {
+            top: 0;
+            padding-left: 20px;
+            padding-right: 20px;
+            height: 100vh;
+            background: #4e342e;
+        }
+
+        h2 {
+            color: aliceblue;
+            background-color: #616161;
+            border-radius: 8px;
+            padding: 1em;
+        }
+
+        .back{
+            color: aliceblue;
+            background-color: #616161;
+            border-radius: 8px;
+            padding: 1em;
+            font-family: sans-serif;
+            font-size: larger;
+            font-weight: bold;
+        }
+
+        #back-link{
+            text-decoration: none;
+            color: chocolate;
+        }
+
+        #bottom_bar{
+            margin: 20px;
+            background-color: #3e2723;
+            margin-left: 30px;
+            margin-right: 30px;
+            border-radius: 8px;
+            padding: 1em;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="area" id="area">
+        <h2 class="back">
+            <%= privacy.data.title %>
+        </h2>
+        <p class="back">
+            <%= privacy.data.body %>
+        </p>
+        <p class="back">Time updated: <%= privacy.data.time %>
+        </p>
+        <p class="back">Date updated: <%= privacy.data.date %>
+        </p>
+        <div class="bottom_bar" id="bottom_bar">
+            <footer class="footer">
+                <center>
+                    <a href="/home" id="back-link">Back Home</a>
+                </center>
+                <center><p>Copyright&copy;2024 Made at <a href="https://futurionlab.com" id="back-link"> Futurion Labs</a>. All rights reserved</p></center>
+            </footer>
+        </div>
+    </div>
+    
+</body>
+
+</html>

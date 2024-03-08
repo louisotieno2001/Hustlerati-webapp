@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/small-devices.css">
+    <link rel="icon" href="./res/logo1.png" type="image/x-icon">
+    <style>
+        .login-form {
+            margin-top: 110px;
+            height: 350px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-page">
+        <div class="massive-logo" title="logo-image"></div>
+        <div class="login-form">
+            <h1>Login</h1>
+            <form action="">
+                <input type="email" name="email" id="login-email" placeholder="Email address"> <br>
+                <input type="password" name="password" id="login-password" placeholder="Password"> <br>
+                <!-- HTML !-->
+                <button class="button-5" role="button" id="login-btn">Login</button>
+                <h4>Don't have an account <a href="index.html">Register</a></h4>
+            </form>
+            <div class="stuff">
+                <a href="/terms&conditions">Terms Of Service</a>
+                <a href="/privacy">Privacy policy</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginBtn = document.getElementById('login-btn');
+            const loginEmail = document.getElementById('login-email');
+            const loginPassword = document.getElementById('login-password');
+
+            loginBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                const emailValue = loginEmail.value.trim();
+                const passwordValue = loginPassword.value.trim();
+
+                if (emailValue === '' || passwordValue === '') {
+                    window.confirm('Both email and password are required.');
+                } else {
+                    const userData = {
+                        email: emailValue,
+                        password: passwordValue,
+                    };
+
+                    try {
+                        const response = await fetch('/login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(userData),
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            window.confirm('Login successful!');
+                            window.location.href = "/home";
+                        } else {
+                            window.confirm('Login failed. Check your credentials.');
+                        }
+                    } catch (error) {
+                        console.error('Error during login:', error);
+                        window.confirm('An error occurred during login. Please try again.');
+                    }
+                }
+            });
+
+        });
+    </script>
+</body>
+
+</html>

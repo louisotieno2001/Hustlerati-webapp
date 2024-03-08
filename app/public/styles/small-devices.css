@@ -1,0 +1,66 @@
+/* Mobile design */
+@media (max-width: 1068px) {
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+    }
+
+    .menu-icon {
+        display: block;
+    }
+
+    .login-page {
+        display: flex;
+        justify-content: space-between;
+        margin: 2em;
+    }
+
+    #ads-tab {
+        display: none;
+    }
+
+    #menu {
+        top: 0;
+        position: fixed;
+        height: 45px;
+        background-color: #442c27;
+        transition: height 10s, background-color 10s;
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    #menu-tab {
+        top: 55px;
+        left: 0;
+        height: 100vh;
+        width: 100%;
+        background-color: #4e342e;
+        display: none;
+        position: inherit;
+        flex-direction: row;
+        align-items: center;
+        padding-top: 20px;
+    }
+
+    #menu-items {
+        width: 100%;
+    }
+
+    #menu-items img {
+        padding-left: 150px;
+    }
+
+    #middle-tab {
+        padding: .5em;
+        padding-top: 65px;
+        width: fit-content;
+    }
+
+    #home-logo{
+        margin-left: -40px;
+    }
+
+}

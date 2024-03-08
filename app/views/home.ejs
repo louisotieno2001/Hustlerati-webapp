@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hustlerati</title>
+    <link rel="icon" href="./res/logo1.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons" />
+    <link rel="stylesheet" href="/styles/small-devices.css">
+    <link rel="stylesheet" href="/styles/index.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #5d4037;
+        }
+
+        #dashboard img {
+            margin-left: 190px;
+        }
+
+        /* Add these styles to the existing <style> tag in the template */
+
+        #news-card {
+            width: 80%;
+            /* Adjust the width of the card */
+            margin: auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            /* Each item takes full width */
+        }
+
+        #news-card img {
+            width: 100%;
+            /* Make sure images take the full width of the container */
+            height: auto;
+            /* Maintain aspect ratio */
+            border-radius: 5px;
+            /* Optional: Add rounded corners */
+        }
+
+
+        @media (max-width: 1068px) {
+            #menu-tab {
+                margin-top: 45px;
+                height: 100vh;
+                left: -8px;
+                width: 100%;
+                background-color: #4e342e;
+                display: none;
+            }
+
+            #dashboard {
+                background-color: #5d4037;
+                height: 100vh;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 150px;
+                padding-left: 20px;
+                transition: width 10s, background-color 10s;
+            }
+
+            #dashboard img {
+                margin-left: 2px;
+            }
+
+            #shop {
+                margin-top: 120px;
+            }
+
+            #investing {
+                margin-top: 120px;
+            }
+
+            #news {
+                margin-top: 120px;
+            }
+
+            #profile {
+                margin-top: 120px;
+            }
+
+            .button-87 {
+                margin: 10px;
+                /* margin-left: 170px; */
+                padding: 15px 40px;
+                text-align: center;
+                text-transform: uppercase;
+                transition: 0.5s;
+                background-size: 200% auto;
+                color: white;
+                border-radius: 10px;
+                display: block;
+                border: 0px;
+                font-weight: 700;
+                box-shadow: 0px 0px 14px -7px #f09819;
+                background-image: linear-gradient(45deg, #FF512F 0%, #F09819 51%, #FF512F 100%);
+                cursor: pointer;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tabs-container">
+        <div class="top-bar">
+        </div>
+        <div class="menu" id="menu">
+            <div class="menu-icon" id="menu-icon" title="Menu Icon">&#9776;</div>
+            <span class="material-symbols-outlined" title="logout" id="logout">logout</span>
+        </div>
+
+        <div class="tab" id="menu-tab">
+            <div class="menu-items" id="menu-items">
+                <img src="/res/logo1.png" alt="Logo Image" srcset="" style="height: 60px; width: 60px;">
+                <a href="#dashboard" class="menu-link" title="Dashboard"><span
+                        class="material-symbols-outlined">grid_view</span>Dashboard</a>
+                <a href="#shop" class="menu-link" title="Marketplace"><span
+                        class="material-symbols-outlined">local_convenience_store</span>Marketplace</a>
+                <a href="#investing" class="menu-link" title="Investor Insights"><span
+                        class="material-symbols-outlined">monitoring</span>Investor Insights</a>
+                <a href="#news" class="menu-link" title="News feed"><span
+                        class="material-symbols-outlined">newspaper</span>News Feed</a>
+                <a href="#profile" class="menu-link" title="Profile"><span
+                        class="material-symbols-outlined">account_circle</span>Profile</a>
+                <a href="" id="terms">Terms of service</a>
+            </div>
+        </div>
+        <div class="middle-tab" id="middle-tab">
+            <div class="display active-tab" id="dashboard">
+                <img src="/res/logo1.png" alt="" srcset="" style="height: 160px; width: 160px; " id="home-logo" />
+                <h1>Welcome to Hustlerati business Suite</h1>
+                <button class="button-87" role="button" id="businessBtn"><strong>+</strong>Add your business</button>
+            </div>
+            <div class="display" id="shop">
+                <h1>Feed</h1>
+                <div class="card">
+
+                </div>
+            </div>
+            <div class="display" id="investing">
+                <h1>Investor Insights</h1>
+                <div class="insights-card">
+
+                </div>
+            </div>
+            <div class="display" id="news">
+                <h1>News</h1>
+                <div class="news-card" id="news-card">
+                    <!-- Add carousel HTML structure and EJS templating here -->
+                    <% for (let i=0; i < newsData.length; i++) { %>
+                        <div class="carousel-item">
+                            <!-- Display images or content from your data -->
+                            <img src="<%= newsData[i].imageUrl %>" alt="News Image <%= i + 1 %>">
+                            <p>
+                                <%= newsData[i].description %>
+                            </p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+            <div class="display" id="profile">
+                <h1>Profile Information</h1>
+                <div class="profile-card">
+
+                </div>
+            </div>
+        </div>
+        <div class="tab" id="ads-tab"></div>
+    </div>
+    <script>
+        const menuIcon = document.getElementById('menu-icon');
+        const menuItems = document.getElementById('menu-items');
+        const middleTab = document.getElementById('middle-tab');
+        const menuTab = document.getElementById('menu-tab');
+        const businessBtn = document.getElementById('businessBtn');
+        const logoutBtn = document.getElementById('logout');
+        const termsLink = document.getElementById('terms');
+
+        termsLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            window.location.href = '/terms&conditions';
+        });
+
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            window.location.href = '/login.html';
+        });
+
+        businessBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            window.location.href = '/register-your-business.html';
+        });
+
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            menuIcon.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                // Toggle menu tab
+                if (isMenuOpen) {
+                    menuTab.style.display = 'none';
+                    isMenuOpen = false;
+                } else {
+                    menuTab.style.display = 'block';
+                    isMenuOpen = true;
+                }
+
+            });
+        }
+
+        // Added event listeners for menu links
+        function addMenuLinkListeners() {
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = e.currentTarget.getAttribute('href').substring(1);
+                    toggleTabs(targetId);
+
+                    // Remove the 'clicked-link' class from all links
+                    menuLinks.forEach(link => {
+                        link.classList.remove('clicked-link');
+                    });
+
+                    // Add the 'clicked-link' class to the clicked link
+                    e.currentTarget.classList.add('clicked-link');
+                    if (isMenuOpen) {
+                        menuTab.style.display = 'none';
+                        isMenuOpen = false;
+                    } else {
+                        menuTab.style.display = 'block';
+                        isMenuOpen = true;
+                    }
+
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        }
+
+        // Function to toggle tabs based on targetId
+        function toggleTabs(targetId) {
+            const tabs = document.querySelectorAll('.display');
+            tabs.forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+
+            const targetTab = document.getElementById(targetId);
+            if (targetTab) {
+                targetTab.classList.add('active-tab');
+            }
+        }
+
+        toggleMenu();
+        addMenuLinkListeners();
+
+        const carouselContainer = document.querySelector('.carousel-container');
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const totalItems = carouselItems.length;
+        let currentIndex = 0;
+
+        function showNextSlide() {
+            if (currentIndex < totalItems - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            updateCarousel();
+        }
+
+        function showPrevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = totalItems - 1;
+            }
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const newPosition = -currentIndex * 100 + '%';
+            carouselContainer.style.transform = 'translateX(' + newPosition + ')';
+        }
+
+        // Optional: Add event listeners for carousel navigation
+        const nextButton = document.getElementById('next-button');
+        const prevButton = document.getElementById('prev-button');
+
+        nextButton.addEventListener('click', showNextSlide);
+        prevButton.addEventListener('click', showPrevSlide);
+    </script>
+</body>
+
+</html>
