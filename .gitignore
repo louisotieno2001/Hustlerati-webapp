@@ -1,0 +1,7 @@
+node-modules/
+*.env
+package-lock.json
+uploads/
+*.tmp
+*.cache
+cms/

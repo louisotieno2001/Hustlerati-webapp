@@ -9,9 +9,15 @@ const cors = require('cors');
 const ejs = require('ejs');
 const app = express();
 const axios = require('axios');
-
+const session = require('express-session');
+const multer = require('multer');
+const pgSession = require('connect-pg-simple')(session);
 const port = process.env.PORT || 3000;
 const saltRounds = 10;
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+const { v4: uuidv4 } = require('uuid');
+const { Buffer } = require('buffer');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -35,6 +41,28 @@ const pool = new Pool({
     @param path  {String}
     @param config {RequestInit}
 */
+
+app.use(session({
+    store: new pgSession({
+        pool: pool,
+        tableName: 'session',
+    }),
+    secret: 'MPILHSALJD',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    },
+}));
+
+// Middleware to check if the user has an active session
+const checkSession = (req, res, next) => {
+    if (req.session.user) {
+        next(); // Continue to the next middleware or route
+    } else {
+        res.redirect('/login.html'); // Redirect to the login page if no session is found
+    }
+};
 
 async function query(path, config) {
     const url = process.env.DIRECTUS_URL;
@@ -66,11 +94,13 @@ async function getNews() {
     });
 }
 
-app.get('/news', async (req, res) => {
+app.get('/home/news', checkSession, async (req, res) => {
     try {
         const news = await getNews();
         const newsData = news.data;
-        res.render('home', { newsData });
+
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({ newsData }));
     } catch (error) {
         console.error('Error fetching news:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -80,6 +110,7 @@ app.get('/news', async (req, res) => {
 app.get('/terms&conditions', async (req, res) => {
     try {
         const terms = await getTerms(1);
+        // console.log(terms);
         res.render('terms&conditions', { terms });
     } catch (error) {
         console.error('Error fetching terms and conditions:', error);
@@ -90,6 +121,7 @@ app.get('/terms&conditions', async (req, res) => {
 app.get('/privacy', async (req, res) => {
     try {
         const privacy = await getPrivacy(1);
+        // console.log(privacy);
         res.render('privacy', { privacy });
     } catch (error) {
         console.error('Error fetching privacy terms:', error);
@@ -97,8 +129,10 @@ app.get('/privacy', async (req, res) => {
     }
 });
 
-app.get('/home', async (req, res) => {
+app.get('/home', checkSession, async (req, res) => {
     try {
+        // const news = await getNews();
+        // const newsData = news.data;
         res.render('home');
     } catch (error) {
         console.error('Error fetching home page:', error);
@@ -108,7 +142,6 @@ app.get('/home', async (req, res) => {
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
-
     try {
         const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
 
@@ -117,7 +150,16 @@ app.post('/login', async (req, res) => {
             const isPasswordMatch = await bcrypt.compare(password, user.password);
 
             if (isPasswordMatch) {
-                res.json({ success: true, user });
+                // Store user information in the session
+                req.session.user = {
+                    id: user.id,
+                    fname: user.firstname,
+                    lname: user.lastname,
+                    email: user.email,
+                    phone: user.phone
+                };
+
+                res.json({ success: true, user: req.session.user });
             } else {
                 res.status(401).json({ success: false, error: 'Invalid credentials' });
             }
@@ -148,16 +190,14 @@ app.post('/register-user', async (req, res) => {
     }
 });
 
-app.post('/register-business', async (req, res) => {
+app.post('/register-business', checkSession, async (req, res) => {
     const { businessName, businessNiche, businessPhone, location, empNo } = req.body;
 
     try {
-
         const result = await pool.query(
             'INSERT INTO businesses (businessname, businessniche, businessphone, location, empno) VALUES ($1, $2, $3, $4, $5) RETURNING *',
             [businessName, businessNiche, businessPhone, location, empNo]
         );
-
         res.status(201).json({ success: true, business: result.rows[0] });
     } catch (error) {
         console.error('Error during registration:', error);

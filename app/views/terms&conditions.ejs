@@ -25,6 +25,12 @@
             padding: 1em;
         }
 
+        h1{
+            background-color: #616161;
+            border-radius: 8px;  
+            padding: .4em;
+        }
+
         .back{
             color: aliceblue;
             background-color: #616161;
@@ -52,10 +58,10 @@
 <body>
     <div class="area" id="area">
         <h2 class="back">
-            <%= terms.data.title %>
+            <%- terms.data.title %>
         </h2>
         <p class="back">
-            <%= terms.data.body %>
+            <%- terms.data.body %>
         </p>
         <p class="back">Time updated: <%= terms.data.time %>
         </p>

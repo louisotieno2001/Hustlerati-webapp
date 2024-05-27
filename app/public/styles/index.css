@@ -193,7 +193,7 @@ input::focus {
 }
 
 .menu {
-  height: 620px;
+  height: 100vh;
   background-color: #442c27;
   transition: height 10s, background-color 10s;
   display: flex;
