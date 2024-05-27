@@ -3,5 +3,5 @@ node-modules/
 package-lock.json
 uploads/
 *.tmp
-*.cache
+*.cache/
 cms/
