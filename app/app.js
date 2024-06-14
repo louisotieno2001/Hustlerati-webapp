@@ -14,18 +14,52 @@ const multer = require('multer');
 const pgSession = require('connect-pg-simple')(session);
 const port = process.env.PORT || 3000;
 const saltRounds = 10;
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 const { v4: uuidv4 } = require('uuid');
 const { Buffer } = require('buffer');
+const url = process.env.DIRECTUS_URL;
+const token = process.env.TOKEN;
+const Redis = require('ioredis'); // Changed import to require
+const redis = new Redis(); // Redis client initialization
+const { promisify } = require('util');
+const { fetch } = require('fetch-ponyfill')();
+const fetchAsync = promisify(fetch);
+const redisClient = redis
+
+
+
+// Function to clear Redis cache
+async function clearCache() {
+    try {
+        // Use the DEL command to delete the cached data
+        await redisClient.del('cachedUsers');
+        console.log('Cache cleared successfully.');
+    } catch (error) {
+        console.error('Error clearing cache:', error);
+    }
+}
+
+// Add a route to trigger cache clearance
+app.get('/clear-cache', async (req, res) => {
+    try {
+        await clearCache();
+        res.status(200).send('Cache cleared successfully.');
+    } catch (error) {
+        console.error('Error clearing cache:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+const upload = multer({ dest: __dirname + '/uploads/' });
+app.use('/uploads', express.static('/'));
 
 // Configure PostgreSQL database connection using environment variables
 const pool = new Pool({
@@ -55,6 +89,17 @@ app.use(session({
     },
 }));
 
+async function query(path, config) {
+    const res = await fetch(encodeURI(`${url}${path}`), {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        ...config
+    });
+    return res;
+}
+
 // Middleware to check if the user has an active session
 const checkSession = (req, res, next) => {
     if (req.session.user) {
@@ -63,18 +108,6 @@ const checkSession = (req, res, next) => {
         res.redirect('/login.html'); // Redirect to the login page if no session is found
     }
 };
-
-async function query(path, config) {
-    const url = process.env.DIRECTUS_URL;
-    const token = process.env.DIRECTUS_TOKEN;
-    const res = await fetch(`${url}${path}`, {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        },
-        ...config
-    });
-    return await res.json();
-}
 
 async function getTerms(id) {
     return query(`/items/terms/${id}`, {
@@ -94,18 +127,217 @@ async function getNews() {
     });
 }
 
-app.get('/home/news', checkSession, async (req, res) => {
+async function getAds() {
     try {
-        const news = await getNews();
-        const newsData = news.data;
-
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({ newsData }));
+        const response = await query('/items/users', {
+            method: 'GET'
+        });
+        if (response.ok) {
+            const usersData = await response.json();
+            return usersData;
+        } else {
+            throw new Error('Failed to fetch users data');
+        }
     } catch (error) {
-        console.error('Error fetching news:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error fetching users data:', error);
+        throw error; // You can handle the error in the calling code
+    }
+}
+
+async function updateBusiness(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/users/${userData.id}`, {
+            method: 'PATCH', // Assuming you want to update an existing item
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/update-business', checkSession, async (req, res) => {
+    try {
+        // Destructure data from req.body
+        const { businessName, businessNiche, businessPhone, location, empNo } = req.body;
+
+        // Extract user id from session
+        const id = req.session.user.id;
+
+        // Construct userData object
+        const userData = {
+            id: id,
+            business_name: businessName,
+            business_niche: businessNiche,
+            business_phone: businessPhone,
+            location: location,
+            employee_numbers: empNo
+        };
+
+        // Call updateBusiness function with userData
+        const updatedData = await updateBusiness(userData);
+
+        // Send "ok" response to the frontend
+        res.status(200).json({ success: true, message: 'Business updated successfully' });
+
+    } catch (error) {
+        console.error('Error in route handler:', error);
+        res.status(500).json({ error: error.message });
     }
 });
+
+async function updateProfile(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/users/${userData.id}`, {
+            method: 'PATCH', // Assuming you want to update an existing item
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+async function updatePic(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/users/${userData.id}`, {
+            method: 'PATCH', // Assuming you want to update an existing item
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+async function updatePosts(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/users/${userData.id}`, {
+            method: 'PATCH', // Assuming you want to update an existing item
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/update-post', upload.single('image'), async (req, res) => {
+    try {
+        const { title, body } = req.body;
+        const id = req.session.user.id;
+
+        // Ensure that req.file contains the expected file information
+        if (!req.file || !req.file.path) {
+            return res.status(400).json({ message: 'No picture uploaded' });
+        }
+
+        // Use req.file.path or other relevant property to get the file path
+        const picturePath = req.file.path;
+
+        // Construct userData object with post information and picture path
+        const userData = {
+            id: id, // Assuming req.user contains user information
+            post_image: picturePath,
+            post_title: title,
+            post_body: body,
+        };
+
+        console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await updatePosts(userData);
+
+        res.status(201).json({ message: 'Post updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update post. Please try again.' });
+    }
+});
+
+app.post('/update-pic', upload.single('profilePic'), async (req, res) => {
+    try {
+        // Ensure that req.file contains the expected file information
+        const id = req.session.user.id;
+        if (!req.file || !req.file.path) {
+            return res.status(400).json({ message: 'No picture uploaded' });
+        }
+
+        // Use req.file.path or other relevant property to get the file path
+        const picturePath = req.file.path;
+
+        // Update userData object with profile_pic field
+        const userData = {
+            id: id, // Assuming req.user contains user information
+            profile_pic: picturePath
+        };
+
+        console.log(userData);
+
+        // Update user data with the new profile pic path
+        const updatedData = await updatePic(userData);
+
+        res.status(201).json({ message: 'Profile picture updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating profile picture:', error);
+        res.status(500).json({ message: 'Failed to update profile picture. Please try again.' });
+    }
+});
+
+
+app.post('/update-profile', checkSession, async (req, res) => {
+    try {
+        // Destructure data from req.body
+        const { firstname, lastname, phone, } = req.body;
+
+        // Extract user id from session
+        const id = req.session.user.id;
+
+        // Construct userData object
+        const userData = {
+            id: id,
+            firstname: firstname,
+            lastname: lastname,
+            phone: phone,
+        };
+
+        console.log(userData);
+
+        // Call updateBusiness function with userData
+        const updatedData = await updateProfile(userData);
+
+        // Send "ok" response to the frontend
+        res.status(200).json({ success: true, message: 'Business updated successfully' });
+
+    } catch (error) {
+        console.error('Error in route handler:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+async function getProfile(userId) {
+    try {
+        const res = await query(`/items/users?filter[id][_eq]=${userId}`, {
+            method: 'GET',
+        });
+        return await res.json();
+    } catch (error) {
+        console.error('Error fetching referrals:', error);
+        throw new Error('Error fetching referrals');
+    }
+}
 
 app.get('/terms&conditions', async (req, res) => {
     try {
@@ -131,9 +363,13 @@ app.get('/privacy', async (req, res) => {
 
 app.get('/home', checkSession, async (req, res) => {
     try {
+        const id = req.session.user.id;
         // const news = await getNews();
         // const newsData = news.data;
-        res.render('home');
+        const profiles = await getProfile(id);
+        const ads = await getAds();
+        console.log("Ads",ads.data[0].post_image);
+        res.render('home', { userData: profiles.data[0], ads: ads.data});
     } catch (error) {
         console.error('Error fetching home page:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -190,19 +426,11 @@ app.post('/register-user', async (req, res) => {
     }
 });
 
-app.post('/register-business', checkSession, async (req, res) => {
-    const { businessName, businessNiche, businessPhone, location, empNo } = req.body;
+app.get('/hustler/dashboard', checkSession,async (req, res) => {
 
-    try {
-        const result = await pool.query(
-            'INSERT INTO businesses (businessname, businessniche, businessphone, location, empno) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [businessName, businessNiche, businessPhone, location, empNo]
-        );
-        res.status(201).json({ success: true, business: result.rows[0] });
-    } catch (error) {
-        console.error('Error during registration:', error);
-        res.status(500).json({ success: false, error: 'Registration failed' });
-    }
+    const id = req.session.user.id;
+    const profiles = await getProfile(id);
+    res.render('dashboard', { userData: profiles.data[0] });
 });
 
 app.listen(port, () => {

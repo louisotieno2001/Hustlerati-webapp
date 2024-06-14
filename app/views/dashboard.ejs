@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #5d4037;
+        }
+
+        #profile-pic {
+            height: 90px;
+            width: 90px;
+            border-radius: 50%;
+            background-image: url(/res/profile.jpg);
+            background-position: center;
+            background-size: cover;
+            cursor: pointer;
+        }
+
+        .top-menu {
+            background-color: #4b281d;
+            color: #fff;
+            padding: 0px 10px;
+            display: flex;
+            justify-content: space-between;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            top: 0;
+        }
+
+        .sub-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #4b281d;
+            width: 100%;
+            padding: 10px;
+            border-radius: 0 0 8px 8px;
+            z-index: 1000;
+        }
+
+        .sub-menu a {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            margin: 15px;
+        }
+
+        #close-menu {
+            display: none;
+            padding-right: 1em;
+            padding-top: .8em;
+            cursor: pointer;
+        }
+
+        #open-menu {
+            padding-right: 1em;
+            padding-top: .8em;
+            cursor: pointer;
+        }
+
+        .display {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin-top: 100px;
+            /* Adjust as needed */
+        }
+
+        .profile-card,
+        .business-card {
+            background-color: #4b281d;
+            color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            width: 45%;
+            /* Adjust as needed */
+            box-sizing: border-box;
+        }
+
+        .user-data {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .user-data h4 {
+            margin-left: 10px;
+        }
+
+        .button-87 {
+            margin-top: 10px;
+        }
+
+        .button-87 {
+            margin: 10px;
+            display: none;
+            padding: 15px 40px;
+            text-align: center;
+            text-transform: uppercase;
+            transition: 0.5s;
+            background-size: 200% auto;
+            color: white;
+            border-radius: 10px;
+            display: block;
+            border: 0px;
+            font-weight: 700;
+            box-shadow: 0px 0px 14px -7px #f09819;
+            background-image: linear-gradient(45deg, #FF512F 0%, #F09819 51%, #FF512F 100%);
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        #post-dialog {
+            background-color: #36211b;
+            border-radius: 8px;
+            border: none;
+            align-self: left;
+            box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+        }
+
+        input,
+        textarea {
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            color: white;
+            outline: none;
+            /* Add this line */
+        }
+
+        textarea:focus {
+            border: none;
+        }
+
+        input:focus {
+            border: none;
+        }
+
+        span {
+            color: white;
+        }
+
+        .body-div {
+            width: 280px;
+            margin: 10px;
+            border-radius: 15px;
+            padding: .5em;
+            background-color: #4e342e;
+            display: flex;
+            flex-direction: column;
+            /* Arrange items in a column */
+            opacity: 90%;
+        }
+
+        .input-div {
+            width: 280px;
+            margin: 10px;
+            border-radius: 15px;
+            padding: .5em;
+            background-color: #4e342e;
+            display: flex;
+            align-items: center;
+            opacity: 90%;
+        }
+
+        .preview {
+            height: 200px;
+            width: 200px;
+            display: none;
+            margin: 0 auto;
+            border-radius: 8px;
+            z-index: 1000;
+            border: #36211b 1px;
+            border-radius: 50%;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .sub-items {
+                position: static;
+                display: none;
+            }
+
+            .display {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .profile-card,
+            .business-card {
+                width: 90%;
+                margin-bottom: 5px;
+            }
+
+            .button-87 {
+                margin: 10px;
+                display: none;
+                padding: 15px 40px;
+                text-align: center;
+                text-transform: uppercase;
+                transition: 0.5s;
+                background-size: 200% auto;
+                color: white;
+                border-radius: 10px;
+                display: block;
+                border: 0px;
+                font-weight: 700;
+                box-shadow: 0px 0px 14px -7px #f09819;
+                background-image: linear-gradient(45deg, #FF512F 0%, #F09819 51%, #FF512F 100%);
+                cursor: pointer;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+            }
+
+            #post-dialog {
+                background-color: #36211b;
+                border-radius: 8px;
+                border: none;
+                width: 350px;
+                align-self: left;
+                box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+            }
+
+            .input-div {
+                width: 280px;
+                margin: 10px;
+                border-radius: 15px;
+                padding: .5em;
+                background-color: #4e342e;
+                display: flex;
+                align-items: center;
+                opacity: 90%;
+            }
+
+            .body-div {
+                width: 280px;
+                margin: 10px;
+                border-radius: 15px;
+                padding: .5em;
+                background-color: #4e342e;
+                display: flex;
+                flex-direction: column;
+                /* Arrange items in a column */
+                opacity: 90%;
+            }
+
+
+            input,
+            textarea {
+                background-color: transparent;
+                border: none;
+                width: 100%;
+                color: white;
+            }
+
+            textarea:focus {
+                border: none;
+            }
+
+            input:focus {
+                border: none;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-menu" id="top-menu">
+        <img src="/res/logo1.png" alt="Logo Image" srcset="" style="height: 60px; width: 60px;">
+        <span class="material-symbols-outlined" id="open-menu">menu</span>
+        <span class="material-symbols-outlined" id="close-menu">close</span>
+        <div class="sub-menu" id="sub-menu">
+            <a href="/home" class="menu-link" title="Dashboard"><span
+                    class="material-symbols-outlined">grid_view</span>Dashboard</a>
+            <a href="/home" class="menu-link" title="Marketplace"><span
+                    class="material-symbols-outlined">local_convenience_store</span>Marketplace</a>
+            <a href="/home" class="menu-link" title="Investor Insights"><span
+                    class="material-symbols-outlined">monitoring</span>Investor Insights</a>
+            <a href="/home" class="menu-link" title="News feed"><span
+                    class="material-symbols-outlined">newspaper</span>News Feed</a>
+            <a href="/home" class="menu-link" title="Profile"><span
+                    class="material-symbols-outlined">account_circle</span>Profile</a>
+            <a href="" id="terms">Terms of service</a>
+        </div>
+    </div>
+
+    <div class="display">
+        <div class="profile-card">
+            <div class="personal-info">
+                <div class="profile-pic" id="profile-pic"
+                    style="background-image: url('/uploads/<%= userData.profile_pic %>'); background-size: cover; background-position: center;">
+                </div>
+                <div class="user-data">
+                    <span class="material-symbols-outlined">
+                        account_circle
+                    </span>
+                    <h4>
+                        <%= userData.firstname %>
+                    </h4>
+                </div>
+                <div class="user-data">
+                    <span class="material-symbols-outlined">
+                        account_circle
+                    </span>
+                    <h4>
+                        <%= userData.lastname %>
+                    </h4>
+                </div>
+                <div class="user-data">
+                    <span class="material-symbols-outlined">
+                        mail
+                    </span>
+                    <h4>
+                        <%= userData.email %>
+                    </h4>
+                </div>
+                <div class="user-data">
+                    <span class="material-symbols-outlined">
+                        phone_enabled
+                    </span>
+                    <h4>
+                        <%= userData.phone %>
+                    </h4>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="business-card">
+            <div class="business-details">
+                <div class="user-data">
+                    <span class="material-symbols-outlined">
+                        storefront
+                    </span>
+                    <h4>
+                        <%= userData.business_name %>
+                    </h4>
+                </div>
+                <div class="user-data">
+                    <span class="material-symbols-outlined">
+                        location_city
+                    </span>
+                    <h4>
+                        <%= userData.business_niche %>
+                    </h4>
+                </div>
+                <div class="user-data">
+                    <span class="material-symbols-outlined">
+                        phone_enabled
+                    </span>
+                    <h4>
+                        <%= userData.business_phone %>
+                    </h4>
+                </div>
+                <div class="user-data">
+                    <span class="material-symbols-outlined">
+                        location_on
+                    </span>
+                    <h4>
+                        <%= userData.location %>
+                    </h4>
+                </div>
+                <button class="button-87" id="post">Post content</button>
+                <h4>Note that you only post this to advertise your presence so everytime you post afresh the previous
+                    post get erased.</h4>
+                <dialog id="post-dialog">
+                    <button class="button-87" id="pick-image">Pick image</button>
+                    <input type="file" id="fileInput" accept="image/*" capture style="display:none;" name="picture"
+                        enctype="multipart/form-data">
+                    <div class="preview" id="preview">
+
+                    </div>
+                    <div class="input-div">
+                        <span class="material-symbols-outlined">
+                            title
+                        </span>
+                        <input type="text" id="title" name="title" required placeholder="Title">
+                    </div>
+                    <div class="body-div">
+                        <span class="material-symbols-outlined">
+                            list_alt
+                        </span>
+                        <textarea name="body" id="body" cols="30" rows="10"
+                            placeholder="What do you wan to say..."></textarea>
+                    </div>
+                    <button class="button-87" id="post-submit">Submit</button>
+                </dialog>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const closeMenu = document.getElementById('close-menu');
+            const openMenu = document.getElementById('open-menu');
+            const subMenu = document.getElementById('sub-menu');
+            const postBtn = document.getElementById('post');
+            const postDialog = document.getElementById('post-dialog');
+            const submitPostBtn = document.getElementById('post-submit');
+            const previewDiv = document.getElementById('preview');
+            const pickImage = document.getElementById('pick-image')
+
+            pickImage.addEventListener('click', (e) => {
+                e.preventDefault();
+                fileInput.click();
+                previewDiv.style.display = 'block';
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const selectedFile = e.target.files[0];
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        const imgPreview = document.createElement('img');
+                        imgPreview.src = event.target.result;
+                        imgPreview.style.maxWidth = '100%';
+                        imgPreview.style.maxHeight = '100%';
+                        previewDiv.appendChild(imgPreview);
+
+                        // Store the selected file
+                        selectedFileData = selectedFile;
+                    };
+                    reader.readAsDataURL(selectedFile);
+                }
+            });
+
+            submitPostBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('title').value;
+                const body = document.getElementById('body').value;
+
+                // Validate input (you may want to implement more robust validation)
+                if (!title || !body) {
+                    alert("Title and body are required.");
+                    return;
+                }
+
+                // Create FormData object and append title, body, and selected file
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('body', body);
+                formData.append('image', selectedFileData);
+
+                console.log(formData);
+
+                try {
+                    // Send post data to server
+                    const response = await fetch('/update-post', {
+                        method: "POST",
+                        body: formData// Send FormData instead of JSON
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert("Post updated");
+                        // Clear selected file data
+                        selectedFileData = null;
+                        postDialog.close();
+                    } else {
+                        alert("Post update failed. Please try again.");
+                    }
+                } catch (error) {
+                    console.error("Error during post update:", error);
+                    alert("An error occurred. Please try again later.");
+                }
+            });
+
+
+
+            postBtn.addEventListener('click', async (e) => {
+                e.preventDefault()
+                postDialog.showModal();
+            })
+
+            openMenu.addEventListener('click', async (e) => {
+                openMenu.style.display = 'none';
+                closeMenu.style.display = 'block';
+                subMenu.style.display = 'block'; // Show submenu
+            });
+
+            closeMenu.addEventListener('click', async (e) => {
+                closeMenu.style.display = 'none';
+                openMenu.style.display = 'block';
+                subMenu.style.display = 'none'; // Hide submenu
+            });
+        });
+    </script>
+</body>
+
+</html>

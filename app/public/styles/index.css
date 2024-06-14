@@ -6,10 +6,47 @@ body {
   color: aliceblue;
 }
 
+#pass-visibility {
+  margin-left: 80px;
+  cursor: pointer;
+  opacity: 90%;
+  border-radius: 15px;
+}
+
+.input-div {
+  border-radius: 15px;
+  padding: .5em;
+  background-color: #4e342e;
+  margin: 18px;
+  display: flex;
+  align-items: center;
+  width: 390px;
+  opacity: 90%;
+}
+
+input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: larger;
+  color: #00e676;
+}
+
+input:focus {
+  border: none;
+}
+
+span {
+  margin-right: 10px;
+  /* color: #00e676; */
+  color: #fff;
+}
+
 .login-page {
   display: flex;
   justify-content: space-between;
   margin: 2em;
+  margin-top: 4em;
 }
 
 .massive-logo {
@@ -32,11 +69,12 @@ body {
   text-align: center;
   margin-top: 10px;
   width: 400px;
-  height: 500px;
+  height: max-content;
   border: 2px solid transparent;
   border-radius: 8px;
   background: #3e2723;
   margin-right: 100px;
+  padding: 2em;
 }
 
 .login-form h1 {
@@ -48,15 +86,9 @@ form {
 }
 
 form input {
-  width: 250px;
   padding: .5em;
-  font-size: large;
-  margin: .3em;
-  background-color: #b4963b;
-  border-radius: 5px;
+  background-color: transparent;
   border: none;
-  color: aliceblue;
-  margin-bottom: .5em;
 }
 
 form a {
@@ -76,7 +108,7 @@ input::focus {
 .button-5 {
   align-items: center;
   background-clip: padding-box;
-  background-color: #fa6400;
+  background-color: #2b130d;
   border: 1px solid transparent;
   border-radius: .25rem;
   box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
@@ -99,7 +131,7 @@ input::focus {
   -webkit-user-select: none;
   touch-action: manipulation;
   vertical-align: baseline;
-  width: auto;
+  width: 200px;
 }
 
 .button-5:hover,
@@ -120,7 +152,7 @@ input::focus {
 
 .tabs-container {
   display: flex;
-  background-color: #8d6e63;
+  /* background-color: #8d6e63; */
   width: 100%;
   overflow: hidden;
   position: relative;
@@ -174,9 +206,9 @@ input::focus {
 
 .middle-tab {
   flex: 3;
-  background-color: #8d6e63;
   color: white;
   overflow-y: auto;
+  height: max-content;
 }
 
 .tab:last-child {
@@ -190,6 +222,7 @@ input::focus {
 .middle-tab {
   padding: .5em;
   padding-left: 50px;
+  height: max-content;
 }
 
 .menu {
@@ -237,6 +270,7 @@ input::focus {
   align-items: center;
   margin: 8px;
   border-radius: 8px;
+  width: 700px;
   transition: width 10s, background-color 10s;
 }
 

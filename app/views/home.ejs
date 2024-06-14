@@ -72,6 +72,17 @@
             height: auto;
         }
 
+        .preview {
+            height: 40px;
+            width: 40px;
+            display: none;
+            margin: 20 auto;
+            border-radius: 8px;
+            z-index: 1000;
+            border: #36211b 1px;
+            border-radius: 50%;
+        }
+
         .material-icons {
             font-size: 48px;
             color: #333;
@@ -89,6 +100,73 @@
             right: 10px;
         }
 
+        .personal-info {
+            background-color: #4b281d;
+            padding: 1em;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .user-data {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-data h4 {
+            margin-left: 10px;
+        }
+
+
+        #edit-profile {
+            margin-left: -5px;
+        }
+
+        #profile-edit-submit {
+            margin-left: -1px;
+        }
+
+        #edit-profile-dialog {
+            background-color: #36211b;
+            border-radius: 8px;
+            border: none;
+            align-self: left;
+            box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+        }
+
+        #more {
+            background-color: #36211b;
+            border-radius: 8px;
+            border: none;
+            align-self: left;
+            box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            background-color: #704639;
+            border: 1px solid #704639;
+            border-radius: 8px;
+            padding: 8px;
+            width: 400px;
+            margin-bottom: 16px;
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            margin-bottom: 0;
+        }
+
 
         @media (max-width: 1068px) {
             #menu-tab {
@@ -98,6 +176,44 @@
                 width: 100%;
                 background-color: #4e342e;
                 display: none;
+            }
+
+            .input-div {
+                width: 280px;
+                margin: 10px;
+                border-radius: 15px;
+                padding: .5em;
+                background-color: #4e342e;
+                display: flex;
+                align-items: center;
+                opacity: 90%;
+            }
+
+            #profile-edit-submit {
+                margin-left: -1px;
+                align-self: center;
+            }
+
+            #edit-profile-dialog {
+                background-color: #36211b;
+                border-radius: 8px;
+                border: none;
+                width: 350px;
+                align-self: left;
+                box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+            }
+
+            #more {
+                background-color: #36211b;
+                border-radius: 8px;
+                border: none;
+                width: 350px;
+                align-self: left;
+                box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+            }
+
+            #edit-profile {
+                margin-left: 0px;
             }
 
             #dashboard {
@@ -132,6 +248,7 @@
 
             .button-87 {
                 margin: 10px;
+                display: none;
                 padding: 15px 40px;
                 text-align: center;
                 text-transform: uppercase;
@@ -149,6 +266,11 @@
                 -webkit-user-select: none;
                 touch-action: manipulation;
             }
+            .card {
+            width: 305px;
+            margin-left: -20px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+        }
         }
     </style>
 </head>
@@ -182,13 +304,41 @@
             <div class="display active-tab" id="dashboard">
                 <img src="/res/logo1.png" alt="" srcset="" style="height: 160px; width: 160px; " id="home-logo" />
                 <h1>Welcome to Hustlerati business Suite</h1>
-                <button class="button-87" role="button" id="businessBtn"><strong>+</strong>Add your business</button>
+                <% if (userData && userData.business_name) { %>
+                    <button class="button-87" role="button" id="businessBtn"
+                        style="display: none;"><strong>+</strong>Add your business</button>
+                    <button class="button-87" role="button" id="mindBtn"><strong>+</strong>Mind <%=
+                            userData.business_name %></button>
+                    <% } else { %>
+                        <button class="button-87" role="button" id="businessBtn"><strong>+</strong>Add your
+                            business</button>
+                        <button class="button-87" role="button" id="mindBtn"
+                            style="display: none;"><strong>+</strong>Mind <%= userData.business_name %></button>
+                        <% } %>
+
             </div>
             <div class="display" id="shop">
-                <h1>Feed</h1>
-                <div class="card">
-
+                <h1 style="margin-left: -20px;">Hustle Hub</h1>
+                <div id="ads-container">
+                    <% function truncateText(text, maxLength) {
+                        if (!text) return ''; // Return empty string if text is null or undefined
+                        if (text.length > maxLength) {
+                            return text.substring(0, maxLength) + '...';
+                        }
+                        return text;
+                    } %>
+                    <% ads.forEach(ad => { %>
+                        <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
+                            <div class="card" id="card">
+                                <img src="/uploads/<%= ad.post_image %>" alt="Post Image" style="max-width: 400px; max-height: 400px;">
+                                <h3><%= ad.post_title %></h3>
+                                <p><%= truncateText(ad.post_body, 50) %></p>
+                                <button class="button-87" id="read-more" onclick="handleClick('<%= ad.post_body %>')">Read more...</button>
+                            </div>
+                        <% } %>
+                    <% }); %>
                 </div>
+          
             </div>
             <div class="display" id="investing">
                 <h1>Investor Insights</h1>
@@ -200,14 +350,78 @@
                 <h1>News</h1>
                 <div id="news-container">
                     <div class="news-card" id="news-card">
-                       
+
                     </div>
                 </div>
             </div>
             <div class="display" id="profile">
                 <h1>Profile</h1>
                 <div class="profile-card">
-                    <div class="profile-pic" id="profile-pic"></div>
+                    <div class="profile-pic" id="profile-pic"
+                        style="background-image: url('/uploads/<%= userData.profile_pic %>');"></div>
+                    <input type="file" id="fileInput" accept="image/*" capture style="display:none;" name="picture"
+                        enctype="multipart/form-data">
+                    <div class="preview" id="preview">
+                        <button class="button-87" id="edit-pic">Submit</button>
+                    </div>
+                    <div class="personal-info">
+                        <div class="user-data">
+                            <span class="material-symbols-outlined">
+                                account_circle
+                            </span>
+                            <h4>
+                                <%= userData.firstname %>
+                            </h4>
+                        </div>
+                        <div class="user-data">
+                            <span class="material-symbols-outlined">
+                                account_circle
+                            </span>
+                            <h4>
+                                <%= userData.lastname %>
+                            </h4>
+                        </div>
+                        <div class="user-data">
+                            <span class="material-symbols-outlined">
+                                mail
+                            </span>
+                            <h4>
+                                <%= userData.email %>
+                            </h4>
+                        </div>
+                        <div class="user-data">
+                            <span class="material-symbols-outlined">
+                                phone_enabled
+                            </span>
+                            <h4>
+                                <%= userData.phone %>
+                            </h4>
+                        </div>
+
+                        <button class="button-87" id="edit-profile">Edit profile</button>
+                        <dialog class="dialog" id="edit-profile-dialog">
+                            <h2 style="color: aliceblue; text-align: center;">Edit Profile</h2>
+                            <div class="input-div">
+                                <span class="material-symbols-outlined">
+                                    account_circle
+                                </span>
+                                <input type="text" id="fname" name="fname" required placeholder="John">
+                            </div>
+                            <div class="input-div">
+                                <span class="material-symbols-outlined">
+                                    account_circle
+                                </span>
+                                <input type="text" id="lname" name="lname" required placeholder="Doe">
+                            </div>
+                            <div class="input-div">
+                                <span class="material-symbols-outlined">
+                                    phone_enabled
+                                </span>
+                                <input type="tel" name="phone" id="phone" placeholder="Phone" required>
+                            </div>
+                            <button class="button-87" id="profile-edit-submit">Edit profile</button>
+                        </dialog>
+                    </div>
                 </div>
             </div>
         </div>
@@ -229,6 +443,10 @@
             </div>
         </div>
     </div>
+    <dialog id="more">
+        <p id="dialog-content"></p>
+        <button class="button-87" id="exit">Exit</button>
+    </dialog>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const menuIcon = document.getElementById('menu-icon');
@@ -239,10 +457,129 @@
             const logoutBtn = document.getElementById('logout');
             const termsLink = document.getElementById('terms');
             const profilePic = document.getElementById('profile-pic');
+            const editProfileBtn = document.getElementById('edit-profile');
+            const editProfileDialog = document.getElementById('edit-profile-dialog');
+            const profileSubmit = document.getElementById('profile-edit-submit');
+            const previewDiv = document.getElementById('preview');
+            const submitPic = document.getElementById('edit-pic');
+            const mindBtn = document.getElementById('mindBtn');
+            // const moreButton = document.querySelectorAll('#read-more');
+            const moreDialog = document.getElementById('more');
+            const exitBtn = document.getElementById('exit');
+
+            exitBtn.addEventListener('click', async(e)=>{
+                e.preventDefault();
+                moreDialog.close();
+            })
+
+            // const handleClick = function handleClick(){
+            //     moreDialog.showModal()
+            // }
+
+            const moreButtons = document.querySelectorAll('#read-more');
+            moreButtons.forEach(button => {
+                button.addEventListener('click', handleClick);
+            });
+
+            mindBtn.addEventListener('click', async (e) => {
+                e.preventDefault()
+                window.location.href = '/hustler/dashboard'
+            })
+
+            profileSubmit.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const firstname = document.getElementById('fname').value;
+                const lastname = document.getElementById('lname').value;
+                const phone = document.getElementById('phone').value;
+
+                // Validate input (you may want to implement more robust validation)
+                if (!firstname || !lastname || !phone) {
+                    alert("All fields are required.");
+                    return;
+                }
+
+                // Create user data object
+                const userData = {
+                    firstname: firstname,
+                    lastname: lastname,
+                    phone: phone,
+                };
+
+                console.log(userData)
+                try {
+                    // Send registration data to server
+                    const response = await fetch('/update-profile', {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert("Profile Updated");
+                        editProfileDialog.close();
+                    } else {
+                        alert("Registration failed. Please try again.");
+                    }
+                } catch (error) {
+                    console.error("Error during registration:", error);
+                    alert("An error occurred. Please try again later.");
+                }
+
+            })
+
+            editProfileBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                editProfileDialog.showModal();
+            })
 
             profilePic.addEventListener("click", async (e) => {
                 e.preventDefault();
+                fileInput.click();
+                previewDiv.style.display = 'block'; // Display the preview div
+            });
 
+            fileInput.addEventListener('change', (e) => {
+                const selectedFile = e.target.files[0];
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        // Set the background image of the profilePic element
+                        profilePic.style.backgroundImage = `url('${event.target.result}')`;
+                    };
+                    reader.readAsDataURL(selectedFile);
+                }
+            });
+
+            submitPic.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const selectedFile = fileInput.files[0];
+                if (selectedFile) {
+                    const formData = new FormData();
+                    formData.append('profilePic', selectedFile);
+                    console.log(formData)
+
+                    try {
+                        const response = await fetch('/update-pic', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            // Assuming data contains the path to the uploaded image
+                            // You can then use this path to update the user's profile_pic field
+                        } else {
+                            console.error('Failed to upload image');
+                        }
+                    } catch (error) {
+                        console.error('Error uploading image:', error);
+                    }
+                } else {
+                    console.error('No file selected');
+                }
             });
 
             termsLink.addEventListener('click', async (e) => {
@@ -323,53 +660,6 @@
             toggleMenu();
             addMenuLinkListeners();
 
-            async function getNews() {
-                try {
-                    const response = await fetch('/home/news');
-                    const json = await response.json();
-                    const newsData = json.newsData;
-
-                    // Get the news container element
-                    const newsContainer = document.getElementById('news-container');
-
-                    // Check if there's any news data
-                    if (newsData && newsData.length > 0) {
-
-                        // Loop through the news data and create news cards
-                        newsData.forEach((newsItem) => {
-                            const newsCard = document.createElement('div');
-                            newsCard.classList.add('news-card');
-
-                            const imageDiv = document.createElement('div');
-                            imageDiv.classList.add('image');
-                            // Set the image source from the news item data
-                            imageDiv.style.backgroundImage = `url('http:127.0.0.1:8055/assets/')`;
-
-                            const paragraphDiv = document.createElement('div');
-                            paragraphDiv.classList.add('paragraph');
-                            // Set the paragraph content from the news item data
-                            paragraphDiv.textContent = newsItem.description;
-
-                            // Append image and paragraph to news card
-                            newsCard.appendChild(imageDiv);
-                            newsCard.appendChild(paragraphDiv);
-
-                            // Append news card to news container
-                            newsContainer.appendChild(newsCard);
-                        });
-                    } else {
-                        // Display a message if there's no news
-                        newsContainer.innerHTML = '<p>No news available</p>';
-                    }
-                } catch (error) {
-                    console.error('Error fetching news data:', error);
-                }
-            }
-
-            // Call the function to fetch and display news
-            getNews();
-
-
             //Carosel stuff
             let currentIndex = 0;
             const totalSlides = document.querySelectorAll('.carousel-item').length;
@@ -403,6 +693,17 @@
             // Automatically move to the next slide every 3 seconds
             setInterval(nextSlide, 3000);
         });
+        async function handleClick(postBody) {
+        // Assuming you want to display the post body in the dialog
+        const moreDialog = document.getElementById('more');
+        const dialogContent = document.getElementById('dialog-content');
+        
+        // Set the content of the dialog
+        dialogContent.textContent = postBody;
+
+        // Show the dialog
+        moreDialog.showModal();
+    }
     </script>
 
 </body>

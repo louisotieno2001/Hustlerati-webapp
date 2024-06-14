@@ -6,6 +6,36 @@
         height: 100vh;
     }
 
+    .input-div {
+        width: 280px;
+        margin: 10px;
+        border-radius: 15px;
+        padding: .5em;
+        background-color: #4e342e;
+        display: flex;
+        align-items: center;
+        opacity: 90%;
+    }
+
+    #pass-visibility {
+        margin-left: -55px;
+        cursor: pointer;
+    }
+
+    .login-form {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        margin-top: 10px;
+        width: 290px;
+        height: max-content;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        margin-left: -15px;
+        padding: 1em;
+    }
+
     .menu-icon {
         display: block;
     }
@@ -15,6 +45,7 @@
         justify-content: space-between;
         margin: 2em;
     }
+
 
     #ads-tab {
         display: none;
@@ -59,7 +90,7 @@
         width: fit-content;
     }
 
-    #home-logo{
+    #home-logo {
         margin-left: -40px;
     }
 

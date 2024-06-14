@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="styles/index.css">
     <link rel="stylesheet" href="styles/small-devices.css">
     <link rel="icon" href="./res/logo1.png" type="image/x-icon">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
 
     </style>
@@ -18,70 +20,107 @@
         <div class="massive-logo" title="logo-image"></div>
         <div class="login-form">
             <h1>Account</h1>
-            <form action="POST">
-                <input type="text" placeholder="First name" required  id="fname"> <br>
-                <input type="text" placeholder="Last name" required id="lname"> <br>
-                <input type="email" name="email" id="email" placeholder="Email address"> <br>
-                <input type="tel" name="phone" id="phone" placeholder="0711223344"> <br>
-                <input type="password" name="password" id="password" placeholder="Password"> <br>
-                <button id="registerButton" class="button-5" role="button" >Register</button>
-                <h4>Already have an account <a href="login.html">Login</a></h4>
-            </form>
+            <div class="input-div">
+                <span class="material-symbols-outlined">
+                    account_circle
+                </span>
+                <input type="text" id="fname" name="fname" required placeholder="John">
+            </div>
+            <div class="input-div">
+                <span class="material-symbols-outlined">
+                    account_circle
+                </span>
+                <input type="text" id="lname" name="lname" required placeholder="Doe">
+            </div>
+            <div class="input-div">
+                <span class="material-symbols-outlined">
+                    mail
+                </span>
+                <input type="email" id="email" name="email" required placeholder="Email">
+            </div>
+            <div class="input-div">
+                <span class="material-symbols-outlined">
+                    phone_enabled
+                </span>
+                <input type="tel" name="phone" id="phone" placeholder="Phone" required>
+            </div>
+            <div class="input-div">
+                <span class="material-symbols-outlined">
+                    security
+                </span>
+                <input type="password" name="" id="password" placeholder="Password" required>
+                <span class="material-symbols-outlined" id="pass-visibility">
+                    visibility
+                </span>
+            </div>
+            <button id="registerButton" class="button-5" role="button">Register</button>
+            <h4>Already have an account <a href="login.html">Login</a></h4>
+
             <div class="stuff">
                 <a href="/terms&conditions">Terms Of Service</a>
                 <a href="/privacy">Privacy policy</a>
             </div>
         </div>
         <script>
-            const submitBtn = document.getElementById('registerButton');
+            document.addEventListener('DOMContentLoaded', function () {
+                const submitBtn = document.getElementById('registerButton');
+                const toggleVisibility = document.getElementById('pass-visibility');
+                const passField = document.getElementById('password');
 
-            submitBtn.addEventListener("click", async (e) => {
-                e.preventDefault();
-                const firstName = document.getElementById('fname').value;
-                const lastName = document.getElementById('lname').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
-                const password = document.getElementById('password').value;
+                toggleVisibility.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    passField.type = passField.type === 'password' ? 'text' : 'password';
+                });
 
-                // Validate input (you may want to implement more robust validation)
-                if (!firstName || !lastName || !email || !phone || !password) {
-                    alert("All fields are required.");
-                    return;
-                }
+                submitBtn.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    const firstName = document.getElementById('fname').value;
+                    const lastName = document.getElementById('lname').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+                    const password = document.getElementById('password').value;
 
-                // Create user data object
-                const userData = {
-                    firstName,
-                    lastName,
-                    email,
-                    phone,
-                    password
-                };
-                try {
-                    // Send registration data to server
-                    const response = await fetch('/register-user', {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(userData)
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        alert("You have successfully registered on Hustlerati!");
-                        // Redirect to login page 
-                        window.location.href = "/login.html";
-                    } else {
-                        alert("Registration failed. Please try again.");
-                        console.log(error);
+                    // Validate input (you may want to implement more robust validation)
+                    if (!firstName || !lastName || !email || !phone || !password) {
+                        alert("All fields are required.");
+                        return;
                     }
-                } catch (error) {
-                    console.error("Error during registration:", error);
-                    alert("An error occurred. Please try again later.");
-                }
+
+                    // Create user data object
+                    const userData = {
+                        firstName,
+                        lastName,
+                        email,
+                        phone,
+                        password
+                    };
+                    try {
+                        // Send registration data to server
+                        const response = await fetch('/register-user', {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(userData)
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            alert("You have successfully registered on Hustlerati!");
+                            // Redirect to login page 
+                            window.location.href = "/login.html";
+                        } else {
+                            alert("Registration failed. Please try again.");
+                            console.log(error);
+                        }
+                    } catch (error) {
+                        console.error("Error during registration:", error);
+                        alert("An error occurred. Please try again later.");
+                    }
+                });
             });
+
         </script>
     </div>
 </body>
