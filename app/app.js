@@ -316,6 +316,8 @@ app.post('/update-news', upload.single('image'), async (req, res) => {
             post_body: body,
         };
 
+        console.log(userData);
+
         // console.log(userData);
 
         // Update user data with the new post data
@@ -431,8 +433,6 @@ app.get('/home', checkSession, async (req, res) => {
         const profiles = await getProfile(id);
         const ads = await getAds();
         const news = await getNews();
-        console.log("News",news);
-        console.log("Ads",ads.data[0].post_image);
         res.render('home', { userData: profiles.data[0], ads: ads.data, news: news.data});
     } catch (error) {
         console.error('Error fetching home page:', error);

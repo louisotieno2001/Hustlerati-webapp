@@ -38,13 +38,6 @@
             margin-left: 190px;
         }
 
-        #news-card {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-            position: relative;
-        }
-
         #news-card img {
             width: 100%;
             height: auto;
@@ -268,6 +261,11 @@
         .posting{
             margin-left: 20px;
         }
+
+        .search-bar{
+           width: 940px;
+           border-radius: 40px;
+        }
         @media (max-width: 1068px) {
 
             .text{
@@ -324,6 +322,10 @@
                 width: 350px;
                 align-self: left;
                 box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+            }
+
+            .search-bar{
+                width: 300px;
             }
 
             #more {
@@ -474,10 +476,9 @@
                 </div>
             </div>
             <div class="display" id="news">
-                <div style="text-align: center; background-color: #4b281d; border-radius: 8px; margin: 10px;">
-                    <input type="text" name="search" id="search" placeholder="Search post..." style="padding: 1em;" oninput="filterPost()">
+                <div style="text-align: center; background-color: #4b281d; margin: 10px;" class="search-bar">
+                    <input type="text" name="search" id="search" placeholder="Search post..." style="padding: .5em;" oninput="filterPost()">
                 </div>
-                <div id="news-container">
                     <div class="news-card" id="news-card">
                         <% if (news.length === 0) { %>
                             <p>No news available. Post something!</p>
@@ -498,7 +499,7 @@
                     </div>
                     
                     <div class="add" id="add"><span class="material-symbols-outlined">edit</span></div>
-                </div>
+             
             </div>
             <div class="display" id="profile">
                 <h1>Profile</h1>
