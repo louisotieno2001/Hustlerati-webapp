@@ -298,7 +298,7 @@ app.post('/update-news', upload.single('image'), async (req, res) => {
     try {
         const { title, body } = req.body;
         const id = req.session.user.fname;
-        console.log("User",id)
+   
 
         // Ensure that req.file contains the expected file information
         if (!req.file || !req.file.path) {
@@ -316,13 +316,10 @@ app.post('/update-news', upload.single('image'), async (req, res) => {
             post_body: body,
         };
 
-        console.log(userData);
-
         // console.log(userData);
 
         // Update user data with the new post data
         const updatedData = await updateNews(userData);
-        console.log(updatedData)
 
         res.status(201).json({ message: 'Post updated successfully', updatedData });
     } catch (error) {
