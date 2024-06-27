@@ -285,7 +285,7 @@ input::focus {
 .active-tab {
   display: block;
   border-radius: 5px;
-  padding: 2em;
+  padding: 1em;
 }
 
 .top-bar {
@@ -370,7 +370,7 @@ input::focus {
 /* CSS */
 .button-87 {
   margin: 10px;
-  margin-left: 170px;
+  margin-left: 200px;
   padding: 15px 40px;
   text-align: center;
   text-transform: uppercase;

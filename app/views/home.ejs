@@ -31,6 +31,7 @@
             background-position: center;
             background-size: cover;
             cursor: pointer;
+            background-color: #F09819;
         }
 
         #dashboard img {
@@ -137,22 +138,25 @@
             background-color: #36211b;
             border-radius: 8px;
             border: none;
+            width: 700px;
             align-self: left;
             box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
         }
 
         .card {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             background-color: #704639;
             border: 1px solid #704639;
             border-radius: 8px;
             padding: 8px;
-            width: 400px;
+            width: 950px;
             margin-bottom: 16px;
         }
 
         .card img {
+            max-width: 400px;
+            max-height: 400px;
             width: 100%;
             border-radius: 8px;
             margin-bottom: 8px;
@@ -167,8 +171,34 @@
             margin-bottom: 0;
         }
 
+        .text{
+            margin: 10px;
+        }
+
+        #content{
+            color: aliceblue;
+        }
+
+        #exit{
+            color: #F09819;
+            font-size: large;
+        }
+
+        .read-more{
+            color: #F09819;
+            font-size: large;
+        }
+        
+
 
         @media (max-width: 1068px) {
+
+            .text{
+            margin: 0px;
+            display: flex;
+            justify-content: space-around;
+            flex-direction: column;
+        }
             #menu-tab {
                 margin-top: 45px;
                 height: 100vh;
@@ -231,7 +261,7 @@
             }
 
             #shop {
-                margin-top: 120px;
+                margin-top: 10px;
             }
 
             #investing {
@@ -267,7 +297,9 @@
                 touch-action: manipulation;
             }
             .card {
-            width: 305px;
+            width: 330px;
+            display: flex;
+            flex-direction: column;
             margin-left: -20px;
             box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
         }
@@ -318,7 +350,7 @@
 
             </div>
             <div class="display" id="shop">
-                <h1 style="margin-left: -20px;">Hustle Hub</h1>
+                <h1>Hustle Hub</h1>
                 <div id="ads-container">
                     <% function truncateText(text, maxLength) {
                         if (!text) return ''; // Return empty string if text is null or undefined
@@ -331,9 +363,10 @@
                         <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
                             <div class="card" id="card">
                                 <img src="/uploads/<%= ad.post_image %>" alt="Post Image" style="max-width: 400px; max-height: 400px;">
-                                <h3><%= ad.post_title %></h3>
-                                <p><%= truncateText(ad.post_body, 50) %></p>
-                                <button class="button-87" id="read-more" onclick="handleClick('<%= ad.post_body %>')">Read more...</button>
+                                <div class="text"> 
+                                    <h1><%= ad.post_title %></h1><br>
+                                    <p><%= truncateText(ad.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p><br>
+                                </div>
                             </div>
                         <% } %>
                     <% }); %>
@@ -362,7 +395,7 @@
                     <input type="file" id="fileInput" accept="image/*" capture style="display:none;" name="picture"
                         enctype="multipart/form-data">
                     <div class="preview" id="preview">
-                        <button class="button-87" id="edit-pic">Submit</button>
+                        <button class="button" id="edit-pic">Submit</button>
                     </div>
                     <div class="personal-info">
                         <div class="user-data">
@@ -444,8 +477,8 @@
         </div>
     </div>
     <dialog id="more">
-        <p id="dialog-content"></p>
-        <button class="button-87" id="exit">Exit</button>
+        <p id="content"></p>
+        <a href="#" id="exit">Exit</button>
     </dialog>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -692,18 +725,20 @@
 
             // Automatically move to the next slide every 3 seconds
             setInterval(nextSlide, 3000);
-        });
-        async function handleClick(postBody) {
-        // Assuming you want to display the post body in the dialog
-        const moreDialog = document.getElementById('more');
-        const dialogContent = document.getElementById('dialog-content');
-        
-        // Set the content of the dialog
-        dialogContent.textContent = postBody;
 
-        // Show the dialog
-        moreDialog.showModal();
-    }
+            const paragraph = document.getElementById('content');
+
+            var readMoreButtons = document.querySelectorAll('.read-more');
+
+            readMoreButtons.forEach(async function (button) {
+                button.addEventListener('click', async function () {
+                    var body = this.getAttribute('data-post-body');
+                    paragraph.textContent = body;
+                    moreDialog.showModal();
+                });
+            });
+        });
+       
     </script>
 
 </body>
