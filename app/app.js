@@ -121,12 +121,6 @@ async function getPrivacy(id) {
     })
 }
 
-async function getNews() {
-    return query(`/items/news`, {
-        method: 'GET',
-    });
-}
-
 async function getAds() {
     try {
         const response = await query('/items/users', {
@@ -143,6 +137,24 @@ async function getAds() {
         throw error; // You can handle the error in the calling code
     }
 }
+
+async function getNews() {
+    try {
+        const response = await query('/items/news', {
+            method: 'GET'
+        });
+        if (response.ok) {
+            const usersData = await response.json();
+            return usersData;
+        } else {
+            throw new Error('Failed to fetch users data');
+        }
+    } catch (error) {
+        console.error('Error fetching users data:', error);
+        throw error; // You can handle the error in the calling code
+    }
+}
+
 
 async function updateBusiness(userData) {
     try {
@@ -267,6 +279,56 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
     }
 });
 
+async function updateNews(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/news/`, {
+            method: 'POST', // Assuming you want to update an existing item
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/update-news', upload.single('image'), async (req, res) => {
+    try {
+        const { title, body } = req.body;
+        const id = req.session.user.fname;
+        console.log("User",id)
+
+        // Ensure that req.file contains the expected file information
+        if (!req.file || !req.file.path) {
+            return res.status(400).json({ message: 'No picture uploaded' });
+        }
+
+        // Use req.file.path or other relevant property to get the file path
+        const picturePath = req.file.path;
+
+        // Construct userData object with post information and picture path
+        const userData = {
+            user_id: id, // Assuming req.user contains user information
+            post_image: picturePath,
+            post_title: title,
+            post_body: body,
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await updateNews(userData);
+        console.log(updatedData)
+
+        res.status(201).json({ message: 'Post updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update post. Please try again.' });
+    }
+});
+
 app.post('/update-pic', upload.single('profilePic'), async (req, res) => {
     try {
         // Ensure that req.file contains the expected file information
@@ -368,8 +430,10 @@ app.get('/home', checkSession, async (req, res) => {
         // const newsData = news.data;
         const profiles = await getProfile(id);
         const ads = await getAds();
+        const news = await getNews();
+        console.log("News",news);
         console.log("Ads",ads.data[0].post_image);
-        res.render('home', { userData: profiles.data[0], ads: ads.data});
+        res.render('home', { userData: profiles.data[0], ads: ads.data, news: news.data});
     } catch (error) {
         console.error('Error fetching home page:', error);
         res.status(500).json({ error: 'Internal Server Error' });
