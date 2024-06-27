@@ -6,3 +6,4 @@ uploads/
 *.cache/
 cms/
 *.cache
+.env
