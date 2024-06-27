@@ -302,8 +302,8 @@
         <div class="business-card">
             <div class="business-details">
                 <div class="profile-pic" id="profile-pic"
-                    style="background-image: url('/uploads/<%= userData.profile_pic %>'); background-size: cover; background-position: center;">
-                </div>
+                style="background-image: url('/uploads/<%= userData.profile_pic %>'); background-size: cover; background-position: center;">
+            </div>
                 <div class="user-data">
                     <span class="material-symbols-outlined">
                         storefront
@@ -384,30 +384,19 @@
             fileInput.addEventListener('change', (e) => {
                 const selectedFile = e.target.files[0];
                 if (selectedFile) {
-                    // Check if the selected file is an image
-                    if (selectedFile.type && selectedFile.type.indexOf('image') === 0) {
-                        const reader = new FileReader();
-                        reader.onload = function (event) {
-                            const imgPreview = document.createElement('img');
-                            imgPreview.src = event.target.result;
-                            imgPreview.style.maxWidth = '100%';
-                            imgPreview.style.maxHeight = '100%';
-                            previewDiv.innerHTML = ''; // Clear previous previews
-                            previewDiv.appendChild(imgPreview);
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        const imgPreview = document.createElement('img');
+                        imgPreview.src = event.target.result;
+                        imgPreview.style.maxWidth = '100%';
+                        imgPreview.style.maxHeight = '100%';
+                        previewDiv.appendChild(imgPreview);
 
-                            // Store the selected file
-                            selectedFileData = selectedFile;
-                        };
-                        reader.readAsDataURL(selectedFile);
-                    } else {
-                        alert('Please select an image file.');
-                        fileInput.value = ''; // Clear the file input field
-                        previewDiv.innerHTML = ''; // Clear any existing previews
-                        selectedFileData = null; // Reset selected file data
-                    }
+                        // Store the selected file
+                        selectedFileData = selectedFile;
+                    };
+                    reader.readAsDataURL(selectedFile);
                 }
-                // Reset file input to clear the selection
-                fileInput.value = '';
             });
 
             submitPostBtn.addEventListener('click', async (e) => {
