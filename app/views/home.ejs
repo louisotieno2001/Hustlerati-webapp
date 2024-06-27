@@ -479,19 +479,24 @@
                 </div>
                 <div id="news-container">
                     <div class="news-card" id="news-card">
-                        <% news.forEach(ad => { %>
-                            <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
-                                <div class="card">
-                                    <img src="/uploads/<%= ad.post_image %>" alt="Post Image" style="max-width: 400px; max-height: 400px;">
-                                    <div class="text"> 
-                                        <h1><%= ad.post_title %></h1><br>
-                                        <p><%= truncateText(ad.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p><br>
+                        <% if (news.length === 0) { %>
+                            <p>No news available. Post something!</p>
+                        <% } else { %>
+                            <% news.forEach(ad => { %>
+                                <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
+                                    <div class="card">
+                                        <img src="/uploads/<%= ad.post_image %>" alt="Post Image" style="max-width: 400px; max-height: 400px;">
+                                        <div class="text"> 
+                                            <h1><%= ad.post_title %></h1><br>
+                                            <p><%= truncateText(ad.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p><br>
+                                        </div>
+                                        <div class="poster-details"></div>
                                     </div>
-                                    <div class="poster-details"></div>
-                                </div>
-                            <% } %>
-                        <% }); %>
+                                <% } %>
+                            <% }); %>
+                        <% } %>
                     </div>
+                    
                     <div class="add" id="add"><span class="material-symbols-outlined">edit</span></div>
                 </div>
             </div>
