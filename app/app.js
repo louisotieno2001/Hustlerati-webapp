@@ -494,6 +494,10 @@ app.get('/hustler/dashboard', checkSession,async (req, res) => {
     res.render('dashboard', { userData: profiles.data[0] });
 });
 
+app.get('/loans/page', async(req, res)=>{
+    res.render('loans');
+})
+
 app.listen(port, () => {
     console.log(`Hustlerati listening on port ${port}`);
 });

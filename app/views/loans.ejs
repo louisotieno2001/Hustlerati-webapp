@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loans</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-position: center;
+            background-size: cover;
+            background-image: url(/res/bimageq.jpg);
+        }
+
+        .display {
+            margin: 15px;
+            max-width: 100%;
+            width: 95%;
+            background-color: #5D4037;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            opacity: 95%;
+        }
+
+        .rules {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .rule {
+            background-color: #8D6E63;
+            border-radius: 8px;
+            margin: 10px;
+            width: calc(100% - 20px);
+            max-width: 450px;
+            padding: 15px;
+            color: white;
+        }
+
+        span {
+            color: yellow;
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        h3 {
+            font-size: 1em;
+            line-height: 1.4;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        a {
+            color: black;
+            text-decoration: underline;
+        }
+
+        button {
+            color: aliceblue;
+            background-color: #3a2823;
+            padding: .5em 1em;
+            font-size: large;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1em;
+        }
+
+        dialog {
+            background-color: #5D4037;
+            border: none;
+            border-radius: 8px;
+            color: aliceblue;
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="display">
+        <h1 style="color: white;">Hello there, welcome to Hustlerati Loans.</h1>
+        <h3 style="color: white;">Our mission is to make financially stable youth to limit struggle with joblessness</h3>
+        <div class="rules">
+            <div class="rule">
+                <span class="material-symbols-outlined">looks_one</span>
+                <h3>The Hustlerati Loans are given to groups of young people/youth/comrades of at least 3 members who have an ambitious business idea that needs initial funding in terms of loans which are to be later paid back to Hustlerati as per the <a href="#" id="terms">Terms of service</a> of the Hustlerati Loans as described by Hustlerati.</h3>
+            </div>
+
+            <div class="rule">
+                <span class="material-symbols-outlined">looks_two</span>
+                <h3>Hustlerati will look at your business idea, and if approved, you may proceed to be awarded the specified loan you request. After which your business idea will be scrutinized by our pool of experts for sustainability, and overall usefulness and relevance and its ability to scale and grow.</h3>
+            </div>
+
+            <div class="rule">
+                <span class="material-symbols-outlined">looks_3</span>
+                <h3>In case of individuals requiring similar assistance and are interested in Hustlerati Loans, the correct procedure is to have at least extra two placeholders to fill your group who may or may not be involved in your business at present or the foreseeable future.</h3>
+            </div>
+
+            <div class="rule">
+                <span class="material-symbols-outlined">looks_4</span>
+                <h3>Want to start a kienyeji kuku business, become a true Hustler today with Hustlerati by registering your group of ambitious fellow comrades <a href="#">Register Group</a></h3>
+            </div>
+            
+            
+            <dialog id="terms-dialog">
+                <h1>Terms of loan service</h1>
+                <p>Welcome to Hustlerati's loan services. By accessing our loan products, you agree to the following terms and conditions. Hustlerati offers loans subject to approval based on creditworthiness and other factors determined by our underwriting criteria. The loan amount, interest rate, repayment schedule, and any applicable fees will be disclosed in the loan agreement provided upon approval. Repayment terms are to be strictly adhered to; failure to meet repayment obligations may result in additional charges, penalties, or legal action. Loans are intended for business purposes only and must not be used for personal, household, or speculative activities. Borrowers are responsible for maintaining accurate financial records and providing periodic updates as requested. Hustlerati reserves the right to modify interest rates and fees based on market conditions and regulatory requirements. Early repayment options may be available but are subject to specific terms outlined in the loan agreement. Collateral or personal guarantees may be required depending on the loan amount and risk assessment. Hustlerati respects borrower privacy and complies with all relevant data protection laws; however, information may be shared with regulatory authorities or credit bureaus as necessary. By accepting these terms, you acknowledge that Hustlerati is not liable for any direct or indirect losses resulting from loan use or economic circumstances beyond our control. These terms constitute the entire agreement between Hustlerati and the borrower, superseding any prior agreements or understandings. For further details or inquiries, please contact our customer service team. Thank you for choosing Hustlerati for your financing needs.</p>
+                <button id="close-terms">Close</button>
+            </dialog>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const openTerms = document.getElementById('terms');
+            const termsDialog = document.getElementById('terms-dialog');
+            const closeTerms = document.getElementById('close-terms');
+
+            openTerms.addEventListener('click', (e) => {
+                e.preventDefault();
+                termsDialog.showModal();
+            });
+
+            closeTerms.addEventListener('click', (e) => {
+                e.preventDefault();
+                termsDialog.close();
+            });
+        });
+    </script>
+</body>
+
+</html>
