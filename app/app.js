@@ -134,7 +134,7 @@ async function getAds() {
         }
     } catch (error) {
         console.error('Error fetching users data:', error);
-        throw error; // You can handle the error in the calling code
+        throw error; 
     }
 }
 
