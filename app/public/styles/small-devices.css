@@ -95,13 +95,13 @@
     }
 
     #news {
-        background-color: #5d4037;
-        height: 100vh;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        padding-top: 2px;
-        transition: width 10s, background-color 10s;
-    }
+  background-color: #5d4037;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 2px;
+  transition: width 10s, background-color 10s;
+}
 
 }

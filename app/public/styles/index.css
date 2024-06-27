@@ -278,6 +278,10 @@ input::focus {
   background-color: #4e342e;
 }
 
+.display {
+  display: none;
+}
+
 .active-tab {
   display: block;
   border-radius: 5px;
