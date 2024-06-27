@@ -121,22 +121,22 @@ async function getPrivacy(id) {
     })
 }
 
-// async function getAds() {
-//     try {
-//         const response = await query('/items/users', {
-//             method: 'GET'
-//         });
-//         if (response.ok) {
-//             const usersData = await response.json();
-//             return usersData;
-//         } else {
-//             throw new Error('Failed to fetch users data');
-//         }
-//     } catch (error) {
-//         console.error('Error fetching users data:', error);
-//         throw error; // You can handle the error in the calling code
-//     }
-// }
+async function getAds() {
+    try {
+        const response = await query('/items/users', {
+            method: 'GET'
+        });
+        if (response.ok) {
+            const usersData = await response.json();
+            return usersData;
+        } else {
+            throw new Error('Failed to fetch users data');
+        }
+    } catch (error) {
+        console.error('Error fetching users data:', error);
+        throw error; // You can handle the error in the calling code
+    }
+}
 
 async function getNews() {
     try {
@@ -429,7 +429,7 @@ app.get('/home', checkSession, async (req, res) => {
         // const news = await getNews();
         // const newsData = news.data;
         const profiles = await getProfile(id);
-        // const ads = await getAds();
+        const ads = await getAds();
         const news = await getNews();
         console.log("News",news);
         console.log("Ads",ads.data[0].post_image);
