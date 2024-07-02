@@ -155,7 +155,6 @@ async function getNews() {
     }
 }
 
-
 async function updateBusiness(userData) {
     try {
         // Use your custom query function to send the update query
@@ -298,7 +297,7 @@ app.post('/update-news', upload.single('image'), async (req, res) => {
     try {
         const { title, body } = req.body;
         const id = req.session.user.fname;
-   
+
 
         // Ensure that req.file contains the expected file information
         if (!req.file || !req.file.path) {
@@ -430,73 +429,416 @@ app.get('/home', checkSession, async (req, res) => {
         const profiles = await getProfile(id);
         const ads = await getAds();
         const news = await getNews();
-        res.render('home', { userData: profiles.data[0], ads: ads.data, news: news.data});
+        res.render('home', { userData: profiles.data[0], ads: ads.data, news: news.data });
     } catch (error) {
         console.error('Error fetching home page:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+// app.post('/login', async (req, res) => {
+//     const { email, password } = req.body;
+//     try {
+//         const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+
+//         if (result.rows.length > 0) {
+//             const user = result.rows[0];
+//             const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+//             if (isPasswordMatch) {
+//                 // Store user information in the session
+//                 req.session.user = {
+//                     id: user.id,
+//                     fname: user.firstname,
+//                     lname: user.lastname,
+//                     email: user.email,
+//                     phone: user.phone
+//                 };
+
+//                 res.json({ success: true, user: req.session.user });
+//             } else {
+//                 res.status(401).json({ success: false, error: 'Invalid credentials' });
+//             }
+//         } else {
+//             res.status(401).json({ success: false, error: 'Invalid credentials' });
+//         }
+//     } catch (error) {
+//         console.error('Error during login:', error);
+//         res.status(500).json({ success: false, error: 'Login failed' });
+//     }
+// });
+
+async function loginUser(email) {
     try {
-        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        // console.log('Querying Directus for user with email:', email);
+        const response = await query(`/items/users?filter[email][_eq]=${email}`, {
+            method: 'SEARCH',
+        });
+        const users = await response.json(); // Extract JSON data from the response
 
-        if (result.rows.length > 0) {
-            const user = result.rows[0];
-            const isPasswordMatch = await bcrypt.compare(password, user.password);
-
-            if (isPasswordMatch) {
-                // Store user information in the session
-                req.session.user = {
-                    id: user.id,
-                    fname: user.firstname,
-                    lname: user.lastname,
-                    email: user.email,
-                    phone: user.phone
-                };
-
-                res.json({ success: true, user: req.session.user });
-            } else {
-                res.status(401).json({ success: false, error: 'Invalid credentials' });
-            }
-        } else {
-            res.status(401).json({ success: false, error: 'Invalid credentials' });
+        // Check if users array is empty or not
+        if (!users || users.length === 0) {
+            // console.log('No user found with email:', email);
         }
+
+        return users;
     } catch (error) {
-        console.error('Error during login:', error);
-        res.status(500).json({ success: false, error: 'Login failed' });
+        console.error('Error querying user data:', error);
+        throw new Error('Error querying user data');
+    }
+}
+
+// Login route
+app.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        console.log('My request', req.body)
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Please fill in all fields' });
+        }
+
+        // Fetch user data from Directus
+        const usersResponse = await loginUser(email);
+
+        // If no user found, return invalid credentials error
+        if (!usersResponse || !usersResponse.data || usersResponse.data.length === 0) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        const user = usersResponse.data[0]; // Extract the first user from the response
+        // console.log("Found user",user);
+
+        // Compare provided password with the hashed password stored in the user's record
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        // Handle invalid password
+        if (!passwordMatch) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        req.session.user = user;
+        // Respond with success message and redirect URL for verified users
+        return res.status(200).json({ message: 'Login successful', redirect: '/home' });
+
+
+    } catch (error) {
+        // Handle internal server error
+        console.error('Error logging in user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-app.post('/register-user', async (req, res) => {
-    const { firstName, lastName, email, phone, password } = req.body;
+// app.post('/register-user', async (req, res) => {
+//     const { firstName, lastName, email, phone, password } = req.body;
 
+//     try {
+//         const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+//         const result = await pool.query(
+//             'INSERT INTO users (firstname, lastname, email, phone, password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+//             [firstName, lastName, email, phone, hashedPassword]
+//         );
+
+//         res.status(201).json({ success: true, user: result.rows[0] });
+//     } catch (error) {
+//         console.error('Error during registration:', error);
+//         res.status(500).json({ success: false, error: 'Registration failed' });
+//     }
+// });
+
+async function registerUser(userData) {
     try {
+        let res = await query(`/items/users/`, {
+            method: 'POST',
+            body: JSON.stringify(userData) // Send user data in the request body
+        });
+        return await res.json(); // Return parsed JSON response
+    } catch (error) {
+        console.error('Error registering user:', error);
+        throw error; // Rethrow error for handling in the calling function
+    }
+}
+
+// Route handler for POST /register
+app.post('/register-user', async (req, res) => {
+    try {
+        const { firstName, lastName, email, phone, password } = req.body;
+
+        // Validate required fields
+        if (!firstName || !lastName || !email || !phone || !password) {
+            return res.status(400).json({ error: 'Please fill in all fields' });
+        }
+
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const result = await pool.query(
-            'INSERT INTO users (firstname, lastname, email, phone, password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [firstName, lastName, email, phone, hashedPassword]
-        );
+        // Construct user data object
+        const userData = {
+            firstname: firstName,
+            lastname: lastName,
+            email: email,
+            phone: phone,
+            password: hashedPassword
+        };
 
-        res.status(201).json({ success: true, user: result.rows[0] });
+        // Register the user using the async function
+        const newUser = await registerUser(userData);
+
+        // Send response indicating success
+        res.status(201).json({ message: 'User registered successfully', user: newUser });
     } catch (error) {
-        console.error('Error during registration:', error);
-        res.status(500).json({ success: false, error: 'Registration failed' });
+        console.error('Error inserting user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-app.get('/hustler/dashboard', checkSession,async (req, res) => {
+app.get('/hustler/dashboard', checkSession, async (req, res) => {
 
     const id = req.session.user.id;
     const profiles = await getProfile(id);
     res.render('dashboard', { userData: profiles.data[0] });
 });
 
-app.get('/loans/page', async(req, res)=>{
+app.get('/loans/page', async (req, res) => {
     res.render('loans');
 })
+
+app.get('/hustlers/group/register', async (req, res) => {
+    res.render('group-register')
+});
+
+async function registerGroup(userData) {
+    try {
+        let res = await query(`/items/groups/`, {
+            method: 'POST',
+            body: JSON.stringify(userData) // Send user data in the request body
+        });
+        return await res.json(); // Return parsed JSON response
+    } catch (error) {
+        console.error('Error registering user:', error);
+        throw error; // Rethrow error for handling in the calling function
+    }
+}
+
+// Route handler for POST /register
+app.post('/register-group', async (req, res) => {
+    try {
+        const { groupName, leaderName, email, phone, password } = req.body;
+
+        // console.log(req.body);
+
+        // Validate required fields
+        if (!groupName || !leaderName || !email || !phone || !password) {
+            return res.status(400).json({ error: 'Please fill in all fields' });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Construct user data object
+        const userData = {
+            groupname: groupName,
+            leadername: leaderName,
+            email: email,
+            phone: phone,
+            password: hashedPassword
+        };
+
+        // Register the user using the async function
+        const newUser = await registerGroup(userData);
+
+        // Send response indicating success
+        res.status(201).json({ message: 'User registered successfully', user: newUser });
+    } catch (error) {
+        console.error('Error inserting user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/hustlers/group/login', async (req, res) => {
+    res.render('group-login')
+});
+
+async function loginGroup(email) {
+    try {
+        // console.log('Querying Directus for user with email:', email);
+        const response = await query(`/items/groups?filter[email][_eq]=${email}`, {
+            method: 'SEARCH',
+        });
+        const users = await response.json(); // Extract JSON data from the response
+
+        // Check if users array is empty or not
+        if (!users || users.length === 0) {
+            // console.log('No user found with email:', email);
+        }
+
+        return users;
+    } catch (error) {
+        console.error('Error querying user data:', error);
+        throw new Error('Error querying user data');
+    }
+}
+
+// Login route
+app.post('/group-login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Please fill in all fields' });
+        }
+
+        // Fetch user data from Directus
+        const usersResponse = await loginGroup(email);
+
+        // If no user found, return invalid credentials error
+        if (!usersResponse || !usersResponse.data || usersResponse.data.length === 0) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        const user = usersResponse.data[0]; // Extract the first user from the response
+
+        // Compare provided password with the hashed password stored in the user's record
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        // Handle invalid password
+        if (!passwordMatch) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        req.session.user = user;
+        // Respond with success message and redirect URL for verified users
+        return res.status(200).json({ message: 'Login successful', redirect: '/hustlers/group/home' });
+    } catch (error) {
+        // Handle internal server error
+        console.error('Error logging in user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+async function getGroupProfile(userId) {
+    try {
+        const res = await query(`/items/groups?filter[id][_eq]=${userId}`, {
+            method: 'GET',
+        });
+        return await res.json();
+    } catch (error) {
+        console.error('Error fetching referrals:', error);
+        throw new Error('Error fetching referrals');
+    }
+}
+
+app.get('/hustlers/group/home', async (req, res) => {
+    const id = req.session.user.id;
+    const groupId = req.session.user.groupname;
+ 
+    const group = await getGroupProfile(id);
+    const members = await getGroupMembers(groupId)
+    // console.log("Members found",members.data);
+
+    res.render('group-home', { group: group.data[0], members: members.data });
+});
+
+async function updateGroups(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/groups/${userData.id}`, {
+            method: 'PATCH', // Assuming you want to update an existing item
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/update-group', async (req, res) => {
+    try {
+        const { group, name, phone, leader } = req.body;
+        const id = req.session.user.id;
+
+        const userData = {
+            id: id, 
+            groupname: name,
+            phone: phone,
+            leadername: leader
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await updateGroups(userData);
+
+        res.status(201).json({ message: 'Post updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update post. Please try again.' });
+    }
+});
+
+async function registerMember(userData) {
+    try {
+        let res = await query(`/items/group_members/`, {
+            method: 'POST',
+            body: JSON.stringify(userData) // Send user data in the request body
+        });
+        return await res.json(); // Return parsed JSON response
+    } catch (error) {
+        console.error('Error registering user:', error);
+        throw error; // Rethrow error for handling in the calling function
+    }
+}
+
+app.post('/submit-member', upload.single('memberImage'), async (req, res) => {
+    try {
+        const { name, email, phone, group } = req.body;
+        
+        console.log(req.body)
+    
+        // Ensure that req.file contains the expected file information
+        if (!req.file || !req.file.path) {
+            return res.status(400).json({ message: 'No picture uploaded' });
+        }
+
+        // Use req.file.path or other relevant property to get the file path
+        const picturePath = req.file.path;
+
+        // Construct userData object with post information and picture path
+        const userData = {
+            pic: picturePath,
+            name: name,
+            phone: phone,
+            email: email,
+            group: group,
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await registerMember(userData);
+
+        res.status(201).json({ message: 'Registered successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update post. Please try again.' });
+    }
+});
+
+async function getGroupMembers(groupId) {
+    try {
+        const res = await query(`/items/group_members?filter[group][_eq]=${groupId}`, {
+            method: 'GET',
+        });
+        return await res.json();
+    } catch (error) {
+        console.error('Error fetching referrals:', error);
+        throw new Error('Error fetching referrals');
+    }
+}
 
 app.listen(port, () => {
     console.log(`Hustlerati listening on port ${port}`);

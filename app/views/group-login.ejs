@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="styles/index.css">
-    <link rel="stylesheet" href="styles/small-devices.css">
-    <link rel="icon" href="./res/logo1.png" type="image/x-icon">
+    <link rel="stylesheet" href="/styles/index.css">
+    <link rel="stylesheet" href="/styles/small-devices.css">
+    <link rel="icon" href="/res/logo1.png" type="image/x-icon">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
@@ -40,7 +40,7 @@
                     </span>
                 </div>
                 <button class="button-5" role="button" id="login-btn">Login</button>
-                <h4>Don't have an account <a href="index.html">Register</a></h4>
+                <h4>Don't have an account <a href="/hustlers/group/register">Register</a></h4>
             </form>
             <div class="stuff">
                 <a href="/terms&conditions">Terms Of Service</a>
@@ -76,7 +76,7 @@
                     };
 
                     try {
-                        const response = await fetch('/login', {
+                        const response = await fetch('/group-login', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -87,10 +87,10 @@
                         const result = await response.json();
 
                         if (result.message === 'Login successful') {
-                            alert('Login successful!');
+                            window.confirm('Login successful!');
                             window.location.href = result.redirect;
                         } else {
-                            alert('Login failed. Check your credentials.');
+                            window.confirm('Login failed. Check your credentials.');
                         }
                     } catch (error) {
                         console.error('Error during login:', error);

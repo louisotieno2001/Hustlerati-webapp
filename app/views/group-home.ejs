@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= group.groupname %>
+    </title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #5d4037;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .preview {
+            height: 200px;
+            width: 200px;
+            display: none;
+            margin: 0 auto;
+            border-radius: 8px;
+            z-index: 1000;
+            border: #36211b 1px;
+            border-radius: 5px;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .top-menu {
+            background-color: #4b281d;
+            color: #fff;
+            padding: 0px 10px;
+            display: flex;
+            justify-content: space-between;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            top: 0;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .sub-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #4b281d;
+            width: 100%;
+            padding: 10px;
+            border-radius: 0 0 8px 8px;
+            z-index: 1000;
+        }
+
+        .sub-menu a {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            margin: 15px;
+        }
+
+        #close-menu {
+            display: none;
+            padding-right: 1em;
+            padding-top: .8em;
+            cursor: pointer;
+        }
+
+        #open-menu {
+            padding-right: 1em;
+            padding-top: .8em;
+            cursor: pointer;
+        }
+
+
+        .display {
+            height: 100vh;
+            margin: 0 auto;
+            padding: 20px;
+            color: aliceblue;
+            background-color: #5d4037;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            margin-top: 60px;
+        }
+
+        .tablinks {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 10px 15px;
+            position: relative;
+            color: #fff;
+            transition: color 0.3s;
+            font-weight: bold;
+        }
+
+        .tablinks.active {
+            color: yellow;
+            /* color: aliceblue; */
+            background-color: #5f382d;
+            border-radius: 8px;
+            transition: background-color 1s;
+        }
+
+        .bottom-tabs {
+            display: none;
+        }
+
+        .tabcontent {
+            background-color: #5f382d;
+            border-radius: 8px;
+            padding: .5em;
+            height: max-content;
+        }
+
+        .edit {
+            left: 60px;
+            background-color: #F09819;
+            border-radius: 5px;
+            display: flex;
+            border: none;
+            color: #fff;
+            padding: .3em;
+            font-size: large;
+            justify-content: center;
+            align-items: center;
+            box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+            cursor: pointer;
+        }
+
+        .card {
+            background-color: #704639;
+            border: 1px solid #704639;
+            border-radius: 8px;
+            padding: 8px;
+            width: 95%;
+            margin-bottom: 16px;
+        }
+
+        .add {
+            left: 60px;
+            background-color: #F09819;
+            border-radius: 5px;
+            display: flex;
+            border: none;
+            color: #fff;
+            padding: .3em;
+            font-size: large;
+            justify-content: center;
+            align-items: center;
+            box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+            cursor: pointer;
+            margin-bottom: 60px;
+        }
+
+        .close-add {
+            left: 60px;
+            background-color: #F09819;
+            border-radius: 5px;
+            display: flex;
+            border: none;
+            color: #fff;
+            padding: .3em;
+            font-size: large;
+            justify-content: center;
+            align-items: center;
+            box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+            cursor: pointer;
+        }
+
+        .submit-member {
+            left: 60px;
+            background-color: #F09819;
+            border-radius: 5px;
+            display: flex;
+            border: none;
+            color: #fff;
+            padding: .3em;
+            font-size: large;
+            justify-content: center;
+            align-items: center;
+            box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+            cursor: pointer;
+        }
+
+        dialog {
+            background-color: #5f382d;
+            border: none;
+            border-radius: 8px;
+            color: aliceblue;
+            padding: 15px;
+        }
+
+
+        input,
+        textarea {
+            background-color: #5e463f;
+            padding: 1em;
+            border-radius: 5px;
+            border: none;
+            width: 100%;
+            color: white;
+            outline: none;
+            margin: 1em;
+            width: 95%;
+        }
+
+        textarea:focus {
+            border: none;
+        }
+
+        input:focus {
+            border: none;
+        }
+
+        .divider{
+            height: 2px;
+            width: 100%;
+            background-color: #F09819;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+
+        /* Media query for small screens */
+        @media screen and (max-width: 600px) {
+            .tabs {
+                display: none;
+            }
+
+            .display {
+                height: 100vh;
+                margin: 0 auto;
+                padding: 4px;
+                margin-top: 30px;
+                color: aliceblue;
+                background-color: #5d4037;
+            }
+
+            .sub-items {
+                position: static;
+                display: none;
+            }
+
+            input,
+            textarea {
+                background-color: #5e463f;
+                padding: 1em;
+                border-radius: 5px;
+                border: none;
+                width: 100%;
+                color: white;
+                outline: none;
+                margin: 1em;
+                width: 85%;
+            }
+
+            textarea:focus {
+                border: none;
+            }
+
+            input:focus {
+                border: none;
+            }
+
+            .bottom-tabs {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #4b281d;
+                display: flex;
+                justify-content: space-evenly;
+                padding: .2em;
+                box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+
+            .bottom-tab {
+                background-color: transparent;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                font-size: 18px;
+                padding: 10px 15px;
+                position: relative;
+                color: #fff;
+                transition: color 0.3s;
+            }
+
+            .bottom-tab.active {
+                font-weight: bold;
+                color: aliceblue;
+            }
+
+
+            .bottom-tab.active .underline {
+                width: 100%;
+            }
+
+            .underline {
+                height: 3px;
+                border-radius: 8px;
+                background-color: yellow;
+                position: absolute;
+                bottom: 2px;
+                left: 0;
+                transition: left 0.3s, width 0.3s;
+            }
+
+            .tabcontent {
+                background-color: #5f382d;
+                border-radius: 8px;
+                padding: .5em;
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-menu" id="top-menu">
+        <img src="/res/logo1.png" alt="Logo Image" srcset="" style="height: 60px; width: 60px;">
+        <span class="material-symbols-outlined" id="open-menu">menu</span>
+        <span class="material-symbols-outlined" id="close-menu">close</span>
+        <div class="sub-menu" id="sub-menu">
+            <a href="/" class="menu-link" title="Dashboard">Go
+                back to Hustlerati</a>
+            <a href="/hustlers/group/register" class="menu-link" title="Marketplace">Log out</a>
+            <a href="" id="terms">Terms of service</a>
+        </div>
+    </div>
+    <div class="display">
+        <div class="tabs">
+            <!-- Main tabs for large screens and top for small screens -->
+            <button class="tablinks active" onclick="openTab(event, 'group')">Group</button>
+            <button class="tablinks" onclick="openTab(event, 'business')">Business</button>
+            <button class="tablinks" onclick="openTab(event, 'loans')">Loans</button>
+            <div class="underline"></div>
+        </div>
+        <!-- Tab contents -->
+        <div id="group" class="tabcontent">
+            <h1>Group details</h1>
+            <h3>Name: <%= group.groupname %>
+            </h3>
+            <h3>Leader: <%= group.leadername %>
+            </h3>
+            <h3>Phone: <%= group.phone %>
+            </h3>
+            <h3>Email: <%= group.email %>
+            </h3>
+            <button class="edit" id="edit" data-group="<%= group.groupname %>">Edit group details</button>
+            <div class="divider"></div>
+            <h1>Group members</h1>
+            <div class="members-list">
+                <% members.forEach(member => { %>
+                    <% if (member.pic !== null) { %>
+                        <div class="card" id="card">
+                            <img src="/uploads/<%= member.pic %>" alt="Post Image" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                            <div class="text"> 
+                                <h1><%= member.name %></h1>
+                                <p><%= member.phone %></p>
+                                <p><%= member.email %></p>
+                            </div>
+                        </div>
+                    <% } %>
+                <% }); %>
+            </div>
+            <button class="add" id="add" data-group="<%= group.groupname %>">+ Add member</button>
+        </div>
+        <div id="business" class="tabcontent" style="display: none;">
+            <!-- Content for Business tab -->
+            <h2>Hustle Details</h2>
+
+        </div>
+        <div id="loans" class="tabcontent" style="display: none;">
+            <!-- Content for Loans tab -->
+            <h2>Group loans</h2>
+
+        </div>
+        <!-- Bottom tabs for small screens -->
+        <div class="bottom-tabs">
+            <div class="bottom-tab" onclick="openTab(event, 'business')">
+                <span class="material-symbols-outlined">storefront</span>
+                <span class="underline"></span>
+            </div>
+            <div class="bottom-tab active" onclick="openTab(event, 'group')">
+                <span class="material-symbols-outlined">partner_exchange</span>
+                <span class="underline"></span>
+            </div>
+            <div class="bottom-tab" onclick="openTab(event, 'loans')">
+                <span class="material-symbols-outlined">credit_score</span>
+                <span class="underline"></span>
+            </div>
+        </div>
+        <dialog class="add-member" id="add-member">
+            <h1>Fill in the details below</h1>
+            <p>Note: Take a picture of your member holding his national/school/highschool ID alongside a paper with the
+                current date</p>
+            <div class="member-image" id="member-image">
+                <button class="submit-member">Take picture</button>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" capture style="display:none;" name="picture"
+                enctype="multipart/form-data">
+            <div class="preview" id="preview">
+            </div>
+            <input type="hidden" name="groupId" id="groupId">
+            <input type="text" name="membe-name" id="member-name" placeholder="Name"><br>
+            <input type="tel" name="membe-phone" id="member-phone" placeholder="Phone"><br>
+            <input type="text" name="membe-email" id="member-email" placeholder="Email"><br>
+            <div class="buttons">
+                <button class="submit-member" id="submit-member"> Submit</button>
+                <button class="close-add" id="close-add">Close</button>
+            </div>
+        </dialog>
+        <dialog class="edit-group" id="edit-group">
+            <h1>Fill in the details below</h1>
+            <p>The details below are the only details that are allowed to be modified. Can be modified as many times as
+                the group rebrands or changes</p>
+            <input type="hidden" name="group" id="group">
+            <input type="text" id="group-name" placeholder="Group name"><br>
+            <input type="tel" id="group-phone" placeholder="Group phone"><br>
+            <input type="text" id="group-leader" placeholder="Group leader name"><br>
+            <div class="buttons">
+                <button class="submit-member" id="submit-edit">Submit</button>
+                <button class="submit-member" id="close-edit">Close</button>
+            </div>
+        </dialog>
+    </div>
+    <script>
+        // JavaScript to handle tab switching and underlining
+        document.addEventListener("DOMContentLoaded", function () {
+            const closeMenu = document.getElementById('close-menu');
+            const openMenu = document.getElementById('open-menu');
+            const subMenu = document.getElementById('sub-menu');
+            const addDialog = document.getElementById('add-member');
+            const closeAddDialog = document.getElementById('close-add');
+            const submitMember = document.getElementById('submit-member');
+            const addButton = document.getElementById('add');
+            const memberImage = document.getElementById('member-image');
+            const fileInput = document.getElementById('fileInput');
+            const previewDiv = document.getElementById('preview');
+            const editDialog = document.getElementById('edit-group');
+            const closeEditDialog = document.getElementById('close-edit');
+            const submitEdit = document.getElementById('submit-edit');
+            const editButton = document.getElementById('edit');
+            const groupName = document.getElementById('group');
+            const groupId = document.getElementById('groupId');
+
+            addButton.addEventListener('click', async (e) => {
+                addDialog.showModal();
+                const group = addButton.getAttribute('data-group');
+                console.log(group);
+                groupId.value = group;
+            });
+
+            editButton.addEventListener('click', async (e) => {
+                editDialog.showModal();
+                const group = editButton.getAttribute('data-group');
+                console.log(group);
+                groupName.value = group;
+            });
+
+            submitEdit.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const group = document.getElementById('group').value.trim();
+                const name = document.getElementById('group-name').value.trim();
+                const phone = document.getElementById('group-phone').value.trim();
+                const leader = document.getElementById('group-leader').value.trim();
+
+                if (!group || !name ||!phone ||!leader) {
+                    alert('All fields are requiered')
+                }
+
+                const data = {
+                    group,
+                    name,
+                    phone,
+                    leader
+                }
+
+                console.log(data);
+
+                try {
+                    // Send post data to server
+                    const response = await fetch('/update-group', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data),
+                        });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert("Group data updated");
+                        // Clear selected file data
+                        selectedFileData = null;
+                        editDialog.close();
+                        window.location.href = "/hustlers/group/home"
+                    } else {
+                        alert("Post update failed. Please try again.");
+                    }
+                } catch (error) {
+                    console.error("Error during post update:", error);
+                    alert("An error occurred. Please try again later.");
+                }
+            })
+
+            closeAddDialog.addEventListener('click', async (e) => {
+                e.preventDefault();
+                addDialog.close();
+            });
+
+            closeEditDialog.addEventListener('click', async (e) => {
+                e.preventDefault();
+                editDialog.close();
+            });
+
+            openMenu.addEventListener('click', async (e) => {
+                openMenu.style.display = 'none';
+                closeMenu.style.display = 'block';
+                subMenu.style.display = 'block'; // Show submenu
+            });
+
+            closeMenu.addEventListener('click', async (e) => {
+                closeMenu.style.display = 'none';
+                openMenu.style.display = 'block';
+                subMenu.style.display = 'none'; // Hide submenu
+            });
+            // Show initial content (Group tab) and underline
+            document.getElementById('group').style.display = 'block';
+            updateUnderline();
+
+            memberImage.addEventListener("click", async (e) => {
+                e.preventDefault();
+                fileInput.click();
+                previewDiv.style.display = 'block'; // Display the preview div
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const selectedFile = e.target.files[0];
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        // Set the background image of the profilePic element
+                        previewDiv.style.backgroundImage = `url('${event.target.result}')`;
+                    };
+                    reader.readAsDataURL(selectedFile);
+                }
+            });
+
+            submitMember.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('member-name').value.trim();
+                const email = document.getElementById('member-email').value.trim();
+                const phone = document.getElementById('member-phone').value.trim();
+                const group = document.getElementById('groupId').value.trim();
+
+                if(!name || !email || !phone || !group){
+                  alert("All fields are required");
+                }
+
+                const selectedFile = fileInput.files[0];
+                if (selectedFile) {
+                    const formData = new FormData();
+                    formData.append('memberImage', selectedFile);
+                    formData.append('name', name);
+                    formData.append('email', email);
+                    formData.append('phone', phone);
+                    formData.append('group', group);
+                    console.log(formData);
+
+                    try {
+                        const response = await fetch('/submit-member', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            alert('Member added successfully')
+                            window.location.href = "/hustlers/group/home"
+                        } else {
+                            console.error('Failed to upload image');
+                        }
+                    } catch (error) {
+                        console.error('Error uploading image:', error);
+                    }
+                } else {
+                    console.error('No file selected');
+                }
+            });
+        });
+
+        function updateUnderline() {
+            var activeTab = document.querySelector('.tablinks.active');
+            var activeTab = document.querySelector('.bottom-tab.active');
+            var underline = document.querySelector('.underline');
+            underline.style.left = activeTab.offsetLeft + "px";
+            underline.style.width = activeTab.offsetWidth + "px";
+        }
+
+        function openTab(event, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Hide all tab content
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Deactivate all tab links
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+
+            // Show the selected tab content
+            document.getElementById(tabName).style.display = "block";
+
+            // Add an "active" class to the button that opened the tab
+            event.currentTarget.classList.add("active");
+
+            // Move the underline to the active tab
+            updateUnderline();
+
+            // Update bottom tab active state and underline
+            updateBottomTabs(tabName);
+        }
+
+        function updateBottomTabs(tabName) {
+            var bottomTabs = document.querySelectorAll('.bottom-tab');
+            for (var i = 0; i < bottomTabs.length; i++) {
+                var tab = bottomTabs[i];
+                var tabText = tab.querySelector('span.material-symbols-outlined');
+                var tabUnderline = tab.querySelector('.underline');
+
+                if (tab.getAttribute('onclick').includes(tabName)) {
+                    tab.classList.add('active');
+                    tabUnderline.style.width = '100%'; // Ensure full width underline for active tab
+                } else {
+                    tab.classList.remove('active');
+                    tabUnderline.style.width = '0'; // Hide underline for inactive tabs
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
