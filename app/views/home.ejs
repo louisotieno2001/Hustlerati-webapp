@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/styles/index.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,8 +35,22 @@
             background-color: #F09819;
         }
 
+        .menu-icon{
+            color: #fff;
+        }
+
         #dashboard img {
             margin-left: 190px;
+        }
+
+        .poster-details{
+            display: flex;
+            justify-content: start;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            opacity: 90%;
+            margin-top: 15px;
         }
 
         #news-card img {
@@ -137,8 +152,6 @@
         }
 
         .card {
-            display: flex;
-            flex-direction: row;
             background-color: #704639;
             border: 1px solid #704639;
             border-radius: 8px;
@@ -147,9 +160,14 @@
             margin-bottom: 16px;
         }
 
+        .post-data{
+            display: flex;
+            flex-direction: row;
+        }
+
         .card img {
-            max-width: 400px;
-            max-height: 400px;
+            max-width: 200px;
+            max-height: 200px;
             width: 100%;
             border-radius: 8px;
             margin-bottom: 8px;
@@ -166,6 +184,9 @@
 
         .text{
             margin: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         #content{
@@ -197,6 +218,20 @@
             cursor: pointer;
         }
 
+        .comment{
+            display: flex;
+            flex-direction: row;
+            background-color: #36211b;
+            width: 480px;
+            border-radius: 5px;
+            margin: 8px;
+            padding: .5em;
+            background-color: #4e342e;
+            display: flex;
+            align-items: center;
+            opacity: 90%;
+        }
+
         .add .material-symbols-outlined {
             font-size: 24px;
             line-height: 1;
@@ -218,7 +253,6 @@
             width: 100%;
             color: white;
             outline: none;
-            /* Add this line */
         }
 
         textarea:focus {
@@ -264,7 +298,8 @@
 
         .search-bar{
            width: 940px;
-          border-radius: 40px;
+           border-radius: 5px;
+           background-color: #36211b;
         }
         @media (max-width: 1068px) {
 
@@ -297,6 +332,7 @@
                 width: 100%;
                 background-color: #4e342e;
                 display: none;
+                z-index: 3000;
             }
 
             .input-div {
@@ -314,6 +350,21 @@
                 margin-left: -1px;
                 align-self: center;
             }
+
+            .comment{
+                display: flex;
+                flex-direction: row;
+                background-color: #36211b;
+                width: 300px;
+                border-radius: 5px;
+                margin-right: 8px;
+                padding: .2em;
+                background-color: #4e342e;
+                display: flex;
+                align-items: center;
+                opacity: 90%;
+            }
+
 
             #edit-profile-dialog {
                 background-color: #36211b;
@@ -400,8 +451,35 @@
             box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
            }
 
+           .card img{
+            max-width: 400px;
+            max-height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 8px;
+           }
+
            .push{
             margin-top: 180px;
+           }
+
+           .post-data{
+            display: flex;
+            flex-direction: column;
+           }
+
+           .filter-input{
+               display: flex;
+               flex-direction: row;
+               background-color: #36211b;
+               width: 325px;
+               border-radius: 5px;
+               margin: 8px;
+               margin-left: -18px;
+               padding: .5em;
+               background-color: #4e342e;
+               align-items: center;
+               opacity: 90%;
            }
         }
     </style>
@@ -426,7 +504,7 @@
                 <a href="#investing" class="menu-link" title="Investor Insights"><span
                         class="material-symbols-outlined">monitoring</span>Investor Insights</a>
                 <a href="#news" class="menu-link" title="News feed"><span
-                        class="material-symbols-outlined">newspaper</span>News Feed</a>
+                        class="material-symbols-outlined">newspaper</span>Hustlerati Feed</a>
                 <a href="#profile" class="menu-link" title="Profile"><span
                         class="material-symbols-outlined">account_circle</span>Profile</a>
                 <a href="/loans/page" class="loans" title="Loans"> <span class="material-symbols-outlined">
@@ -454,6 +532,12 @@
             </div>
             <div class="display push" id="shop">
                 <h1>Hustle Hub</h1>
+                <div class="filter-input">
+                    <span class="material-symbols-outlined" title="Filter">
+                        tune
+                        </span>
+                    <input type="text" id="filter-theme" class="filter-theme" placeholder="Filter by category">
+                </div>
                 <div id="ads-container">
                     <% function truncateText(text, maxLength) {
                         if (!text) return ''; // Return empty string if text is null or undefined
@@ -465,10 +549,27 @@
                     <% ads.forEach(ad => { %>
                         <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
                             <div class="card" id="card">
-                                <img src="/uploads/<%= ad.post_image %>" alt="Post Image" style="max-width: 400px; max-height: 400px;">
+                                <div class="post-data">
+                                <img src="/uploads/<%= ad.post_image %>" alt="Post Image">
                                 <div class="text"> 
-                                    <h1><%= ad.post_title %></h1><br>
-                                    <p><%= truncateText(ad.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p><br>
+                                    <strong><p><%= ad.post_title %></p></strong> 
+                                    <p><%= truncateText(ad.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p>
+                                </div>
+                                </div>
+                                <div class="poster-details" >
+                                    <div class="comment">
+                                       <input type="text" placeholder="Leave a comment...">
+                                        <span class="material-symbols-outlined">
+                                            send
+                                            </span>
+                                    </div>
+                                        <span class="material-symbols-outlined">
+                                            favorite
+                                            </span>
+                                            <span id="numbers">0</span>
+                                        <span class="material-symbols-outlined">
+                                            share
+                                            </span>
                                 </div>
                             </div>
                         <% } %>
@@ -493,12 +594,28 @@
                             <% news.forEach(ad => { %>
                                 <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
                                     <div class="card">
-                                        <img src="/uploads/<%= ad.post_image %>" alt="Post Image" style="max-width: 400px; max-height: 400px;">
+                                        <div class="post-data">
+                                        <img src="/uploads/<%= ad.post_image %>" alt="Post Image">
                                         <div class="text"> 
-                                            <h1><%= ad.post_title %></h1><br>
-                                            <p><%= truncateText(ad.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p><br>
+                                            <h1><%= ad.post_title %></h1>
+                                            <p><%= truncateText(ad.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p>
                                         </div>
-                                        <div class="poster-details"></div>
+                                        </div>
+                                        <div class="poster-details" >
+                                            <div class="comment">
+                                               <input type="text" placeholder="Leave a comment...">
+                                                <span class="material-symbols-outlined">
+                                                    send
+                                                    </span>
+                                            </div>
+                                                <span class="material-symbols-outlined">
+                                                    favorite
+                                                    </span>
+                                                    <span id="numbers">0</span>
+                                                <span class="material-symbols-outlined">
+                                                    share
+                                                    </span>
+                                        </div>
                                     </div>
                                 <% } %>
                             <% }); %>

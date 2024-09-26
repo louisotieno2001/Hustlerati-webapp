@@ -109,14 +109,25 @@ const checkSession = (req, res, next) => {
     }
 };
 
-async function getTerms(id) {
-    return query(`/items/terms/${id}`, {
-        method: 'GET',
-    })
+async function getTerms() {
+    try {
+        const response = await query('/items/terms', {
+            method: 'GET'
+        });
+        if (response.ok) {
+            const usersData = await response.json();
+            return usersData;
+        } else {
+            throw new Error('Failed to fetch users data');
+        }
+    } catch (error) {
+        console.error('Error fetching users data:', error);
+        throw error; // You can handle the error in the calling code
+    }
 }
 
-async function getPrivacy(id) {
-    return query(`/items/privacy/${id}`, {
+async function getPrivacy() {
+    return query(`/items/privacy`, {
         method: 'GET',
     })
 }
@@ -401,9 +412,9 @@ async function getProfile(userId) {
 
 app.get('/terms&conditions', async (req, res) => {
     try {
-        const terms = await getTerms(1);
-        // console.log(terms);
-        res.render('terms&conditions', { terms });
+        const terms = await getTerms();
+        console.log("Terms", terms.data[0]);
+        res.render('terms&conditions', { terms:terms.data[0] });
     } catch (error) {
         console.error('Error fetching terms and conditions:', error);
         res.status(500).json({ error: 'Internal Server Error' });
