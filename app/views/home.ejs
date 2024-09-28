@@ -467,20 +467,6 @@
             display: flex;
             flex-direction: column;
            }
-
-           .filter-input{
-               display: flex;
-               flex-direction: row;
-               background-color: #36211b;
-               width: 325px;
-               border-radius: 5px;
-               margin: 8px;
-               margin-left: -18px;
-               padding: .5em;
-               background-color: #4e342e;
-               align-items: center;
-               opacity: 90%;
-           }
         }
     </style>
 </head>
@@ -514,7 +500,7 @@
             </div>
         </div>
         <div class="middle-tab" id="middle-tab">
-            <div class="display active-tab" id="dashboard">
+            <div class="display" id="dashboard">
                 <img src="/res/logo1.png" alt="" srcset="" style="height: 160px; width: 160px; " id="home-logo" />
                 <h1>Welcome to Hustlerati business Suite</h1>
                 <% if (userData && userData.business_name) { %>
@@ -530,13 +516,11 @@
                         <% } %>
 
             </div>
-            <div class="display push" id="shop">
+            <div class="display push active-tab" id="shop">
                 <h1>Hustle Hub</h1>
-                <div class="filter-input">
-                    <span class="material-symbols-outlined" title="Filter">
-                        tune
-                        </span>
-                    <input type="text" id="filter-theme" class="filter-theme" placeholder="Filter by category">
+                <div class="theme-list" id="theme-list">
+                    <ul>
+                    </ul>
                 </div>
                 <div id="ads-container">
                     <% function truncateText(text, maxLength) {
@@ -550,6 +534,13 @@
                         <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
                             <div class="card" id="card">
                                 <div class="post-data">
+                                   
+                                <div class="more-items" id="more-items">
+                                    <p>See more</p>
+                                    <span class="material-symbols-outlined">
+                                        arrow_circle_right
+                                        </span>
+                                </div>
                                 <img src="/uploads/<%= ad.post_image %>" alt="Post Image">
                                 <div class="text"> 
                                     <strong><p><%= ad.post_title %></p></strong> 
@@ -762,6 +753,18 @@
             const exitBtn = document.getElementById('exit');
             const exitPost = document.getElementById('exit-post');
             const fileInput = document.getElementById('fileInput');
+            // Filtering themes for catgories
+            const filterInput = document.getElementById('filter-theme');
+            const themeList = document.getElementById('theme-list');
+            const filter = document.getElementById('filter');
+            const moreItems = document.getElementsByClassName('more-items');
+
+            for (let i = 0; i < moreItems.length; i++) {
+                moreItems[i].addEventListener('click', (e) => {
+                    e.preventDefault();
+                    window.location.href = "/marketplace";
+                });
+            }
 
             exitPost.addEventListener('click', async(e)=>{
                 e.preventDefault();

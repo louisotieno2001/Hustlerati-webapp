@@ -49,7 +49,6 @@ app.get('/clear-cache', async (req, res) => {
     }
 });
 
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
@@ -245,7 +244,7 @@ async function updatePosts(userData) {
     try {
         // Use your custom query function to send the update query
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', // Assuming you want to update an existing item
+            method: 'PATCH', 
             body: JSON.stringify(userData) // Convert userData to JSON string
         });
         const updatedData = await res.json();
@@ -271,7 +270,7 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
 
         // Construct userData object with post information and picture path
         const userData = {
-            id: id, // Assuming req.user contains user information
+            id: id, 
             post_image: picturePath,
             post_title: title,
             post_body: body,
@@ -286,6 +285,58 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
     } catch (error) {
         console.error('Error updating post:', error);
         res.status(500).json({ message: 'Failed to update post. Please try again.' });
+    }
+});
+
+async function updateShelf(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/shelf/`, {
+            method: 'POST', 
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/update-shelf', upload.single('image'), async (req, res) => {
+    try {
+        const { name, quantity, price, condition, availability, description } = req.body;
+        const id = req.session.user.id;
+
+        // Ensure that req.file contains the expected file information
+        if (!req.file || !req.file.path) {
+            return res.status(400).json({ message: 'No picture uploaded' });
+        }
+
+        // Use req.file.path or other relevant property to get the file path
+        const picturePath = req.file.path;
+
+        // Construct userData object with post information and picture path
+        const userData = {
+            id: id, // Assuming req.user contains user information
+            post_image: picturePath,
+            item_name: name,
+            item_quantity: quantity,
+            item_price: price,
+            item_condition: condition,
+            item_availability: availability,
+            item_description: description
+        };
+
+        console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await updateShelf(userData);
+
+        res.status(201).json({ message: 'Shelf updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating shelf:', error);
+        res.status(500).json({ message: 'Failed to update shelf. Please try again.' });
     }
 });
 
@@ -850,6 +901,10 @@ async function getGroupMembers(groupId) {
         throw new Error('Error fetching referrals');
     }
 }
+
+app.get('/marketplace', async (req, res) => {
+ res.render('marketplace');
+});
 
 app.listen(port, () => {
     console.log(`Hustlerati listening on port ${port}`);

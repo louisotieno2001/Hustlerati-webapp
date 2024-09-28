@@ -4,6 +4,8 @@
         margin: 0;
         padding: 0;
         height: 100vh;
+        background: #4e342e;
+        font-family: sans-serif;
     }
 
     .input-div {

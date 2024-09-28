@@ -4,6 +4,7 @@ body {
   font-family: sans-serif;
   background: #4e342e;
   color: aliceblue;
+  height: 100vh;
 }
 
 #pass-visibility {
@@ -415,6 +416,11 @@ input::focus {
 }
 
 /* Filter input */
+.filter-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
 
 .filter-input{
   display: flex;
@@ -423,7 +429,6 @@ input::focus {
   width: 950px;
   border-radius: 5px;
   margin: 8px;
-  margin-left: -1px;
   padding: .5em;
   background-color: #4e342e;
   display: flex;
@@ -431,7 +436,42 @@ input::focus {
   opacity: 90%;
 }
 
+.filter-input input{
+  width: 940px;
+}
+
 .filter-input .material-symbols-outlined{
   cursor: pointer;
 }
 
+.card {
+  position: relative; 
+  display: inline-block; 
+}
+
+.card .material-symbols-outlined{
+  cursor: pointer;
+}
+
+.more-items {
+  position: absolute; 
+  top: 10px; 
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.7); 
+  padding: 5px 10px; 
+  border-radius: 5px; 
+  z-index: 10; 
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.more-items p {
+  margin: 0; 
+  color: rgb(46, 45, 45);
+}
+
+.more-items .material-symbols-outlined {
+  margin-left: 5px; 
+  color: rgb(46, 45, 45);
+}
