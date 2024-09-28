@@ -290,13 +290,12 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
 
 async function updateShelf(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/shelf/`, {
-            method: 'POST', 
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            method: 'POST',
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
-        return updatedData; // Return updated data
+        return updatedData; 
     } catch (error) {
         console.error('Error:', error);
         throw new Error('Failed to update');
@@ -307,6 +306,10 @@ app.post('/update-shelf', upload.single('image'), async (req, res) => {
     try {
         const { name, quantity, price, condition, availability, description } = req.body;
         const id = req.session.user.id;
+        const business_niche = req.session.user.business_niche;
+        const business_name = req.session.user.business_name;
+        const user_firstname = req.session.user.firstname;
+        const user_lastname = req.session.user.lastname;
 
         // Ensure that req.file contains the expected file information
         if (!req.file || !req.file.path) {
@@ -318,8 +321,12 @@ app.post('/update-shelf', upload.single('image'), async (req, res) => {
 
         // Construct userData object with post information and picture path
         const userData = {
-            id: id, // Assuming req.user contains user information
-            post_image: picturePath,
+            user_id:id,
+            user_firstname: user_firstname,
+            user_secondname: user_lastname,
+            business_niche: business_niche,
+            business_name: business_name,
+            item_image: picturePath,
             item_name: name,
             item_quantity: quantity,
             item_price: price,
@@ -328,7 +335,7 @@ app.post('/update-shelf', upload.single('image'), async (req, res) => {
             item_description: description
         };
 
-        console.log(userData);
+        // console.log(userData);
 
         // Update user data with the new post data
         const updatedData = await updateShelf(userData);

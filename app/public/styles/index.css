@@ -339,6 +339,7 @@ input::focus {
   align-items: center;
   padding-top: 2px;
   transition: width 10s, background-color 10s;
+  margin-top: 50px;
 }
 
 #investing {
@@ -358,6 +359,7 @@ input::focus {
   width: 100%;
   padding-top: 2px;
   transition: width 10s, background-color 10s;
+  margin-top: 50px;
 }
 
 #profile {
