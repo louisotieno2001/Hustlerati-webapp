@@ -11,9 +11,9 @@
     .input-div {
         width: 280px;
         margin: 10px;
-        border-radius: 15px;
-        padding: .5em;
-        background-color: #4e342e;
+        border-radius: 2px;
+        /* background-color: #4e342e; */
+          background: #3e2723;
         display: flex;
         align-items: center;
         opacity: 90%;
@@ -24,17 +24,20 @@
         cursor: pointer;
     }
 
+    .massive-logo{
+        display: none;
+    }
+
     .login-form {
         display: flex;
         align-items: center;
+        justify-content: center;
         flex-direction: column;
         text-align: center;
         margin-top: 10px;
-        width: 290px;
+        width: 90%;
         height: max-content;
-        border: 2px solid transparent;
         border-radius: 8px;
-        margin-left: -15px;
         padding: 1em;
     }
 
@@ -106,6 +109,10 @@
         width: 100%;
         padding-top: 2px;
         transition: width 10s, background-color 10s;
+    }
+
+    #shop{
+        margin-top: 150px;
     }
 
 }

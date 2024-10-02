@@ -562,7 +562,7 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        console.log('My request', req.body)
+        // console.log('My request', req.body)
 
         if (!email || !password) {
             return res.status(400).json({ error: 'Please fill in all fields' });
