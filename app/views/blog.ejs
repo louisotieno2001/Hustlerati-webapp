@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link rel="icon" href="/images/logo1.png" type="image/x-icon">
+    <link rel="stylesheet" href="/styles/readBlog.css">
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+<body>
+    <div class="top-menu" id="top-menu">
+        <img src="/images/logo1.png" alt="Logo Image" srcset="" style="height: 60px; width: 60px;">
+        <span class="material-symbols-outlined" id="open-menu">menu</span>
+        <span class="material-symbols-outlined" id="close-menu">close</span>
+        <div class="sub-menu" id="sub-menu">
+            <div class="link-item">
+                <span class="material-symbols-outlined">grid_view</span>
+                <a href="/home" class="menu-link" title="Dashboard">Dashboard</a>
+            </div>
+            <div class="link-item">
+                <span class="material-symbols-outlined">local_convenience_store</span>
+                <a href="/home" class="menu-link" title="Marketplace">Marketplace</a>
+            </div>
+            <div class="link-item">
+                <span class="material-symbols-outlined">monitoring</span>
+                <a href="/home" class="menu-link" title="Investor Insights">Investor Insights</a>
+            </div>
+            <div class="link-item">
+                <span class="material-symbols-outlined">newspaper</span>
+                <a href="/home" class="menu-link" title="News feed">News Feed</a>
+            </div>
+            <div class="link-item">
+                <span class="material-symbols-outlined">account_circle</span>
+                <a href="/home" class="menu-link" title="Profile">Profile</a>
+            </div>
+            <div class="link-item"><span class="material-symbols-outlined">
+                    gavel
+                </span><a href="" id="terms">Terms of service</a></div>
+        </div>
+    </div>
+    <div class="display">
+        <div class="reader-card">
+            <div class="blog-image" id="blog-image"></div>
+            <div class="blog-title" id="blog-title"></div>
+            <div class="blog-body" id="blog-body"></div>
+        </div>
+        <div class="poster-details">
+            <div class="comment">
+                <input type="text" placeholder="Leave a comment..." id="comment">
+                <span class="material-symbols-outlined" id="sendComment">
+                    send
+                </span>
+            </div>
+            <div class="icons">
+                <span class="material-symbols-outlined" id="like">
+                    favorite
+                </span>
+                <span id="numbers">0</span>
+                <span class="material-symbols-outlined" id="share">
+                    share
+                </span>
+            </div>
+        </div>
+    </div>
+    <script src="/scripts/readBlog.js"></script>
+    </div>
+</body>
+
+</html>

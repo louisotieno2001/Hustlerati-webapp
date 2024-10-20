@@ -5,21 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accounts</title>
-    <link rel="stylesheet" href="/styles/index.css">
-    <link rel="stylesheet" href="/styles/small-devices.css">
-    <link rel="icon" href="/res/logo1.png" type="image/x-icon">
+    <link rel="stylesheet" href="/styles/auth.css">
+    <link rel="icon" href="/images/logo1.png" type="image/x-icon">
+    <link rel="stylesheet" href="/styles/loader.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-
-    </style>
 </head>
 
 <body>
     <div class="login-page">
-        <div class="massive-logo" title="logo-image"></div>
         <div class="login-form">
-            <h1>Account</h1>
+            <h1>Group Account</h1>
             <div class="input-div">
                 <span class="material-symbols-outlined">
                     account_circle
@@ -53,19 +49,43 @@
                     visibility
                 </span>
             </div>
+            <p class="feedback" id="error"></p>
+            <p class="feedback" id="success"></p>
             <button id="registerButton" class="button-5" role="button">Register</button>
             <h4>Already have an account <a href="/hustlers/group/login">Login</a></h4>
-
-            <div class="stuff">
-                <a href="/terms&conditions">Terms Of Service</a>
-                <a href="/privacy">Privacy policy</a>
-            </div>
+        </div>
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+        </div>
+        <div class="stuff">
+            <a href="/terms&conditions">Terms Of Service</a>
+            <a href="/privacy">Privacy policy</a>
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const submitBtn = document.getElementById('registerButton');
                 const toggleVisibility = document.getElementById('pass-visibility');
                 const passField = document.getElementById('password');
+                const loader = document.getElementById('loader');
+                const error = document.getElementById('error');
+                const success = document.getElementById('success');
+
+                async function showLoader() {
+                    loader.style.display = 'flex';
+                }
+
+                // Function to hide the loader
+                async function hideLoader() {
+                    loader.style.display = 'none';
+                }
+
+                async function showError() {
+                    error.style.display = 'block'
+                }
+
+                async function showSuccess() {
+                    success.style.display = 'block'
+                }
 
                 toggleVisibility.addEventListener('click', async (e) => {
                     e.preventDefault();
@@ -74,6 +94,7 @@
 
                 submitBtn.addEventListener("click", async (e) => {
                     e.preventDefault();
+                    showLoader();
                     const groupName = document.getElementById('gname').value;
                     const leaderName = document.getElementById('lname').value;
                     const email = document.getElementById('email').value;
@@ -82,7 +103,9 @@
 
                     // Validate input (you may want to implement more robust validation)
                     if (!groupName || !leaderName || !email || !phone || !password) {
-                        alert("All fields are required.");
+                        hideLoader();
+                        showError();
+                        error.innerText = "All fields are required.";
                         return;
                     }
 
@@ -96,6 +119,7 @@
                     };
                     try {
                         // Send registration data to server
+                        showLoader();
                         const response = await fetch('/register-group', {
                             method: "POST",
                             headers: {
@@ -107,16 +131,21 @@
                         const result = await response.json();
 
                         if (response.ok) {
-                            alert("You have successfully registered on Hustlerati!");
+                            showSuccess();
+                            success.innerText = "You have successfully registered on Hustlerati!";
                             // Redirect to login page 
                             window.location.href = "/hustlers/group/login";
                         } else {
-                            alert("Registration failed. Please try again.");
+                            showError();
+                            error.innerText = "Registration failed. Please try again.";
                             console.log(error);
                         }
                     } catch (error) {
                         console.error("Error during registration:", error);
-                        alert("An error occurred. Please try again later.");
+                        showError();
+                        error.innerText = "An error occurred. Please try again later.";
+                    }finally{
+                        hideLoader();
                     }
                 });
             });

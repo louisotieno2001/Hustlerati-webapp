@@ -12,7 +12,7 @@ const axios = require('axios');
 const session = require('express-session');
 const multer = require('multer');
 const pgSession = require('connect-pg-simple')(session);
-const port = process.env.PORT || 3011;
+const port = process.env.PORT || 3000;
 const saltRounds = 10;
 const { v4: uuidv4 } = require('uuid');
 const { Buffer } = require('buffer');
@@ -24,8 +24,6 @@ const { promisify } = require('util');
 const { fetch } = require('fetch-ponyfill')();
 const fetchAsync = promisify(fetch);
 const redisClient = redis
-
-
 
 // Function to clear Redis cache
 async function clearCache() {
@@ -104,7 +102,7 @@ const checkSession = (req, res, next) => {
     if (req.session.user) {
         next(); // Continue to the next middleware or route
     } else {
-        res.redirect('/login.html'); // Redirect to the login page if no session is found
+        res.redirect('/login'); // Redirect to the login page if no session is found
     }
 };
 
@@ -123,12 +121,6 @@ async function getTerms() {
         console.error('Error fetching users data:', error);
         throw error; // You can handle the error in the calling code
     }
-}
-
-async function getPrivacy() {
-    return query(`/items/privacy`, {
-        method: 'GET',
-    })
 }
 
 async function getAds() {
@@ -153,6 +145,24 @@ async function getNews() {
         const response = await query('/items/news', {
             method: 'GET'
         });
+        if (response.ok) {
+            const usersData = await response.json();
+            return usersData;
+        } else {
+            throw new Error('Failed to fetch users data');
+        }
+    } catch (error) {
+        console.error('Error fetching users data:', error);
+        throw error; // You can handle the error in the calling code
+    }
+}
+
+async function getInvestorsBlog() {
+    try {
+        const response = await query('/items/investors_blog', {
+            method: 'GET'
+        });
+
         if (response.ok) {
             const usersData = await response.json();
             return usersData;
@@ -244,7 +254,7 @@ async function updatePosts(userData) {
     try {
         // Use your custom query function to send the update query
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', 
+            method: 'PATCH',
             body: JSON.stringify(userData) // Convert userData to JSON string
         });
         const updatedData = await res.json();
@@ -270,7 +280,7 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
 
         // Construct userData object with post information and picture path
         const userData = {
-            id: id, 
+            id: id,
             post_image: picturePath,
             post_title: title,
             post_body: body,
@@ -292,13 +302,31 @@ async function updateShelf(userData) {
     try {
         const res = await query(`/items/shelf/`, {
             method: 'POST',
-            body: JSON.stringify(userData) 
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
-        return updatedData; 
+        return updatedData;
     } catch (error) {
         console.error('Error:', error);
         throw new Error('Failed to update');
+    }
+}
+
+async function getMyProducts(userId) {
+    try {
+        const response = await query(`/items/shelf?filter[user_id][_eq]=${userId}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const productsData = await response.json();
+            return productsData.data;
+        } else {
+            throw new Error('Failed to fetch products');
+        }
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error;
     }
 }
 
@@ -321,7 +349,7 @@ app.post('/update-shelf', upload.single('image'), async (req, res) => {
 
         // Construct userData object with post information and picture path
         const userData = {
-            user_id:id,
+            user_id: id,
             user_firstname: user_firstname,
             user_secondname: user_lastname,
             business_niche: business_niche,
@@ -365,7 +393,7 @@ async function updateNews(userData) {
 app.post('/update-news', upload.single('image'), async (req, res) => {
     try {
         const { title, body } = req.body;
-        const id = req.session.user.fname;
+        const id = req.session.user.id;
 
 
         // Ensure that req.file contains the expected file information
@@ -468,22 +496,59 @@ async function getProfile(userId) {
     }
 }
 
+app.get('/', async (req, res) => {
+    res.render('index')
+});
+
+app.get('/register-your-business', async (req, res) => {
+    res.render('register-your-business')
+});
+
+app.get('/blog', async (req, res) => {
+    res.render('blog')
+});
+
+app.get('/login', async (req, res) => {
+    res.render('login');
+});
+
 app.get('/terms&conditions', async (req, res) => {
     try {
         const terms = await getTerms();
         console.log("Terms", terms.data[0]);
-        res.render('terms&conditions', { terms:terms.data[0] });
+        res.render('terms&conditions', { terms: terms.data[0] });
     } catch (error) {
         console.error('Error fetching terms and conditions:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
+async function getPrivacy() {
+    const response = await query(`/items/privacy`, {
+        method: 'GET',
+    });
+
+    console.log("API Response Status:", response.status);
+    
+    if (response.status !== 200) {
+        throw new Error('Failed to fetch privacy data');
+    }
+
+    const responseData = await response.json(); // Await the JSON parsing
+
+    // Check if responseData.data is an array and has at least one item
+    if (Array.isArray(responseData.data) && responseData.data.length > 0) {
+        return responseData.data[0]; // Return the first item from the data array
+    } else {
+        throw new Error('Privacy data not found');
+    }
+}
+
 app.get('/privacy', async (req, res) => {
     try {
-        const privacy = await getPrivacy(1);
-        // console.log(privacy);
-        res.render('privacy', { privacy });
+        const privacy = await getPrivacy();
+        // console.log("What I got", privacy);
+        res.render('privacy', { privacy }); // Pass privacy as an object
     } catch (error) {
         console.error('Error fetching privacy terms:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -498,7 +563,8 @@ app.get('/home', checkSession, async (req, res) => {
         const profiles = await getProfile(id);
         const ads = await getAds();
         const news = await getNews();
-        res.render('home', { userData: profiles.data[0], ads: ads.data, news: news.data });
+        const investorBlogs = await getInvestorsBlog();
+        res.render('home', { userData: profiles.data[0], ads: ads.data, news: news.data, blogs: investorBlogs.data });
     } catch (error) {
         console.error('Error fetching home page:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -664,10 +730,10 @@ app.post('/register-user', async (req, res) => {
 });
 
 app.get('/hustler/dashboard', checkSession, async (req, res) => {
-
     const id = req.session.user.id;
     const profiles = await getProfile(id);
-    res.render('dashboard', { userData: profiles.data[0] });
+    const products = await getMyProducts(id);
+    res.render('dashboard', { userData: profiles.data[0], products: products });
 });
 
 app.get('/loans/page', async (req, res) => {
@@ -801,12 +867,10 @@ async function getGroupProfile(userId) {
 
 app.get('/hustlers/group/home', async (req, res) => {
     const id = req.session.user.id;
-    const groupId = req.session.user.groupname;
- 
-    const group = await getGroupProfile(id);
-    const members = await getGroupMembers(groupId)
-    // console.log("Members found",members.data);
 
+    const group = await getGroupProfile(id);
+    const members = await getGroupMembers(id)
+    // console.log("Members found",members.data);
     res.render('group-home', { group: group.data[0], members: members.data });
 });
 
@@ -831,16 +895,94 @@ app.post('/update-group', async (req, res) => {
         const id = req.session.user.id;
 
         const userData = {
-            id: id, 
+            id: id,
             groupname: name,
             phone: phone,
             leadername: leader
         };
 
-        // console.log(userData);
+        console.log(userData);
 
         // Update user data with the new post data
         const updatedData = await updateGroups(userData);
+
+        res.status(201).json({ message: 'Post updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update post. Please try again.' });
+    }
+});
+
+async function deleteGroupMember(userData) {
+    try {
+        const response = await query(`/items/group_members/${userData.id}`, {
+            method: 'DELETE',
+            body: JSON.stringify(userData)
+        });
+
+        if (response.status === 204) {
+            // 204 No Content response for successful deletion
+            return { message: 'Deleted successfully' };
+        } else {
+            const updatedData = await res.json();
+            return { message: 'Deleted successfully', updatedData };
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to delete');
+    }
+}
+
+app.post('/delete-group-member', async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        console.log(userId)
+
+        const userData = {
+            id: userId,
+        }
+
+        const updatedData = await deleteGroupMember(userData);
+
+        console.log("Updated", updatedData)
+
+        res.status(201).json({ message: 'Deleted successfully', updatedData });
+    } catch (error) {
+        console.error('Error in deletion:', error);
+        res.status(500).json({ message: 'Failed to delete. Please try again.' });
+    }
+})
+
+async function updateGroupDescription(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/groups/${userData.id}`, {
+            method: 'PATCH', // Assuming you want to update an existing item
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/edit-business-description', async (req, res) => {
+    try {
+        const { groupId, description } = req.body;
+        const id = req.session.user.id;
+
+        const userData = {
+            id: groupId,
+            business_description: description
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await updateGroupDescription(userData);
 
         res.status(201).json({ message: 'Post updated successfully', updatedData });
     } catch (error) {
@@ -864,10 +1006,12 @@ async function registerMember(userData) {
 
 app.post('/submit-member', upload.single('memberImage'), async (req, res) => {
     try {
-        const { name, email, phone, group } = req.body;
-        
-        console.log(req.body)
-    
+        const { name, email, phone } = req.body;
+
+        const id = req.session.user.id;
+
+        // console.log(req.body)
+
         // Ensure that req.file contains the expected file information
         if (!req.file || !req.file.path) {
             return res.status(400).json({ message: 'No picture uploaded' });
@@ -882,7 +1026,7 @@ app.post('/submit-member', upload.single('memberImage'), async (req, res) => {
             name: name,
             phone: phone,
             email: email,
-            group: group,
+            group: id,
         };
 
         // console.log(userData);
@@ -909,8 +1053,83 @@ async function getGroupMembers(groupId) {
     }
 }
 
-app.get('/marketplace', async (req, res) => {
- res.render('marketplace');
+async function getProducts() {
+    try {
+        const response = await query('/items/shelf', {
+            method: 'GET'
+        });
+
+        // Check if the response is OK
+        if (response.ok) {
+            const productsData = await response.json();
+            return productsData; // Return the complete products data
+        } else {
+            throw new Error('Failed to fetch products data');
+        }
+    } catch (error) {
+        console.error('Error fetching products data:', error);
+        throw error; // Allow the caller to handle the error
+    }
+}
+
+app.get('/marketplace', checkSession, async (req, res) => {
+    try {
+        const products = await getProducts();
+
+        // Log the entire products data for debugging
+        // console.log("Fetched products:", products);
+
+        // Check if products have data
+        if (products && products.data && products.data.length > 0) {
+            res.render('marketplace', { products: products.data });
+        } else {
+            res.render('marketplace', { product: [] }); // Render with empty product array
+        }
+    } catch (error) {
+        console.error('Error fetching marketplace data:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+async function deleteProducts(itemData) {
+    try {
+        const response = await query(`/items/shelf/${itemData.id}`, {
+            method: 'DELETE',
+            body: JSON.stringify(itemData)
+        });
+
+        if (response.status === 204) {
+            // 204 No Content response for successful deletion
+            return { message: 'Deleted successfully' };
+        } else {
+            const updatedData = await res.json();
+            return { message: 'Deleted successfully', updatedData };
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to delete');
+    }
+}
+
+app.post('/delete-item-off-shelf', async (req, res) => {
+    try {
+        const { itemId } = req.body;
+
+        console.log(itemId)
+
+        const itemData = {
+            id: itemId,
+        }
+
+        const updatedData = await deleteProducts(itemData);
+
+        console.log("Updated", updatedData)
+
+        res.status(201).json({ message: 'Deleted successfully', updatedData });
+    } catch (error) {
+        console.error('Error in deletion:', error);
+        res.status(500).json({ message: 'Failed to delete. Please try again.' });
+    }
 });
 
 app.listen(port, () => {

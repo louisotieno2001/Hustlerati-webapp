@@ -50,6 +50,30 @@ collections:
       versioning: false
     schema:
       name: groups
+  - collection: investors_blog
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: investors_blog
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: null
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: investors_blog
   - collection: news
     meta:
       accountability: all
@@ -74,12 +98,36 @@ collections:
       versioning: false
     schema:
       name: news
+  - collection: orders
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: orders
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: null
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: orders
   - collection: privacy
     meta:
       accountability: all
       archive_app_filter: true
-      archive_field: status
-      archive_value: archived
+      archive_field: null
+      archive_value: null
       collapse: open
       collection: privacy
       color: null
@@ -92,9 +140,9 @@ collections:
       preview_url: null
       singleton: false
       sort: null
-      sort_field: sort
+      sort_field: null
       translations: null
-      unarchive_value: draft
+      unarchive_value: null
       versioning: false
     schema:
       name: privacy
@@ -405,6 +453,44 @@ fields:
       foreign_key_table: null
       foreign_key_column: null
   - collection: groups
+    field: business_description
+    type: text
+    meta:
+      collection: groups
+      conditions: null
+      display: null
+      display_options: null
+      field: business_description
+      group: null
+      hidden: false
+      interface: input-rich-text-html
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: business_description
+      table: groups
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: groups
     field: email
     type: string
     meta:
@@ -633,6 +719,195 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: investors_blog
+    field: id
+    type: uuid
+    meta:
+      collection: investors_blog
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: investors_blog
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: investors_blog
+    field: post_body
+    type: text
+    meta:
+      collection: investors_blog
+      conditions: null
+      display: null
+      display_options: null
+      field: post_body
+      group: null
+      hidden: false
+      interface: input-rich-text-html
+      note: null
+      options:
+        toolbar:
+          - aligncenter
+          - alignjustify
+          - alignleft
+          - alignright
+          - backcolor
+          - blockquote
+          - bold
+          - bullist
+          - code
+          - copy
+          - customImage
+          - customLink
+          - customMedia
+          - cut
+          - forecolor
+          - fullscreen
+          - h1
+          - h2
+          - h3
+          - h4
+          - h5
+          - h6
+          - hr
+          - indent
+          - italic
+          - numlist
+          - outdent
+          - paste
+          - remove
+          - removeformat
+          - selectall
+          - table
+          - underline
+          - unlink
+      readonly: false
+      required: false
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: post_body
+      table: investors_blog
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: investors_blog
+    field: post_image
+    type: uuid
+    meta:
+      collection: investors_blog
+      conditions: null
+      display: null
+      display_options: null
+      field: post_image
+      group: null
+      hidden: false
+      interface: file-image
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 2
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: post_image
+      table: investors_blog
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: investors_blog
+    field: post_title
+    type: string
+    meta:
+      collection: investors_blog
+      conditions: null
+      display: null
+      display_options: null
+      field: post_title
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: post_title
+      table: investors_blog
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: news
     field: id
     type: uuid
@@ -824,6 +1099,235 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: orders
+    field: id
+    type: uuid
+    meta:
+      collection: orders
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: orders
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: orders
+    field: payment_status
+    type: string
+    meta:
+      collection: orders
+      conditions: null
+      display: null
+      display_options: null
+      field: payment_status
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: payment_status
+      table: orders
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: orders
+    field: product_id
+    type: string
+    meta:
+      collection: orders
+      conditions: null
+      display: null
+      display_options: null
+      field: product_id
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: product_id
+      table: orders
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: orders
+    field: product_name
+    type: string
+    meta:
+      collection: orders
+      conditions: null
+      display: null
+      display_options: null
+      field: product_name
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: product_name
+      table: orders
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: orders
+    field: quantity
+    type: string
+    meta:
+      collection: orders
+      conditions: null
+      display: null
+      display_options: null
+      field: quantity
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: quantity
+      table: orders
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: orders
+    field: user_id
+    type: string
+    meta:
+      collection: orders
+      conditions: null
+      display: null
+      display_options: null
+      field: user_id
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: user_id
+      table: orders
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: privacy
     field: body
     type: text
@@ -839,8 +1343,8 @@ fields:
       note: null
       options: null
       readonly: false
-      required: false
-      sort: 9
+      required: true
+      sort: 3
       special: null
       translations: null
       validation: null
@@ -863,73 +1367,31 @@ fields:
       foreign_key_table: null
       foreign_key_column: null
   - collection: privacy
-    field: date_created
-    type: timestamp
+    field: date
+    type: dateTime
     meta:
       collection: privacy
       conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_created
+      display: null
+      display_options: null
+      field: date
       group: null
-      hidden: true
+      hidden: false
       interface: datetime
       note: null
       options: null
-      readonly: true
-      required: false
+      readonly: false
+      required: true
       sort: 5
-      special:
-        - date-created
+      special: null
       translations: null
       validation: null
       validation_message: null
-      width: half
+      width: full
     schema:
-      name: date_created
+      name: date
       table: privacy
-      data_type: timestamp with time zone
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: privacy
-    field: date_updated
-    type: timestamp
-    meta:
-      collection: privacy
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: date_updated
-      group: null
-      hidden: true
-      interface: datetime
-      note: null
-      options: null
-      readonly: true
-      required: false
-      sort: 7
-      special:
-        - date-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      name: date_updated
-      table: privacy
-      data_type: timestamp with time zone
+      data_type: timestamp without time zone
       default_value: null
       max_length: null
       numeric_precision: null
@@ -944,7 +1406,7 @@ fields:
       foreign_key_column: null
   - collection: privacy
     field: id
-    type: integer
+    type: uuid
     meta:
       collection: privacy
       conditions: null
@@ -959,7 +1421,8 @@ fields:
       readonly: true
       required: false
       sort: 1
-      special: null
+      special:
+        - uuid
       translations: null
       validation: null
       validation_message: null
@@ -967,109 +1430,50 @@ fields:
     schema:
       name: id
       table: privacy
-      data_type: integer
-      default_value: nextval('privacy_id_seq'::regclass)
+      data_type: uuid
+      default_value: null
       max_length: null
-      numeric_precision: 32
-      numeric_scale: 0
+      numeric_precision: null
+      numeric_scale: null
       is_nullable: false
       is_unique: true
       is_primary_key: true
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: true
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: privacy
-    field: sort
-    type: integer
-    meta:
-      collection: privacy
-      conditions: null
-      display: null
-      display_options: null
-      field: sort
-      group: null
-      hidden: true
-      interface: input
-      note: null
-      options: null
-      readonly: false
-      required: false
-      sort: 3
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: sort
-      table: privacy
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: 32
-      numeric_scale: 0
-      is_nullable: true
-      is_unique: false
-      is_primary_key: false
       is_generated: false
       generation_expression: null
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
   - collection: privacy
-    field: status
-    type: string
+    field: time
+    type: dateTime
     meta:
       collection: privacy
       conditions: null
-      display: labels
-      display_options:
-        choices:
-          - text: $t:published
-            value: published
-            foreground: '#FFFFFF'
-            background: var(--theme--primary)
-          - text: $t:draft
-            value: draft
-            foreground: '#18222F'
-            background: '#D3DAE4'
-          - text: $t:archived
-            value: archived
-            foreground: '#FFFFFF'
-            background: var(--theme--warning)
-        showAsDot: true
-      field: status
+      display: null
+      display_options: null
+      field: time
       group: null
       hidden: false
-      interface: select-dropdown
+      interface: datetime
       note: null
-      options:
-        choices:
-          - text: $t:published
-            value: published
-          - text: $t:draft
-            value: draft
-          - text: $t:archived
-            value: archived
+      options: null
       readonly: false
-      required: false
-      sort: 2
+      required: true
+      sort: 4
       special: null
       translations: null
       validation: null
       validation_message: null
       width: full
     schema:
-      name: status
+      name: time
       table: privacy
-      data_type: character varying
-      default_value: draft
-      max_length: 255
+      data_type: timestamp without time zone
+      default_value: null
+      max_length: null
       numeric_precision: null
       numeric_scale: null
-      is_nullable: false
+      is_nullable: true
       is_unique: false
       is_primary_key: false
       is_generated: false
@@ -1092,8 +1496,8 @@ fields:
       note: null
       options: null
       readonly: false
-      required: false
-      sort: 8
+      required: true
+      sort: 2
       special: null
       translations: null
       validation: null
@@ -1115,86 +1519,6 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
-  - collection: privacy
-    field: user_created
-    type: uuid
-    meta:
-      collection: privacy
-      conditions: null
-      display: user
-      display_options: null
-      field: user_created
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 4
-      special:
-        - user-created
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      name: user_created
-      table: privacy
-      data_type: uuid
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: directus_users
-      foreign_key_column: id
-  - collection: privacy
-    field: user_updated
-    type: uuid
-    meta:
-      collection: privacy
-      conditions: null
-      display: user
-      display_options: null
-      field: user_updated
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
-      readonly: true
-      required: false
-      sort: 6
-      special:
-        - user-updated
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      name: user_updated
-      table: privacy
-      data_type: uuid
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: directus_users
-      foreign_key_column: id
   - collection: session
     field: expire
     type: dateTime
@@ -2447,45 +2771,24 @@ relations:
       constraint_name: directus_settings_public_favicon_foreign
       on_update: NO ACTION
       on_delete: NO ACTION
-  - collection: privacy
-    field: user_created
-    related_collection: directus_users
+  - collection: investors_blog
+    field: post_image
+    related_collection: directus_files
     meta:
       junction_field: null
-      many_collection: privacy
-      many_field: user_created
+      many_collection: investors_blog
+      many_field: post_image
       one_allowed_collections: null
-      one_collection: directus_users
+      one_collection: directus_files
       one_collection_field: null
       one_deselect_action: nullify
       one_field: null
       sort_field: null
     schema:
-      table: privacy
-      column: user_created
-      foreign_key_table: directus_users
+      table: investors_blog
+      column: post_image
+      foreign_key_table: directus_files
       foreign_key_column: id
-      constraint_name: privacy_user_created_foreign
+      constraint_name: investors_blog_post_image_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
-  - collection: privacy
-    field: user_updated
-    related_collection: directus_users
-    meta:
-      junction_field: null
-      many_collection: privacy
-      many_field: user_updated
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    schema:
-      table: privacy
-      column: user_updated
-      foreign_key_table: directus_users
-      foreign_key_column: id
-      constraint_name: privacy_user_updated_foreign
-      on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET NULL

@@ -1,0 +1,485 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #5d4037;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.preview {
+    height: 200px;
+    width: 200px;
+    display: none;
+    margin: 0 auto;
+    border-radius: 8px;
+    z-index: 1000;
+    border: #36211b 1px;
+    border-radius: 5px;
+    background-position: center;
+    background-size: cover;
+}
+
+.top-menu {
+    background-color: #4b281d;
+    color: #fff;
+    padding: 0px 10px;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.sub-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #4b281d;
+    width: 100%;
+    padding: 10px;
+    border-radius: 0 0 8px 8px;
+    z-index: 1000;
+}
+
+.sub-menu a {
+    display: block;
+    text-decoration: none;
+    color: #fff;
+    margin: 15px;
+}
+
+#close-menu {
+    display: none;
+    padding-right: 1em;
+    padding-top: .8em;
+    cursor: pointer;
+}
+
+#open-menu {
+    padding-right: 1em;
+    padding-top: .8em;
+    cursor: pointer;
+}
+
+
+.display {
+    height: 100vh;
+    margin: 0 auto;
+    padding: 20px;
+    color: aliceblue;
+    background-color: #5d4037;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    margin-top: 60px;
+    border: 1px solid #4b281d;
+    border-radius: 8px;
+}
+
+.description-body{
+    margin-top: -45px;
+}
+
+.tablinks {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 10px 15px;
+    position: relative;
+    color: #fff;
+    transition: color 0.3s;
+    font-weight: bold;
+}
+
+.tablinks.active {
+    color: yellow;
+    /* color: aliceblue; */
+    background-color: #5f382d;
+    border-radius: 8px;
+    transition: background-color 1s;
+}
+
+.underline{
+    display: none;
+}
+
+.bottom-tabs {
+    display: none;
+}
+
+.tabcontent {
+    /* background-color: #5f382d; */
+    border-radius: 8px;
+    padding: .5em;
+    height: max-content;
+    border: #4b281d 1px solid;
+}
+
+.edit {
+    left: 60px;
+    background-color: #F09819;
+    border-radius: 5px;
+    display: flex;
+    border: none;
+    color: #fff;
+    padding: .3em;
+    font-size: large;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+    cursor: pointer;
+}
+
+.members-list {
+    gap: 16px; /* Space between cards */
+    padding: 16px; /* Padding around the list */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border-radius: 8px; /* Optional rounded corners */
+    margin: 10px;
+    display: flex;
+    overflow-x: auto; /* Enables horizontal scrolling */
+    padding: 16px; /* Padding around the list */
+    white-space: nowrap; /* Prevents wrapping of cards */
+}
+
+.card {
+    flex: 0 0 200px; /* Fixed width for cards */
+    background-color: transparent; /* Background color for cards */
+    border: 1px solid #4b281d; /* Card border */
+    border-radius: 8px; /* Rounded corners for cards */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden; /* Prevents content overflow */
+    transition: transform 0.2s; /* Smooth scale on hover */
+    width: 300px;
+    text-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: scale(1.02); /* Scale effect on hover */
+}
+
+.card img {
+    display: block; /* Ensures image takes full width of card */
+    width: 100%; /* Ensures the image fits the card */
+    height: auto; /* Maintains aspect ratio */
+}
+
+.text {
+    height: 100%;
+    padding: 8px; /* Padding inside the text section */
+}
+
+.delete-member {
+    background-color: #e74c3c; /* Red background for delete button */
+    color: white; /* Text color */
+    border: none; /* No border */
+    padding: 8px 12px; /* Padding */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    width: 90%;
+    margin: 10px;
+}
+
+.delete-member:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
+.add {
+    left: 60px;
+    background-color: #F09819;
+    border-radius: 8px;
+    display: flex;
+    border: none;
+    color: #fff;
+    padding: .5em;
+    font-size: large;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+    cursor: pointer;
+    margin-bottom: 60px;
+}
+
+.close-add {
+    left: 60px;
+    background-color: #F09819;
+    border-radius: 5px;
+    display: flex;
+    border: none;
+    color: #fff;
+    padding: .3em;
+    font-size: large;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+    cursor: pointer;
+}
+
+.submit-member {
+    left: 60px;
+    background-color: #F09819;
+    border-radius: 5px;
+    display: flex;
+    border: none;
+    color: #fff;
+    padding: .3em;
+    font-size: large;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+    cursor: pointer;
+}
+
+dialog {
+    background-color: #5f382d;
+    border: none;
+    border-radius: 8px;
+    color: aliceblue;
+    padding: 15px;
+    z-index: 900;
+    position: relative;
+}
+
+
+input,
+textarea {
+    background-color: #5e463f;
+    padding: 1em;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    color: white;
+    outline: none;
+    margin: 1em;
+    width: 95%;
+}
+
+textarea:focus {
+    border: none;
+}
+
+input:focus {
+    border: none;
+}
+
+.divider{
+    height: 2px;
+    width: 100%;
+    background-color: #F09819;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+#edit-business-description{
+    margin-top: 20px;
+}
+
+.ql-toolbar {
+    background-color: white; /* Set the toolbar background to white */
+    border: 1px solid #ccc; /* Optional: Add a light border */
+}
+
+.ql-toolbar .ql-stroke {
+    stroke: black; /* Set the color of icons to black */
+}
+
+.ql-toolbar .ql-picker-label,
+.ql-toolbar .ql-picker-item {
+    color: black; /* Set the color of text in the toolbar */
+}
+
+.ql-toolbar .ql-picker:hover .ql-picker-label,
+.ql-toolbar .ql-picker:hover .ql-picker-item {
+    color: #555; /* Optional: Change color on hover */
+}
+
+.editor-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+#spinner {
+    position: fixed;
+    /* Fixed positioning to keep it in view */
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    display: none;
+}
+
+#error{
+    background-color: white;
+    color: red;
+    text-align: center;
+}
+
+#success{
+    background-color: white;
+    color: green;
+    text-align: center;
+}
+
+#group-error{
+    background-color: white;
+    color: red;
+    text-align: center;
+}
+
+#group-success{
+    background-color: white;
+    color: green;
+    text-align: center;
+}
+
+.feedback-div {
+    position: fixed; 
+    top: 0; 
+    transition: opacity 0.5s ease;
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 9999; 
+    display: none; /* Initially hidden */
+    pointer-events: none;
+}
+
+.feedback {
+    color: white; 
+    text-align: center;
+    border-radius: 8px; 
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8); /* Optional: background for the feedback message */
+    pointer-events: none;
+}
+
+#general-success{
+    display: none;
+    background-color: green;
+}
+
+#general-error{
+    display: none;
+    background-color: red;
+}
+
+/* Media query for small screens */
+@media screen and (max-width: 600px) {
+    .tabs {
+        display: none;
+    }
+
+    .display {
+        height: 100vh;
+        margin: 0 auto;
+        padding: 4px;
+        margin-top: 30px;
+        color: aliceblue;
+        background-color: #5d4037;
+    }
+
+    .sub-items {
+        position: static;
+        display: none;
+    }
+
+    input,
+    textarea {
+        background-color: #5e463f;
+        padding: 1em;
+        border-radius: 5px;
+        border: none;
+        width: 100%;
+        color: white;
+        outline: none;
+        margin: 1em;
+        width: 85%;
+    }
+
+    textarea:focus {
+        border: none;
+    }
+
+    input:focus {
+        border: none;
+    }
+
+    .bottom-tabs {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #4b281d;
+        display: flex;
+        justify-content: space-evenly;
+        padding: .2em;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .bottom-tab {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-size: 18px;
+        padding: 10px 15px;
+        position: relative;
+        color: #fff;
+        transition: color 0.3s;
+        width: max-content;
+    }
+
+    .bottom-tab.active {
+        font-weight: bold;
+        color: aliceblue;
+    }
+
+
+    .bottom-tab.active .underline {
+        width: 100%;
+    }
+
+    .underline {
+        height: 3px;
+        border-radius: 8px;
+        background-color: yellow;
+        position: absolute;
+        bottom: 2px;
+        left: 0;
+        transition: left 0.3s, width 0.3s;
+        display: block;
+    }
+
+    .tabcontent {
+        background-color: #5f382d;
+        border-radius: 8px;
+        padding: .5em;
+        margin-top: 30px;
+    }
+}

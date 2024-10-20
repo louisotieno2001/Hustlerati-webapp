@@ -1,0 +1,209 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: #4e342e;
+    color: aliceblue;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* Use column layout */
+    justify-content: center;
+    align-items: center;
+}
+
+#pass-visibility {
+    cursor: pointer;
+}
+
+.login-page {
+    display: flex;
+    flex-direction: column;
+    /* Stack form and footer */
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.login-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 5px;
+    /* Reduced margin */
+    width: 360px;
+    /* Slightly smaller width */
+    border-radius: 12px;
+    background: #3e2723;
+    padding: 1.8em;
+    /* Reduced padding */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.login-form h1 {
+    color: #BC8D00;
+    margin-bottom: 15px;
+    /* Reduced margin */
+    font-size: 1.8em;
+    /* Slightly smaller font size */
+}
+
+.input-div {
+    border-radius: 15px;
+    padding: 0.3em;
+    /* Reduced padding for input div */
+    background: #3e2723;
+    margin: 10px 0;
+    /* Reduced margin */
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 2px solid white;
+    /* White border */
+    transition: background 0.3s, border 0.3s;
+    /* Added transition for border */
+}
+
+.input-div:hover {
+    background: rgba(62, 39, 35, 0.8);
+    border: 2px solid white;
+    /* Keep white border on hover */
+}
+
+input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: larger;
+    color: white;
+    /* White text */
+    padding: 5px;
+    /* Reduced padding for input */
+    flex: 1;
+    border-radius: 8px;
+    transition: border 0.3s;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    opacity: 0.7;
+}
+
+input:focus {
+    border-bottom: 2px solid white;
+    /* White focus border */
+}
+
+span {
+    margin-right: 10px;
+    color: white;
+    /* White icon color */
+    font-size: 1.5em;
+}
+
+.button-5 {
+    align-items: center;
+    background-color: #2b130d;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: white;
+    /* White text */
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 16px;
+    /* Font size */
+    font-weight: 600;
+    justify-content: center;
+    line-height: 1.25;
+    padding: 0.75em;
+    /* Keep height consistent */
+    width: 220px;
+    /* Increased width */
+    margin-top: 15px;
+    /* Adjusted margin */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.button-5:hover {
+    background-color: #fb8332;
+    transform: translateY(-2px);
+}
+
+.stuff {
+    margin-top: 20px;
+    /* Spacing from form */
+    text-align: center;
+    /* Center-align links */
+}
+
+.stuff a {
+    color: #BC8D00;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 14px;
+}
+
+.login-form a {
+    color: #BC8D00;
+    text-decoration: none;
+}
+
+select{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    color: white;
+    font-size: large;
+}
+
+#error {
+    background-color: white;
+    color: red;
+    width: 100%;
+    display: none;
+    padding: .5em;
+    border-radius: 5px;
+}
+
+#success {
+    background-color: white;
+    color: green;
+    width: 100%;
+    display: none;
+    padding: .5em;
+    border-radius: 5px;
+}
+
+/* Media Query for Small Screens */
+@media (max-width: 480px) {
+    .login-form {
+        width: 90%;
+        padding: 1em;
+    }
+
+    .login-form h1 {
+        font-size: 1.5em;
+    }
+
+    .button-5 {
+        width: 100%;
+    }
+
+    .input-div {
+        width: 100%;
+    }
+
+    input {
+        font-size: 1em;
+    }
+
+    span {
+        font-size: 1.2em;
+    }
+
+    .stuff a {
+        font-size: 12px;
+    }
+}

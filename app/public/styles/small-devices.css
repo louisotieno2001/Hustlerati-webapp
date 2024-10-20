@@ -8,39 +8,6 @@
         font-family: sans-serif;
     }
 
-    .input-div {
-        width: 280px;
-        margin: 10px;
-        border-radius: 2px;
-        /* background-color: #4e342e; */
-          background: #3e2723;
-        display: flex;
-        align-items: center;
-        opacity: 90%;
-    }
-
-    #pass-visibility {
-        margin-left: -55px;
-        cursor: pointer;
-    }
-
-    .massive-logo{
-        display: none;
-    }
-
-    .login-form {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        text-align: center;
-        margin-top: 10px;
-        width: 90%;
-        height: max-content;
-        border-radius: 8px;
-        padding: 1em;
-    }
-
     .menu-icon {
         display: block;
     }
@@ -94,7 +61,7 @@
     #middle-tab {
         padding: .5em;
         padding-top: 1px;
-        width: fit-content;
+        width: 100%;
     }
 
     #home-logo {
@@ -109,10 +76,10 @@
         width: 100%;
         padding-top: 2px;
         transition: width 10s, background-color 10s;
+        overflow-x: hidden;
     }
 
     #shop{
         margin-top: 150px;
     }
-
 }
