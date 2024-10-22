@@ -19,7 +19,7 @@
         <div class="menu-icons">
             <span class="material-symbols-outlined" id="cart">
                 shopping_cart 
-                <p id="cart-numbers" class="cart-numbers"></p>
+                <p id="cart-numbers" class="cart-numbers"><%= totalQuantity %></p>
             </span>
             
             <span class="material-symbols-outlined" id="open-menu">menu</span>
@@ -91,12 +91,14 @@
                                                                         <p><strong>
                                                                                 <%= product.item_price %>
                                                                             </strong></p>
-                                                                        <p>Condition: <%= product.item_condition %>
+                                                                        <p>Condition: <%= product.item_condition %> 
                                                                         </p>
-                                                                        <p>Status: <%= product.item_availability %>
+                                                                        <p>In stock: <%= product.item_quantity %>
                                                                         </p>
                                                                         <div class="add-to-cart">
-                                                                            <button class="add-to-cart-button" data-cardId="<%= product.id %>">Add to cart</button><p id="subtract" class="subtract">-</p><p id="add" class="add">+</p>
+                                                                            <button class="add-to-cart-button" data-product-id="<%= product.id %>" data-product-name="<%= product.item_name %>" data-seller-id="<%= product.user_id %>" data-item-quantity="<%= product.item_quantity %>" data-product-image="<%= product.item_image %>" data-unit-price="<%= product.item_price %>"> <span class="material-symbols-outlined" id="cart">
+                                                                                shopping_cart 
+                                                                            </span>Add to cart</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -109,7 +111,7 @@
                                                             <% } %>
         </div>
     </div>
-    <div class="confirm" id="confirm">
+    <div class="feedback-div" id="feedback-div">
         <p class="feedback" id="error"></p>
         <p class="feedback" id="success"></p>
     </div>

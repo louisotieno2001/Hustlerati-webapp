@@ -263,6 +263,85 @@ span {
     background-color: red;
 }
 
+.order-display {
+    width: 95%;
+    margin: auto;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 50px;
+    height: 100vh;
+    color: white;
+    overflow-y: auto;
+}
+
+.tabs {
+    display: flex;
+    background-color: #4b281d;
+    color: white;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #450F01;
+    border: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    transition: background-color 0.3s;
+    color: white;
+}
+
+.tab:hover {
+    background-color: #36211b;
+}
+
+.tab.active {
+    background-color: #4b281d;
+    font-weight: bold;
+    border: 1px solid #450F01;
+    border-bottom: none;
+}
+
+.tab-content {
+    padding: 20px;
+    border: 1px solid #450F01;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.card {
+    padding: .5em;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin: 2px;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.card h4{
+    color: red;
+}
+
+.image {
+    height: 300px;
+    width: 300px;
+    background-position: center;
+    background-size: cover;
+    border-radius: 8px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+}
+
 @media only screen and (max-width: 768px) {
     .sub-items {
         position: static;

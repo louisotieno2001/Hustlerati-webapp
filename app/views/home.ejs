@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/styles/small-devices.css">
     <link rel="stylesheet" href="/styles/index.css">
     <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/loader.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
@@ -92,9 +93,9 @@
                     <% } else { %>
                         <% blogs.forEach((blog, index) => { %>
                             <% if (blog.post_image !== null && blog.post_title !== null && blog.post_body !== null) { %>
-                                <div class="card" id="card-<%= index %>" style="background-image: url('https://127.0.0.1:8055/assets/<%= blog.post_image %>');" data-title="<%= blog.post_title %>" data-body="<%- blog.post_body %>" data-image="/uploads/<%= blog.post_image %>">
+                                <div class="card" id="card-<%= index %>" style="background-image: url('https://127.0.0.1:8055/assets/<%= blog.post_image %>');" data-title="<%- blog.post_title %>" data-body="<%- blog.post_body %>" data-image="/uploads/<%= blog.post_image %>">
                                     <div class="text"> 
-                                        <h1 id="title-<%= index %>"><%= blog.post_title %></h1>
+                                        <h1 id="title-<%= index %>"><%- blog.post_title %></h1>
                                         <p id="body-<%= index %>"><%- truncateText(blog.post_body, 200) %> <a href="#" class="read-more" data-post-body="<%- blog.post_body %>">Read more</a></p>
                                     </div>
                                 </div>
@@ -110,7 +111,7 @@
                     <% } else { %>
                         <% news.forEach(ad => { %>
                             <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
-                                <div class="card" style="background-image: url('/uploads/<%= ad.post_image %>');" data-title="<%= ad.post_title %>" data-body="<%- ad.post_body %>" data-image="/uploads/<%= ad.post_image %>">
+                                <div class="card" style="background-image: url('/uploads/<%= ad.post_image %>');" data-title="<%= ad.post_title %>" data-body="<%= ad.post_body %>" data-image="/uploads/<%= ad.post_image %>">
                                     <div class="text"> 
                                         <h1><%= ad.post_title %></h1>
                                         <p><%= truncateText(ad.post_body, 200) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p>
@@ -120,7 +121,7 @@
                         <% }); %>
                     <% } %>
                 </div>     
-                <div class="add" id="add"><span class="material-symbols-outlined">edit</span></div>
+                <div class="add" id="add" title="Post something"><span class="material-symbols-outlined">edit</span></div>
             </div>            
             <div class="display" id="profile">
                 <h1>Profile</h1>
@@ -238,6 +239,13 @@
         <button class="button-87 posting" id="post-submit">Submit</button>
         <button class="button-87 posting" id="exit-post">Exit</button>
     </dialog>
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+    <div class="feedback-div" id="feedback-div">
+        <p class="feedback" id="error"></p>
+        <p class="feedback" id="success"></p>
+    </div>
    <script src="/scripts/homeFunctionalities.js"></script>
     <script src="/scripts/readBlog.js"></script>
 </body>

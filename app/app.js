@@ -265,6 +265,285 @@ async function updatePosts(userData) {
     }
 }
 
+async function updateProductQuantities(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/shelf/${userData.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+async function getCorrectProduct(productData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/shelf/${productData.id}`, {
+            method: 'GET',
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/update-quantity', async (req, res) => {
+    try {
+        const { productId } = req.body;
+
+        const productData = {
+            id: productId,
+        };
+
+        const correctProduct = await getCorrectProduct(productData)
+
+        // console.log(correctProduct);
+
+        const originalValue = correctProduct.data.item_quantity;
+
+        // console.log(originalValue)
+
+        const newValue = parseInt(originalValue, 10) - 1;
+
+        // Construct userData object with post information and picture path
+        const userData = {
+            id: productId,
+            item_quantity: newValue,
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await updateProductQuantities(userData);
+
+        res.status(201).json({ message: 'Updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update. Please try again.' });
+    }
+});
+
+app.post('/update-cancelled-quantity', async (req, res) => {
+    try {
+        const { productId } = req.body;
+
+        const productData = {
+            id: productId,
+        };
+
+        const correctProduct = await getCorrectProduct(productData)
+
+        console.log(correctProduct);
+
+        const originalValue = correctProduct.data.item_quantity;
+
+        console.log(originalValue)
+
+        const newValue = parseInt(originalValue, 10) + 1;
+
+        console.log(newValue);
+
+        // Construct userData object with post information and picture path
+        const userData = {
+            id: productId,
+            item_quantity: newValue,
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await updateProductQuantities(userData);
+
+        res.status(201).json({ message: 'Updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update. Please try again.' });
+    }
+});
+
+async function cancelOrder(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/orders/${userData.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/cancel-order', async (req, res) => {
+    try {
+        const { itemId } = req.body;
+
+        const status = "cancelled"
+
+        const userData = {
+            id: itemId,
+            order_status: status,
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await cancelOrder(userData);
+
+        res.status(201).json({ message: 'Updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        res.status(500).json({ message: 'Failed to update. Please try again.' });
+    }
+});
+
+async function completeOrder(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/orders/${userData.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/complete-order', async (req, res) => {
+    try {
+        const { orderId } = req.body;
+
+        const status = "fulfilled"
+
+        const userData = {
+            id: orderId,
+            order_status: status,
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await completeOrder(userData);
+
+        res.status(201).json({ message: 'Updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        res.status(500).json({ message: 'Failed to update. Please try again.' });
+    }
+});
+
+async function getCorrectOrder(productData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/orders/${productData.id}`, {
+            method: 'GET',
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+async function updateItemNumberInCart(orderData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/orders/${orderData.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify(orderData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/add-item-to-cart', async (req, res) => {
+    try {
+        const { itemId } = req.body;
+
+        const productData = {
+            id: itemId,
+        };
+
+        const correctOrder = await getCorrectOrder(productData)
+
+        // console.log(correctOrder);
+
+        const originalValue = correctOrder.data.quantity;
+
+        // console.log(originalValue)
+
+        const newValue = parseInt(originalValue, 10) + 1;
+
+        // console.log(newValue);
+
+        const orderData = {
+            id: itemId,
+            quantity: newValue,
+        };
+
+        // Update user data with the new post data
+        const updatedData = await updateItemNumberInCart(orderData);
+
+        res.status(201).json({ message: 'Updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update. Please try again.' });
+    }
+});
+
+app.post('/subtract-item-to-cart', async (req, res) => {
+    try {
+        const { itemId } = req.body;
+
+        const productData = {
+            id: itemId,
+        };
+
+        const correctOrder = await getCorrectOrder(productData)
+
+        // console.log(correctOrder);
+
+        const originalValue = correctOrder.data.quantity;
+
+        // console.log(originalValue)
+
+        const newValue = parseInt(originalValue, 10) - 1;
+
+        // console.log(newValue);
+
+        const orderData = {
+            id: itemId,
+            quantity: newValue,
+        };
+
+
+        // Update user data with the new post data
+        const updatedData = await updateItemNumberInCart(orderData);
+
+        res.status(201).json({ message: 'Updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update. Please try again.' });
+    }
+});
+
 app.post('/update-post', upload.single('image'), async (req, res) => {
     try {
         const { title, body } = req.body;
@@ -286,7 +565,7 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
             post_body: body,
         };
 
-        console.log(userData);
+        // console.log(userData);
 
         // Update user data with the new post data
         const updatedData = await updatePosts(userData);
@@ -301,6 +580,20 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
 async function updateShelf(userData) {
     try {
         const res = await query(`/items/shelf/`, {
+            method: 'POST',
+            body: JSON.stringify(userData)
+        });
+        const updatedData = await res.json();
+        return updatedData;
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+async function addOrder(userData) {
+    try {
+        const res = await query(`/items/orders/`, {
             method: 'POST',
             body: JSON.stringify(userData)
         });
@@ -375,6 +668,33 @@ app.post('/update-shelf', upload.single('image'), async (req, res) => {
     }
 });
 
+app.post('/add-order', async (req, res) => {
+    try {
+        const { productId, productName, sellerId, productImage, unitPrice } = req.body;
+        const id = req.session.user.id;
+
+        // Construct userData object with post information and picture path
+        const userData = {
+            purchaser_user_id: id,
+            product_id: productId,
+            product_name: productName,
+            seller_id: sellerId,
+            product_image: productImage,
+            unit_cost: unitPrice
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await addOrder(userData);
+
+        res.status(201).json({ message: 'Shelf updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating shelf:', error);
+        res.status(500).json({ message: 'Failed to update shelf. Please try again.' });
+    }
+});
+
 async function updateNews(userData) {
     try {
         // Use your custom query function to send the update query
@@ -441,7 +761,7 @@ app.post('/update-pic', upload.single('profilePic'), async (req, res) => {
             profile_pic: picturePath
         };
 
-        console.log(userData);
+        // console.log(userData);
 
         // Update user data with the new profile pic path
         const updatedData = await updatePic(userData);
@@ -470,7 +790,7 @@ app.post('/update-profile', checkSession, async (req, res) => {
             phone: phone,
         };
 
-        console.log(userData);
+        // console.log(userData);
 
         // Call updateBusiness function with userData
         const updatedData = await updateProfile(userData);
@@ -512,6 +832,60 @@ app.get('/login', async (req, res) => {
     res.render('login');
 });
 
+app.get('/admin', async (req, res) => {
+    res.render('admin-login');
+});
+
+app.get('/admin-register', async (req, res) => {
+    res.render('admin-registration');
+});
+
+async function getCorrectUser(userId) {
+    try {
+        const response = await query(`/items/users?filter[id][_eq]=${userId}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const productsData = await response.json();
+            return productsData.data;
+        } else {
+            throw new Error('Failed to fetch products');
+        }
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+    }
+}
+
+app.get('/admin-dashboard', async (req, res) => {
+    try {
+        const orders = await getAllOrders();
+
+        // Use Promise.all to fetch all users in parallel
+        const userPromises = orders.data.map(async (order) => {
+            const user = await getCorrectUser(order.purchaser_user_id);
+            return user; // Return user data for each order
+        });
+
+        // Wait for all user fetches to complete
+        const users = await Promise.all(userPromises);
+
+        // Combine orders with corresponding user information
+        const ordersWithUsers = orders.data.map((order, index) => ({
+            ...order,
+            user: users[index] // Associate user info with the corresponding order
+        }));
+
+        // console.log(ordersWithUsers);
+
+        res.render('admin', { orders: ordersWithUsers });
+    } catch (error) {
+        console.error('Error fetching orders or users:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 app.get('/terms&conditions', async (req, res) => {
     try {
         const terms = await getTerms();
@@ -523,13 +897,32 @@ app.get('/terms&conditions', async (req, res) => {
     }
 });
 
+async function getAllOrders() {
+    try {
+        const response = await query('/items/orders', {
+            method: 'GET'
+        });
+
+        // Check if the response is OK
+        if (response.ok) {
+            const productsData = await response.json();
+            return productsData; // Return the complete products data
+        } else {
+            throw new Error('Failed to fetch products data');
+        }
+    } catch (error) {
+        console.error('Error fetching products data:', error);
+        throw error; // Allow the caller to handle the error
+    }
+}
+
 async function getPrivacy() {
     const response = await query(`/items/privacy`, {
         method: 'GET',
     });
 
     console.log("API Response Status:", response.status);
-    
+
     if (response.status !== 200) {
         throw new Error('Failed to fetch privacy data');
     }
@@ -555,6 +948,24 @@ app.get('/privacy', async (req, res) => {
     }
 });
 
+async function getSellerOrders(userId) {
+    try {
+        const response = await query(`/items/orders?filter[seller_id][_eq]=${userId}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const productsData = await response.json();
+            return productsData.data;
+        } else {
+            throw new Error('Failed to fetch products');
+        }
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+    }
+}
+
 app.get('/home', checkSession, async (req, res) => {
     try {
         const id = req.session.user.id;
@@ -570,38 +981,6 @@ app.get('/home', checkSession, async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
-// app.post('/login', async (req, res) => {
-//     const { email, password } = req.body;
-//     try {
-//         const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-
-//         if (result.rows.length > 0) {
-//             const user = result.rows[0];
-//             const isPasswordMatch = await bcrypt.compare(password, user.password);
-
-//             if (isPasswordMatch) {
-//                 // Store user information in the session
-//                 req.session.user = {
-//                     id: user.id,
-//                     fname: user.firstname,
-//                     lname: user.lastname,
-//                     email: user.email,
-//                     phone: user.phone
-//                 };
-
-//                 res.json({ success: true, user: req.session.user });
-//             } else {
-//                 res.status(401).json({ success: false, error: 'Invalid credentials' });
-//             }
-//         } else {
-//             res.status(401).json({ success: false, error: 'Invalid credentials' });
-//         }
-//     } catch (error) {
-//         console.error('Error during login:', error);
-//         res.status(500).json({ success: false, error: 'Login failed' });
-//     }
-// });
 
 async function loginUser(email) {
     try {
@@ -665,24 +1044,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// app.post('/register-user', async (req, res) => {
-//     const { firstName, lastName, email, phone, password } = req.body;
-
-//     try {
-//         const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-//         const result = await pool.query(
-//             'INSERT INTO users (firstname, lastname, email, phone, password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-//             [firstName, lastName, email, phone, hashedPassword]
-//         );
-
-//         res.status(201).json({ success: true, user: result.rows[0] });
-//     } catch (error) {
-//         console.error('Error during registration:', error);
-//         res.status(500).json({ success: false, error: 'Registration failed' });
-//     }
-// });
-
 async function registerUser(userData) {
     try {
         let res = await query(`/items/users/`, {
@@ -733,7 +1094,8 @@ app.get('/hustler/dashboard', checkSession, async (req, res) => {
     const id = req.session.user.id;
     const profiles = await getProfile(id);
     const products = await getMyProducts(id);
-    res.render('dashboard', { userData: profiles.data[0], products: products });
+    const sellerOrders = await getSellerOrders(id);
+    res.render('dashboard', { userData: profiles.data[0], products: products, orders: sellerOrders });
 });
 
 app.get('/loans/page', async (req, res) => {
@@ -783,6 +1145,52 @@ app.post('/register-group', async (req, res) => {
 
         // Register the user using the async function
         const newUser = await registerGroup(userData);
+
+        // Send response indicating success
+        res.status(201).json({ message: 'User registered successfully', user: newUser });
+    } catch (error) {
+        console.error('Error inserting user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+async function registerAdmin(userData) {
+    try {
+        let res = await query(`/items/admin/`, {
+            method: 'POST',
+            body: JSON.stringify(userData) // Send user data in the request body
+        });
+        return await res.json(); // Return parsed JSON response
+    } catch (error) {
+        console.error('Error registering user:', error);
+        throw error; // Rethrow error for handling in the calling function
+    }
+}
+
+app.post('/register-admin', async (req, res) => {
+    try {
+        const { firstName, lastName, email, phone, password, role } = req.body;
+
+        // Validate required fields
+        if (!firstName || !lastName || !email || !phone || !password) {
+            return res.status(400).json({ error: 'Please fill in all fields' });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Construct user data object
+        const userData = {
+            firstname: firstName,
+            secondname: lastName,
+            email: email,
+            phone: phone,
+            password: hashedPassword,
+            role: role
+        };
+
+        // Register the user using the async function
+        const newUser = await registerAdmin(userData);
 
         // Send response indicating success
         res.status(201).json({ message: 'User registered successfully', user: newUser });
@@ -853,6 +1261,62 @@ app.post('/group-login', async (req, res) => {
     }
 });
 
+async function loginAdmin(email) {
+    try {
+        // console.log('Querying Directus for user with email:', email);
+        const response = await query(`/items/admin?filter[email][_eq]=${email}`, {
+            method: 'SEARCH',
+        });
+        const users = await response.json(); // Extract JSON data from the response
+
+        // Check if users array is empty or not
+        if (!users || users.length === 0) {
+            // console.log('No user found with email:', email);
+        }
+
+        return users;
+    } catch (error) {
+        console.error('Error querying user data:', error);
+        throw new Error('Error querying user data');
+    }
+}
+
+app.post('/admin-login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Please fill in all fields' });
+        }
+
+        // Fetch user data from Directus
+        const usersResponse = await loginAdmin(email);
+
+        // If no user found, return invalid credentials error
+        if (!usersResponse || !usersResponse.data || usersResponse.data.length === 0) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        const user = usersResponse.data[0]; // Extract the first user from the response
+
+        // Compare provided password with the hashed password stored in the user's record
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        // Handle invalid password
+        if (!passwordMatch) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        req.session.user = user;
+        // Respond with success message and redirect URL for verified users
+        return res.status(200).json({ message: 'Login successful', redirect: '/admin-dashboard' });
+    } catch (error) {
+        // Handle internal server error
+        console.error('Error logging in user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 async function getGroupProfile(userId) {
     try {
         const res = await query(`/items/groups?filter[id][_eq]=${userId}`, {
@@ -901,7 +1365,7 @@ app.post('/update-group', async (req, res) => {
             leadername: leader
         };
 
-        console.log(userData);
+        // console.log(userData);
 
         // Update user data with the new post data
         const updatedData = await updateGroups(userData);
@@ -937,7 +1401,7 @@ app.post('/delete-group-member', async (req, res) => {
     try {
         const { userId } = req.body;
 
-        console.log(userId)
+        // console.log(userId)
 
         const userData = {
             id: userId,
@@ -945,7 +1409,7 @@ app.post('/delete-group-member', async (req, res) => {
 
         const updatedData = await deleteGroupMember(userData);
 
-        console.log("Updated", updatedData)
+        // console.log("Updated", updatedData)
 
         res.status(201).json({ message: 'Deleted successfully', updatedData });
     } catch (error) {
@@ -983,6 +1447,43 @@ app.post('/edit-business-description', async (req, res) => {
 
         // Update user data with the new post data
         const updatedData = await updateGroupDescription(userData);
+
+        res.status(201).json({ message: 'Post updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update post. Please try again.' });
+    }
+});
+
+async function cartCheckout(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/orders/${userData.id}`, {
+            method: 'PATCH', // Assuming you want to update an existing item
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/checkout', async (req, res) => {
+    try {
+        const { itemId } = req.body;
+        const status = "paid";
+
+        const userData = {
+            id: itemId,
+            order_status: status
+        };
+
+        // console.log(userData);
+
+        // Update user data with the new post data
+        const updatedData = await cartCheckout(userData);
 
         res.status(201).json({ message: 'Post updated successfully', updatedData });
     } catch (error) {
@@ -1074,6 +1575,15 @@ async function getProducts() {
 
 app.get('/marketplace', checkSession, async (req, res) => {
     try {
+        const id = req.session.user.id;
+        const orders = await getMyOrders(id);
+
+        if (orders.length === 0) {
+            console.log('No orders found for user:', id);
+        }
+        const totalQuantity = orders
+            .filter(order => order.order_status === null) // Filter orders with null status
+            .reduce((sum, order) => sum + ( parseInt(order.quantity, 10) || 0), 0); // Sum quantities
         const products = await getProducts();
 
         // Log the entire products data for debugging
@@ -1081,12 +1591,50 @@ app.get('/marketplace', checkSession, async (req, res) => {
 
         // Check if products have data
         if (products && products.data && products.data.length > 0) {
-            res.render('marketplace', { products: products.data });
+            res.render('marketplace', { products: products.data, totalQuantity });
         } else {
-            res.render('marketplace', { product: [] }); // Render with empty product array
+            res.render('marketplace', { product: [], totalQuantity }); // Render with empty product array
         }
     } catch (error) {
         console.error('Error fetching marketplace data:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+async function getMyOrders(userId) {
+    try {
+        const response = await query(`/items/orders?filter[purchaser_user_id][_eq]=${userId}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const productsData = await response.json();
+            return productsData.data;
+        } else {
+            throw new Error('Failed to fetch products');
+        }
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+    }
+}
+
+app.get('/cart', checkSession, async (req, res) => {
+    try {
+        const id = req.session.user.id;
+
+        const orders = await getMyOrders(id);
+
+        if (orders.length === 0) {
+            console.log('No orders found for user:', id);
+        }
+        const totalQuantity = orders
+            .filter(order => order.order_status === null) // Filter orders with null status
+            .reduce((sum, order) => sum + ( parseInt(order.quantity, 10) || 0), 0); // Sum quantities
+        // Render the cart page with orders and total quantity
+        res.render('cart', { orders, totalQuantity });
+    } catch (error) {
+        console.error('Error fetching cart data:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -1102,7 +1650,7 @@ async function deleteProducts(itemData) {
             // 204 No Content response for successful deletion
             return { message: 'Deleted successfully' };
         } else {
-            const updatedData = await res.json();
+            const updatedData = await response.json();
             return { message: 'Deleted successfully', updatedData };
         }
     } catch (error) {
@@ -1123,7 +1671,69 @@ app.post('/delete-item-off-shelf', async (req, res) => {
 
         const updatedData = await deleteProducts(itemData);
 
-        console.log("Updated", updatedData)
+        // console.log("Updated", updatedData)
+
+        res.status(201).json({ message: 'Deleted successfully', updatedData });
+    } catch (error) {
+        console.error('Error in deletion:', error);
+        res.status(500).json({ message: 'Failed to delete. Please try again.' });
+    }
+});
+
+async function deleteItemInCart(itemData) {
+    try {
+        const response = await query(`/items/orders/${itemData.id}`, {
+            method: 'DELETE',
+            body: JSON.stringify(itemData)
+        });
+
+        if (response.status === 204) {
+            // 204 No Content response for successful deletion
+            return { message: 'Deleted successfully' };
+        } else {
+            const updatedData = await response.json();
+            return { message: 'Deleted successfully', updatedData };
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to delete');
+    }
+}
+
+app.post('/delete-item-off-cart', async (req, res) => {
+    try {
+        const { itemId } = req.body;
+
+        console.log(itemId)
+
+        const itemData = {
+            id: itemId,
+        }
+
+        const updatedData = await deleteItemInCart(itemData);
+
+        // console.log("Updated", updatedData)
+
+        res.status(201).json({ message: 'Deleted successfully', updatedData });
+    } catch (error) {
+        console.error('Error in deletion:', error);
+        res.status(500).json({ message: 'Failed to delete. Please try again.' });
+    }
+});
+
+app.post('/clear-cancelled-order', async (req, res) => {
+    try {
+        const { itemId } = req.body;
+
+        console.log(itemId)
+
+        const itemData = {
+            id: itemId,
+        }
+
+        const updatedData = await deleteItemInCart(itemData);
+
+        // console.log("Updated", updatedData)
 
         res.status(201).json({ message: 'Deleted successfully', updatedData });
     } catch (error) {

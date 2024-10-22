@@ -263,3 +263,30 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
 });
+
+function showTab(tabId) {
+    // Hide all tab panes
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    tabPanes.forEach(pane => {
+        pane.classList.remove('active');
+    });
+
+    // Remove active class from all tabs
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    // Show the clicked tab pane
+    const activeTabPane = document.getElementById(tabId);
+    activeTabPane.classList.add('active');
+
+    // Set the active class on the clicked tab
+    const activeTab = [...tabs].find(tab => tab.textContent === activeTabPane.querySelector('h3').textContent);
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
+}
+
+// Initialize to show the first tab
+showTab('all-orders'); 

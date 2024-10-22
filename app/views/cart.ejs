@@ -1,11 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart</title>
+    <link rel="icon" href="/images/logo1.png" type="image/x-icon">
+    <link rel="stylesheet" href="/styles/cart.css">
+    <link rel="stylesheet" href="/styles/loader.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
-    
+    <div class="top-menu" id="top-menu">
+        <img src="/images/logo1.png" alt="Logo Image" style="height: 60px; width: 60px;">
+        <div class="menu-icons">
+            <span class="material-symbols-outlined" id="cart">
+                shopping_cart 
+                <p id="cart-numbers" class="cart-numbers"><%= totalQuantity %></p>
+            </span>
+            
+            <span class="material-symbols-outlined" id="open-menu">menu</span>
+            <span class="material-symbols-outlined" id="close-menu">close</span>
+        </div>
+        <div class="sub-menu" id="sub-menu">
+            <div class="link-item"><span class="material-symbols-outlined">grid_view</span><a href="/home">Dashboard</a>
+            </div>
+            <div class="link-item"><span class="material-symbols-outlined">local_convenience_store</span><a
+                    href="/marketplace">Marketplace</a></div>
+            <div class="link-item"><span class="material-symbols-outlined">monitoring</span><a href="/home">Investor
+                    Insights</a></div>
+            <div class="link-item"><span class="material-symbols-outlined">newspaper</span><a href="/home">News Feed</a>
+            </div>
+            <div class="link-item"><span class="material-symbols-outlined">account_circle</span><a
+                    href="/home">Profile</a></div>
+            <div class="link-item"><span class="material-symbols-outlined">gavel</span><a href="#" id="terms">Terms of
+                    Service</a></div>
+        </div>
+    </div>
+    <div class="cart-display">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('cart-items')" title="Items you added to cart but have not paid for">Wish list</button>
+            <button class="tab active" onclick="showTab('new-orders')" title="Orders succesfully purchased by full payment">Paid</button>
+            <button class="tab" onclick="showTab('fulfilled-orders')" title="Orders you have received product for">Fulfilled</button>
+            <button class="tab" onclick="showTab('cancelled-orders')" title="Orders you purchased but cancelled or cancelled by product owner">Cancelled</button>
+        </div>
+        <div class="tab-content">
+            <div id="cart-items" class="tab-pane active">
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                        <% if (!order.order_status) { %> 
+                            <div class="card">
+                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <h3>Product: <%= order.product_name %></h3>
+                                <p>Order ID: <%= order.id %></p>
+                                <p>Quantity: <%= order.quantity || 'N/A' %></p>
+                                <div class="buttons">
+                                    <button class="checkout" id="checkout" title="Pay for item"  data-card-id="<%= order.id %>" data-product-id="<%= order.product_id %>">Checkout</button>
+                                    <p class="add" id="add" title="Add item to quantity cart" data-card-id="<%= order.id %>" data-product-id="<%= order.product_id %>"><span class="material-symbols-outlined">
+                                        add_shopping_cart
+                                        </span></p>
+                                    <p class="subtract" id="subtract" title="Subtract item quantity from cart" data-card-id="<%= order.id %>" data-product-id="<%= order.product_id %>"><span class="material-symbols-outlined">
+                                        remove_shopping_cart
+                                        </span></p>
+                                </div>
+                                <button class="remove" id="remove" title="Remove item from cart" data-card-id="<%= order.id %>">Remove</button>
+                            </div>
+                        <% } %>
+                    <% }); %>
+                <% } else { %>
+                    <p>No orders found.</p>
+                <% } %>              
+            </div>
+            <div id="new-orders" class="tab-pane">
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                        <% if (order.order_status === "paid") { %> 
+                            <div class="card">
+                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <h3>Product: <%= order.product_name %></h3>
+                                <p>Order ID: <%= order.id %></p>
+                                <p>Quantity: <%= order.quantity || 'N/A' %></p>
+                                <button class="cancel" id="cancel" title="Remove item from cart" data-card-id="<%= order.id %>" data-product-id="<%= order.product_id %>">Cancel order</button>
+                            </div>
+                        <% } %>
+                    <% }); %>
+                <% } else { %>
+                    <p>No paid orders found.</p>
+                <% } %> 
+            </div>
+            <div id="fulfilled-orders" class="tab-pane">
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                        <% if (order.order_status === "fulfilled") { %> <!-- Check if order_status is empty -->
+                            <div class="card">
+                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <h3>Product: <%= order.product_name %></h3>
+                                <p>Order ID: <%= order.id %></p>
+                                <p>Quantity: <%= order.quantity || 'N/A' %></p>
+                            </div>
+                        <% } %>
+                    <% }); %>
+                <% } else { %>
+                    <p>No fulfilled orders found.</p>
+                <% } %> 
+            </div>
+            <div id="cancelled-orders" class="tab-pane">
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                        <% if (order.order_status === "cancelled") { %> <!-- Check if order_status is empty -->
+                            <div class="card">
+                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <h3>Product: <%= order.product_name %></h3>
+                                <p>Order ID: <%= order.id %></p>
+                                <p>Quantity: <%= order.quantity || 'N/A' %></p>
+                                <h4>Clear only once you have your refund, no refund is given without proof of cancelling. It is recommended not to clear the order</h4>
+                                <button disabled class="clear" id="clear" title="Clear item frm cancelled orders" data-card-id="<%= order.id %>">Clear Item</button>
+                            </div>
+                        <% } %>
+                    <% }); %>
+                <% } else { %>
+                    <p>No cancelled orders found.</p>
+                <% } %> 
+            </div>
+        </div>
+    </div>    
+    <div class="feedback-div" id="feedback-div">
+        <p class="feedback" id="error"></p>
+        <p class="feedback" id="success"></p>
+    </div>
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+    <script src="/scripts/cart.js"></script>
 </body>
 </html>

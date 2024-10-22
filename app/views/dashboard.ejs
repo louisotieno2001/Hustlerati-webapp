@@ -174,8 +174,80 @@
                 <button class="button-87" id="submit_item">Submit</button>
             </dialog>
             <button class="button-87" id="add_to_shelf">+ Add to shelf</button>
-        </div>
+        </div> 
     </div>
+    <div class="order-display">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('all-orders')" title="All time orders">All Orders</button>
+            <button class="tab active" onclick="showTab('new-orders')" title="Orders succesfully purchased by full payment but not yet delivered">Pending</button>
+            <button class="tab" onclick="showTab('fulfilled-orders')" title="Orders customer received product for">Fulfilled</button>
+            <button class="tab" onclick="showTab('cancelled-orders')" title="Orders purchased but cancelled by customer">Cancelled</button>
+        </div>
+        <div class="tab-content">
+            <div id="all-orders" class="tab-pane active">
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %> 
+                        <div class="card">
+                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <h3>Product: <%= order.product_name %></h3>
+                                <p>Order ID: <%= order.id %></p>
+                                <p>Quantity: <%= order.quantity || 'N/A' %></p>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No orders found.</p>
+                <% } %>      
+            </div>
+            <div id="new-orders" class="tab-pane">
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                        <% if (order.order_status === "paid") { %> 
+                            <div class="card">
+                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <h3>Product: <%= order.product_name %></h3>
+                                <p>Order ID: <%= order.id %></p>
+                                <p>Quantity: <%= order.quantity || 'N/A' %></p>
+                            </div>
+                        <% } %>
+                    <% }); %>
+                <% } else { %>
+                    <p>No paid orders found.</p>
+                <% } %> 
+            </div>
+            <div id="fulfilled-orders" class="tab-pane">
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                        <% if (order.order_status === "fulfilled") { %> <!-- Check if order_status is empty -->
+                            <div class="card">
+                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <h3>Product: <%= order.product_name %></h3>
+                                <p>Order ID: <%= order.id %></p>
+                                <p>Quantity: <%= order.quantity || 'N/A' %></p>
+                            </div>
+                        <% } %>
+                    <% }); %>
+                <% } else { %>
+                    <p>No fulfilled orders found.</p>
+                <% } %> 
+            </div>
+            <div id="cancelled-orders" class="tab-pane">
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                        <% if (order.order_status === "cancelled") { %> <!-- Check if order_status is empty -->
+                            <div class="card">
+                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <h3>Product: <%= order.product_name %></h3>
+                                <p>Order ID: <%= order.id %></p>
+                                <p>Quantity: <%= order.quantity || 'N/A' %></p>
+                            </div>
+                        <% } %>
+                    <% }); %>
+                <% } else { %>
+                    <p>No cancelled orders found.</p>
+                <% } %>  
+            </div>
+        </div>
+    </div>  
     <script src="/scripts/dashboard.js"></script>
 </body>
 </html>

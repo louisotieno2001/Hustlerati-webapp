@@ -18,6 +18,31 @@ document.addEventListener('DOMContentLoaded', function () {
     const exitPost = document.getElementById('exit-post');
     const fileInput = document.getElementById('fileInput');
     const moreItems = document.getElementsByClassName('more-items');
+    const loader = document.getElementById('loader');
+    const errorParagraph = document.getElementById('error');
+    const success = document.getElementById('success');
+
+    async function showLoader() {
+        loader.style.display = 'flex';
+    }
+
+    async function hideLoader() {
+        loader.style.display = 'none';
+    }
+
+    function showFeedback() {
+        const feedbackDiv = document.getElementById('feedback-div');
+        feedbackDiv.style.display = 'block';
+        setTimeout(() => {
+            feedbackDiv.style.display = 'none';
+        }, 2000);
+    }
+
+    function reloadPage() {
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    }
 
     for (let i = 0; i < moreItems.length; i++) {
         moreItems[i].addEventListener('click', (e) => {
@@ -26,24 +51,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    exitPost.addEventListener('click', async(e)=>{
+    exitPost.addEventListener('click', async (e) => {
         e.preventDefault();
         postDialog.close();
     })
 
-    exitBtn.addEventListener('click', async(e)=>{
+    exitBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         moreDialog.close();
     })
-
-    // const handleClick = function handleClick(){
-    //     moreDialog.showModal()
-    // }
-
-    const moreButtons = document.querySelectorAll('#read-more');
-    moreButtons.forEach(button => {
-        button.addEventListener('click', handleClick);
-    });
 
     mindBtn.addEventListener('click', async (e) => {
         e.preventDefault()
@@ -52,13 +68,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     profileSubmit.addEventListener('click', async (e) => {
         e.preventDefault();
+        showLoader();
         const firstname = document.getElementById('fname').value;
         const lastname = document.getElementById('lname').value;
         const phone = document.getElementById('phone').value;
 
         // Validate input (you may want to implement more robust validation)
         if (!firstname || !lastname || !phone) {
-            alert("All fields are required.");
+            showFeedback();
+            errorParagraph.style.display = 'flex';
+            errorParagraph.innerText = "All fields are required.";
+            hideLoader();
             return;
         }
 
@@ -72,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(userData)
         try {
             // Send registration data to server
+            showLoader();
             const response = await fetch('/update-profile', {
                 method: "POST",
                 headers: {
@@ -83,14 +104,23 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (response.ok) {
-                alert("Profile Updated");
+                showFeedback();
+                success.style.display = 'flex';
+                success.innerText = "Updated succesfully.";
+                reloadPage();
                 editProfileDialog.close();
             } else {
-                alert("Registration failed. Please try again.");
+                showFeedback();
+                errorParagraph.style.display = 'flex';
+                errorParagraph.innerText = "Update failed. Please try again";
             }
         } catch (error) {
             console.error("Error during registration:", error);
-            alert("An error occurred. Please try again later.");
+            showFeedback();
+            errorParagraph.style.display = 'flex';
+            errorParagraph.innerText = "Something went wrong. Try again later";
+        } finally{
+            hideLoader();
         }
 
     })
@@ -127,23 +157,37 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(formData)
 
             try {
+                showLoader();
                 const response = await fetch('/update-pic', {
                     method: 'POST',
                     body: formData
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    // Assuming data contains the path to the uploaded image
-                    // You can then use this path to update the user's profile_pic field
+                    showFeedback();
+                    success.style.display = 'flex';
+                    success.innerText = "Profile uploaded successfully.";
+                    reloadPage();
                 } else {
                     console.error('Failed to upload image');
+                    showFeedback();
+                    errorParagraph.style.display = 'flex';
+                    errorParagraph.innerText = "Failed to upload the profile.";
                 }
             } catch (error) {
                 console.error('Error uploading image:', error);
+                showFeedback();
+                errorParagraph.style.display = 'flex';
+                errorParagraph.innerText = "Something went wrong. Try again later.";
+            }finally{
+                hideLoader();
             }
         } else {
             console.error('No file selected');
-        }
+            showFeedback();
+            errorParagraph.style.display = 'flex';
+            errorParagraph.innerText = "No file has been selected. Select a fle to proceed";
+        } 
     });
 
     logoutBtn.addEventListener('click', async (e) => {
@@ -269,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const previewdiv = document.getElementById('add-preview');
     const pickImage = document.getElementById('pick-image');
     const postBtn = document.getElementById('add');
-   
+
 
     postBtn.addEventListener('click', async (e) => {
         e.preventDefault()
@@ -302,12 +346,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     submitPostBtn.addEventListener('click', async (e) => {
         e.preventDefault();
+        showLoader();
         const title = document.getElementById('title').value;
         const body = document.getElementById('body').value;
 
         // Validate input (you may want to implement more robust validation)
         if (!title || !body) {
-            alert("Title and body are required.");
+            showFeedback();
+            errorParagraph.style.display = 'flex';
+            errorParagraph.innerText = "Both title and body fields are required.";
+            hideLoader();
             return;
         }
 
@@ -321,6 +369,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             // Send post data to server
+            showLoader();
             const response = await fetch('/update-news', {
                 method: "POST",
                 body: formData// Send FormData instead of JSON
@@ -329,16 +378,25 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (response.ok) {
-                alert("Post updated");
+                showFeedback();
+                success.style.display = 'flex';
+                success.innerText = "Posted successfully.";
+                reloadPage();
                 // Clear selected file data
                 selectedFileData = null;
                 postDialog.close();
             } else {
-                alert("Post update failed. Please try again.");
-            }
+                showFeedback();
+                errorParagraph.style.display = 'flex';
+                errorParagraph.innerText = "Post update failed. Please try again..";
+            } 
         } catch (error) {
             console.error("Error during post update:", error);
-            alert("An error occurred. Please try again later.");
+            showFeedback();
+            errorParagraph.style.display = 'flex';
+            errorParagraph.innerText = "An error occurred. Please try again later.";
+        }finally{
+            hideLoader();
         }
     });
 });

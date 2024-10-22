@@ -163,20 +163,19 @@ body {
 
 .cart-numbers {
     position: absolute;
-    top: -8px; 
-    right: -8px; 
-    background-color: white;
-    color: red; 
-    border-radius: 50%; 
-    width: 20px; 
-    height: 20px; 
+    top: -25px;
+    right: -8px;
+    background-color: #450F01;
+    color: white;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px; 
-    font-weight: bold;
-    border: 1px solid #4b281d; 
-    display: none;
+    font-size: 10px;
+    font-weight: bolder;
+    border: 1px solid #4b281d;
+    border-radius: 50%;
 }
 
 .add-to-cart{
@@ -188,7 +187,7 @@ body {
 }
 
 .add-to-cart button{
-    width: 70%;
+    width: 100%;
     padding: .4em;
     border: none;
     border-radius: 8px;
@@ -198,30 +197,44 @@ body {
     height: 50px;
     margin: .5px;
     cursor: pointer;
-}
-
-.add-to-cart p {
-    width: 15%;
-    background-color: #450F01;
-    height: 50px;
-    margin: .5px;
-    text-align: center;
-    font-size: larger;
-    cursor: pointer;
     display: flex;
-    justify-content: center; 
-    align-items: center; 
+    justify-content: center;
+    align-items: center;
 }
 
-
-#add{
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+.feedback-div {
+    position: fixed; 
+    top: 0; 
+    transition: opacity 0.5s ease;
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    background-color: transparent; 
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 9999; 
+    display: none;
+    pointer-events: none;
 }
 
-#subtract{
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+.feedback {
+    color: white; 
+    text-align: center;
+    border-radius: 8px; 
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8); /* Optional: background for the feedback message */
+    pointer-events: none;
+}
+
+#success{
+    display: none;
+    background-color: green;
+}
+
+#error{
+    display: none;
+    background-color: red;
 }
 
 @media (max-width: 480px) {

@@ -1,0 +1,101 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #5d4037;
+}
+
+.display {
+    margin: 20px;
+    width: 100%;
+}
+
+.filter{
+    width: 100%;
+    margin-bottom: 30px;
+    width: 96%;
+    background-color: #450F01;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.filter input{
+    width: 100%;
+    background: transparent;
+    color: white;
+    padding: .5em;
+    outline: none;
+    border: none;
+}
+
+.card {
+    padding: .5em;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin: 2px;
+    margin-bottom: 15px;
+    color: white;
+    width: 95%;
+    text-wrap: wrap;
+}
+
+.card h4 {
+    color: red;
+}
+
+.image {
+    height: 300px;
+    width: 300px;
+    background-position: center;
+    background-size: cover;
+    border-radius: 8px;
+}
+
+.fulfill {
+    width: 295px;
+    margin: 1px;
+    background-color: #450F01;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: .5em;
+    margin-top: 5px;
+    color: white;
+}
+
+.feedback-div {
+    position: fixed; 
+    top: 0; 
+    transition: opacity 0.5s ease;
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 9999; 
+    display: none; /* Initially hidden */
+    pointer-events: none;
+}
+
+.feedback {
+    color: white; 
+    text-align: center;
+    border-radius: 8px; 
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8); /* Optional: background for the feedback message */
+    pointer-events: none;
+}
+
+#success{
+    display: none;
+    background-color: green;
+}
+
+#error{
+    display: none;
+    background-color: red;
+}

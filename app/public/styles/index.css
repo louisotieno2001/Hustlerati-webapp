@@ -337,7 +337,7 @@ input::focus {
 /* CSS */
 .button-87 {
   margin: 10px;
-  margin-left: 200px;
+  margin-left: 150px;
   padding: 15px 40px;
   text-align: center;
   text-transform: uppercase;
@@ -430,4 +430,39 @@ input::focus {
 .more-items .material-symbols-outlined {
   margin-left: 5px; 
   color: rgb(46, 45, 45);
+}
+
+.feedback-div {
+  position: fixed; 
+  top: 0; 
+  transition: opacity 0.5s ease;
+  left: 0; 
+  width: 100%;
+  height: 100%;
+  background-color: transparent; 
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  z-index: 9999; 
+  display: none;
+  pointer-events: none;
+}
+
+.feedback {
+  color: white; 
+  text-align: center;
+  border-radius: 8px; 
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8); /* Optional: background for the feedback message */
+  pointer-events: none;
+}
+
+#success{
+  display: none;
+  background-color: green;
+}
+
+#error{
+  display: none;
+  background-color: red;
 }
