@@ -10,6 +10,7 @@ body {
     /* Use column layout */
     justify-content: center;
     align-items: center;
+    overflow-y: auto;
 }
 
 #pass-visibility {
@@ -39,6 +40,20 @@ body {
     padding: 1.8em;
     /* Reduced padding */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+}
+
+.contact-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 5px;
+    /* Reduced margin */
+    width: 100%;
+    /* Slightly smaller width */
+    border-radius: 12px;
+    padding: 1.8em;
 }
 
 .login-form h1 {
@@ -52,17 +67,13 @@ body {
 .input-div {
     border-radius: 15px;
     padding: 0.3em;
-    /* Reduced padding for input div */
     background: #3e2723;
     margin: 10px 0;
-    /* Reduced margin */
     display: flex;
     align-items: center;
     width: 100%;
     border: 2px solid white;
-    /* White border */
     transition: background 0.3s, border 0.3s;
-    /* Added transition for border */
 }
 
 .input-div:hover {
@@ -93,6 +104,17 @@ input::placeholder {
 input:focus {
     border-bottom: 2px solid white;
     /* White focus border */
+}
+
+.input-div textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    font-size: larger;
+    font-weight: bolder;
+    margin: 10px;
 }
 
 span {
@@ -149,13 +171,41 @@ span {
     text-decoration: none;
 }
 
-select{
+select {
     background-color: transparent;
     border: none;
     outline: none;
     width: 100%;
     color: white;
     font-size: large;
+}
+
+.feedback-div {
+    position: fixed;
+    top: 0;
+    transition: opacity 0.5s ease;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+}
+
+.feedback {
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Optional: background for the feedback message */
+    pointer-events: none;
 }
 
 #error {
@@ -174,6 +224,36 @@ select{
     display: none;
     padding: .5em;
     border-radius: 5px;
+}
+
+.material-symbols-outlined {
+    cursor: pointer;
+    font-size: larger;
+}
+
+.review{
+    background-color: #2b130d;
+    padding: .3em;
+    border-radius: 15px;
+    width: 100%;
+    border: white 2px solid;
+}
+
+
+.stars{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.star {
+    cursor: pointer;
+    color: white; /* default color */
+}
+
+.star.clicked {
+    color: yellow; /* color when clicked */
 }
 
 /* Media Query for Small Screens */
@@ -205,5 +285,18 @@ select{
 
     .stuff a {
         font-size: 12px;
+    }
+
+    .contact-form {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        margin-top: 5px;
+        /* Reduced margin */
+        width: 300px;
+        /* Slightly smaller width */
+        border-radius: 12px;
+        padding: 1.8em;
     }
 }

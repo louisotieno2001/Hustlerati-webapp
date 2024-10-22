@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business registration</title>
+    <title>Business registration | Hustlerati</title>
     <link rel="stylesheet" href="/styles/auth.css">
     <link rel="stylesheet" href="/styles/small-devices.css">
     <link rel="stylesheet" href="/styles/loader.css">
@@ -11,9 +12,17 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
-     
+
     </style>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-VCMHYS7QJ4');
+    </script>
 </head>
+
 <body>
     <div class="login-page">
         <div class="login-form">
@@ -28,15 +37,15 @@
                 <div class="input-div">
                     <span class="material-symbols-outlined">
                         domain
-                        </span>
+                    </span>
                     <!-- <input type="text" id="niche" name="niche" required placeholder="Niche"> -->
-                     <select name="niche" id="niche">
+                    <select name="niche" id="niche">
                         <option value="Fashion">Fashion</option>
                         <option value="Electronics">Electronics</option>
                         <option value="Food">Food</option>
                         <option value="Art">Art</option>
                         <option value="Software">Software</option>
-                     </select>
+                    </select>
                 </div>
                 <div class="input-div">
                     <span class="material-symbols-outlined">
@@ -48,14 +57,14 @@
                     <div class="input-div">
                         <span class="material-symbols-outlined">
                             location_on
-                            </span>
+                        </span>
                         <input type="text" name="location" id="location" placeholder="Location" required>
                     </div>
                 </div>
                 <div class="input-div">
                     <span class="material-symbols-outlined">
                         counter_7
-                        </span>
+                    </span>
                     <input type="text" name="numbers" id="numbers" placeholder="Number of employees" required>
                 </div>
                 <p class="feedback" id="error"></p>
@@ -70,4 +79,5 @@
     </div>
     <script src="/scripts/registerBusinessLogic.js"></script>
 </body>
+
 </html>

@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms&Conditions</title>
+    <title>Privacy | Hustlerati</title>
     <link rel="stylesheet" href="/styles/index.css">
     <link rel="icon" href="/images/logo1.png" type="image/x-icon">
     <style>
@@ -25,7 +25,7 @@
             padding: 1em;
         }
 
-        .back{
+        .back {
             color: aliceblue;
             background-color: #616161;
             border-radius: 8px;
@@ -35,12 +35,12 @@
             font-weight: bold;
         }
 
-        #back-link{
+        #back-link {
             text-decoration: none;
             color: chocolate;
         }
 
-        #bottom_bar{
+        #bottom_bar {
             margin: 20px;
             background-color: #3e2723;
             margin-left: 30px;
@@ -48,9 +48,16 @@
             border-radius: 8px;
             padding: 1em;
         }
-
     </style>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-VCMHYS7QJ4');
+    </script>
 </head>
+
 <body>
     <div class="area" id="area">
         <h2 class="back">
@@ -59,9 +66,11 @@
         <div class="back">
             <%- privacy.body || 'No body content available.' %>
         </div>
-        <p class="back">Time updated: <%= privacy.time || 'N/A' %></p>
-        <p class="back">Date updated: <%= privacy.date || 'N/A' %></p>
-        
+        <p class="back">Time updated: <%= privacy.time || 'N/A' %>
+        </p>
+        <p class="back">Date updated: <%= privacy.date || 'N/A' %>
+        </p>
+
         <div class="bottom_bar" id="bottom_bar">
             <footer class="footer">
                 <center>
@@ -70,7 +79,7 @@
             </footer>
         </div>
     </div>
-    
+
 </body>
 
 </html>

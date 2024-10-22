@@ -65,7 +65,6 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
-    ssl: { rejectUnauthorized: false }
 });
 
 /**
@@ -840,6 +839,10 @@ app.get('/admin-register', async (req, res) => {
     res.render('admin-registration');
 });
 
+app.get('/reviews', async (req, res) => {
+    res.render('review');
+});
+
 async function getCorrectUser(userId) {
     try {
         const response = await query(`/items/users?filter[id][_eq]=${userId}`, {
@@ -1086,6 +1089,49 @@ app.post('/register-user', async (req, res) => {
         res.status(201).json({ message: 'User registered successfully', user: newUser });
     } catch (error) {
         console.error('Error inserting user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+async function contactUs(userData) {
+    try {
+        let res = await query(`/items/contact_us/`, {
+            method: 'POST',
+            body: JSON.stringify(userData) // Send user data in the request body
+        });
+        return await res.json(); // Return parsed JSON response
+    } catch (error) {
+        console.error('Error adding message:', error);
+        throw error; // Rethrow error for handling in the calling function
+    }
+}
+
+app.post('/contact-us', checkSession, async (req, res) => {
+    try {
+        const { firstName, lastName, email, phone, message, stars } = req.body;
+
+        // Validate required fields
+        if (!firstName || !lastName || !email || !phone || !message ||!stars) {
+            return res.status(400).json({ error: 'Please fill in all fields' });
+        }
+
+        // Construct user data object
+        const userData = {
+            firstname: firstName,
+            lastname: lastName,
+            email: email,
+            phone: phone,
+            message: message,
+            stars: stars
+        };
+
+        // Register the user using the async function
+        const newMessage = await contactUs(userData);
+
+        // Send response indicating success
+        res.status(201).json({ message: 'Message sent successfully', message: newMessage });
+    } catch (error) {
+        console.error('Error inserting message:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });

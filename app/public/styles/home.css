@@ -418,6 +418,7 @@ input:focus {
         background-color: #4e342e;
         display: none;
         z-index: 3000;
+        overflow-y: scroll;
     }
 
     .input-div {

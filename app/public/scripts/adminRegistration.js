@@ -82,6 +82,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("Error during registration:", error);
             showError();
             error.innerText = "An error occurred. Please try again later.";
+        }finally{
+            hideLoader();
         }
     });
 });

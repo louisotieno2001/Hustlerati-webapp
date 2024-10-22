@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketplace</title>
+    <title>Marketplace | Hustlerati</title>
     <link rel="icon" href="/images/logo1.png" type="image/x-icon">
     <link rel="stylesheet" href="/styles/small-devices.css">
     <link rel="stylesheet" href="/styles/index.css">
@@ -12,16 +12,26 @@
     <link rel="stylesheet" href="/styles/loader.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-VCMHYS7QJ4');
+    </script>
 </head>
+
 <body>
     <div class="top-menu" id="top-menu">
         <img src="/images/logo1.png" alt="Logo Image" style="height: 60px; width: 60px;">
         <div class="menu-icons">
             <span class="material-symbols-outlined" id="cart">
-                shopping_cart 
-                <p id="cart-numbers" class="cart-numbers"><%= totalQuantity %></p>
+                shopping_cart
+                <p id="cart-numbers" class="cart-numbers">
+                    <%= totalQuantity %>
+                </p>
             </span>
-            
+
             <span class="material-symbols-outlined" id="open-menu">menu</span>
             <span class="material-symbols-outlined" id="close-menu">close</span>
         </div>
@@ -91,14 +101,22 @@
                                                                         <p><strong>
                                                                                 <%= product.item_price %>
                                                                             </strong></p>
-                                                                        <p>Condition: <%= product.item_condition %> 
+                                                                        <p>Condition: <%= product.item_condition %>
                                                                         </p>
                                                                         <p>In stock: <%= product.item_quantity %>
                                                                         </p>
                                                                         <div class="add-to-cart">
-                                                                            <button class="add-to-cart-button" data-product-id="<%= product.id %>" data-product-name="<%= product.item_name %>" data-seller-id="<%= product.user_id %>" data-item-quantity="<%= product.item_quantity %>" data-product-image="<%= product.item_image %>" data-unit-price="<%= product.item_price %>"> <span class="material-symbols-outlined" id="cart">
-                                                                                shopping_cart 
-                                                                            </span>Add to cart</button>
+                                                                            <button class="add-to-cart-button"
+                                                                                data-product-id="<%= product.id %>"
+                                                                                data-product-name="<%= product.item_name %>"
+                                                                                data-seller-id="<%= product.user_id %>"
+                                                                                data-item-quantity="<%= product.item_quantity %>"
+                                                                                data-product-image="<%= product.item_image %>"
+                                                                                data-unit-price="<%= product.item_price %>">
+                                                                                <span class="material-symbols-outlined"
+                                                                                    id="cart">
+                                                                                    shopping_cart
+                                                                                </span>Add to cart</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -121,4 +139,5 @@
     <script src="/scripts/marketPlaceLogic.js"></script>
     <script src="/scripts/filterCategory.js"></script>
 </body>
+
 </html>
