@@ -816,6 +816,10 @@ async function getProfile(userId) {
 }
 
 app.get('/', async (req, res) => {
+    res.render('landingPage')
+});
+
+app.get('/register', async (req, res) => {
     res.render('index')
 });
 

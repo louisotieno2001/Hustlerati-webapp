@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page | Hustlerati</title>
+    <style>
+        @font-face {
+            font-family: JuneBug;
+            src: url('JUNEBUG.TTF');
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #5d4037;
+            color: #fff;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: transparent;
+        }
+
+        .logo {
+            font-size: xx-large;
+            font-weight: bold;
+            color: #BC8D00;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login {
+            background-color: #BC8D00;
+            text-decoration: none;
+        }
+
+        .signup {
+            background-color: #BC8D00;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .welcome {
+            flex: 1;
+            display: flex;
+            justify-content: left;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            margin: 30px;
+            height: 70vh;
+            flex-direction: row;
+        }
+
+        .text {
+            width: 50%;
+            height: 70vh;
+            font-size: xx-large;
+        }
+
+        .image {
+            background-image: url('/images/shopping.avif');
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            width: 50%;
+            height: 70vh;
+        }
+
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #450F01;
+            color: #fff;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            color: #fff;
+        }
+
+        .cookie-banner p {
+            margin: 0;
+        }
+
+        .cookie-banner button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cookie-banner button.reject {
+            background-color: #f44336;
+        }
+
+        .social-nav {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .social-nav a {
+            margin: 0 10px;
+            color: #BC8D00;
+            text-decoration: none;
+        }
+
+        .social-nav img {
+            margin: 0 5px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .explain {
+            font-family: 'MyWebFont', Fallback, sans-serif;
+            font-style: italic;
+            font-weight: lighter;
+        }
+
+        .title {
+            color: #BC8D00;
+        }
+
+        @media screen and (max-width: 500px) {
+            .logo {
+                font-size: x-large;
+                font-weight: bold;
+                color: #BC8D00;
+            }
+
+            .welcome {
+                flex: 1;
+                display: flex;
+                justify-content: left;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 20px;
+                margin: 3px;
+                height: 70vh;
+            }
+
+            .explain {
+                font-family: 'MyWebFont', Fallback, sans-serif;
+                font-style: italic;
+                font-size: x-large;
+                margin: 5px;
+            }
+
+            .title {
+                color: #BC8D00;
+            }
+
+            .text {
+                width: 100%;
+                height: 70vh;
+                font-size: lighter;
+            }
+
+            .image {
+                background-image: url('/images/shopping.avif');
+                background-size: cover;
+                background-position: center;
+                border-radius: 15px;
+                width: 100%;
+                height: 70vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">Hustlerati</div>
+        <div>
+            <a href="/login" class="button login" onclick="login()">Login</a>
+            <a href="/register" class="button signup" onclick="signup()">Signup</a>
+        </div>
+    </header>
+
+    <div class="welcome">
+        <div class="text">
+            <h1 class="title">Karibu Hustlerati!</h1>
+            <h1 class="explain">Get all your fashion, art and electronics needs met today. Tomorrow is too far!</h1>
+        </div>
+        <div class="image">
+
+        </div>
+    </div>
+
+    <div class="cookie-banner" id="cookieBanner">
+        <p>We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of
+            cookies.</p>
+        <div>
+            <button class="accept" onclick="acceptCookies()">Accept</button>
+            <button class="reject" onclick="rejectCookies()">Reject</button>
+        </div>
+    </div>
+
+    <nav class="social-nav">
+        <a aria-label="Chat on WhatsApp" href="https://wa.me/254746852485"><img src="/images/icon-whatsapp.webp" alt="Whatsapp" ></a>
+        <a href="#"><img src="/images/facebook.png" alt="Facebook" ></a>
+        <a href="#"><img src="/images/x.jpg" alt="X" ></a>
+        <a href="#"><img src="/images/instagram.png" alt="Instagram"></a>
+        <a href="#"><img src="/images/linkedin.png" alt="Linked In"></a>
+    </nav>
+
+    <script>
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        // Function to get a cookie value
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Function to accept cookies
+        function acceptCookies() {
+            setCookie('cookieConsent', 'accepted', 30);
+            document.getElementById('cookieBanner').style.display = 'none';
+        }
+
+        // Function to reject cookies
+        function rejectCookies() {
+            window.location.href = 'https://www.google.com';
+        }
+
+        // Check for cookie consent on page load
+        window.onload = function () {
+            const cookieConsent = getCookie('cookieConsent');
+            if (cookieConsent === 'accepted') {
+                document.getElementById('cookieBanner').style.display = 'none';
+            } else {
+                document.getElementById('cookieBanner').style.display = 'flex';
+            }
+        };
+    </script>
+</body>
+
+</html>

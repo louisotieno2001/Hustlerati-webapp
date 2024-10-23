@@ -23,6 +23,13 @@
     </script>
     </head>
 <body>
+    <div class="cookie-banner" id="cookieBanner" style="display: flex; z-index: 999;">
+        <p>We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies.</p>
+        <div>
+            <button class="accept" onclick="acceptCookies()">Accept</button>
+            <button class="reject" onclick="rejectCookies()">Reject</button>
+        </div>
+    </div>
     <div class="tabs-container">
         <div class="top-bar">
         </div>
@@ -107,7 +114,7 @@
                     <% } else { %>
                         <% blogs.forEach((blog, index) => { %>
                             <% if (blog.post_image !== null && blog.post_title !== null && blog.post_body !== null) { %>
-                                <div class="card" id="card-<%= index %>" style="background-image: url('https://127.0.0.1:8055/assets/<%= blog.post_image %>');" data-title="<%- blog.post_title %>" data-body="<%- blog.post_body %>" data-image="/uploads/<%= blog.post_image %>">
+                                <div class="card" id="card-<%= index %>" style="background-image: url('/assets/<%= blog.post_image %>'); background-position: center; background-size: cover;" data-title="<%- blog.post_title %>" data-body="<%- blog.post_body %>" data-image="/uploads/<%= blog.post_image %>">
                                     <div class="text"> 
                                         <h1 id="title-<%= index %>"><%- blog.post_title %></h1>
                                         <p id="body-<%= index %>"><%- truncateText(blog.post_body, 200) %> <a href="#" class="read-more" data-post-body="<%- blog.post_body %>">Read more</a></p>
