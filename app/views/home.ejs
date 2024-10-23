@@ -64,7 +64,7 @@
             </div>
         </div>
         <div class="middle-tab" id="middle-tab">
-            <div class="display" id="dashboard">
+            <div class="display active-tab" id="dashboard">
                 <img src="/images/logo1.png" alt="" srcset="" style="height: 160px; width: 160px; " id="home-logo" />
                 <h1>Welcome to Hustlerati business Suite</h1>
                 <% if (userData && userData.business_name) { %>
@@ -80,7 +80,7 @@
                         <% } %>
 
             </div>
-            <div class="display push active-tab" id="shop">
+            <div class="display push" id="shop">
                 <div id="ads-container" class="">
                     <% function truncateText(text, maxLength) {
                         if (!text) return ''; // Return empty string if text is null or undefined
