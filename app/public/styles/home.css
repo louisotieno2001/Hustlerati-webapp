@@ -376,7 +376,9 @@ input:focus {
 
 .read-more {
     color: #ffcc00;
-    /* Highlight color for the 'Read more' link */
+    /* Highlight color for the 'Read mor    <a href="/reviews" class="loans" title="Loans"><span class="material-symbols-outlined">
+                            contact_support
+                            </span>Contact Us</a>e' link */
     text-decoration: underline;
 }
 
@@ -412,13 +414,13 @@ input:focus {
 
     #menu-tab {
         margin-top: 45px;
-        height: 100vh;
-        left: -8px;
+        height: 1200px;
+        left: -10px;
         width: 100%;
         background-color: #4e342e;
         display: none;
         z-index: 3000;
-        overflow-y: scroll;
+        overflow: auto;
     }
 
     .input-div {
