@@ -18,34 +18,12 @@ const { v4: uuidv4 } = require('uuid');
 const { Buffer } = require('buffer');
 const url = process.env.DIRECTUS_URL;
 const token = process.env.TOKEN;
-const Redis = require('ioredis'); // Changed import to require
-const redis = new Redis(); // Redis client initialization
+// const Redis = require('ioredis'); // Changed import to require
+// const redis = new Redis(); // Redis client initialization
 const { promisify } = require('util');
 const { fetch } = require('fetch-ponyfill')();
 const fetchAsync = promisify(fetch);
-const redisClient = redis
-
-// Function to clear Redis cache
-async function clearCache() {
-    try {
-        // Use the DEL command to delete the cached data
-        await redisClient.del('cachedUsers');
-        console.log('Cache cleared successfully.');
-    } catch (error) {
-        console.error('Error clearing cache:', error);
-    }
-}
-
-// Add a route to trigger cache clearance
-app.get('/clear-cache', async (req, res) => {
-    try {
-        await clearCache();
-        res.status(200).send('Cache cleared successfully.');
-    } catch (error) {
-        console.error('Error clearing cache:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
+// const redisClient = redis
 
 app.use(cors());
 app.use(bodyParser.json());
