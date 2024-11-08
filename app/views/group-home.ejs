@@ -99,6 +99,15 @@
         <div id="loans" class="tabcontent" style="display: none;">
             <!-- Content for Loans tab -->
             <h2>Group loans</h2>
+            <button class="add" id="apply-group-loan" data-group-id="<%= group.id %>"><span
+                class="material-symbols-outlined">
+                edit
+            </span>Apply for group loan</button>
+            <h2>Personal loans</h2>
+            <button class="add" id="apply-personal-loan" data-group-id="<%= group.id %>"><span
+                class="material-symbols-outlined">
+                edit
+            </span>Apply for personal loan</button>
         </div>
         <!-- Bottom tabs for small screens -->
         <div class="bottom-tabs">
@@ -136,6 +145,13 @@
                 <button class="submit-member" id="submit-member"> Submit</button>
                 <button class="close-add" id="close-add">Close</button>
             </div>
+        </dialog>
+        <dialog id="apply-loan" class="edit-group">
+            <input type="number" name="amount" id="amount">
+            <select name="loan-type" id="loan-type">
+                <option value="Personal">Personaly</option>
+                <option value="Group">Group</option>
+            </select>
         </dialog>
         <dialog class="edit-group" id="edit-group">
             <h1>Fill in the details below</h1>
