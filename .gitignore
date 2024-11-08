@@ -7,4 +7,4 @@ uploads/
 *.cache/
 cms/
 *.cache
-.env
+/app/.env
