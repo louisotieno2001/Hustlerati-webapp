@@ -246,6 +246,7 @@ input::focus {
   width: 20%;
   transition: width 10s, background-color 10s;
   background-color: #fff;
+  overflow-y: auto;
 }
 
 .display {

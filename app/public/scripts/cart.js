@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const clearItemBtn = document.querySelectorAll('.clear');
     const addItemBtn = document.querySelectorAll('.add');
     const subtractItemBtn = document.querySelectorAll('.subtract');
+    const purchaseDialog = document.getElementById('purchase-dialog');
+    const exitPurchase = document.getElementById('exit-purchase');
 
 
     async function showLoader() {
@@ -38,6 +40,17 @@ document.addEventListener('DOMContentLoaded', async function () {
             location.reload();
         }, 1000);
     }
+
+    function showDialog(){
+        purchaseDialog.classList.add('show');
+        purchaseDialog.showModal();
+    }
+
+    exitPurchase.addEventListener('click', async (e)=>{
+        e.preventDefault()
+        purchaseDialog.close()
+        reloadPage();
+    })
 
     removeItemBtn.forEach(async function (button) {
         button.addEventListener('click', async function () {
@@ -176,7 +189,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                         showFeedback();
                         success.style.display = 'flex';
                         success.innerText = "Purchase successful!";
-                        reloadPage();
+                        showDialog();
                     } else {
                         showFeedback();
                         errorParagraph.style.display = 'flex';
@@ -312,6 +325,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                         showFeedback();
                         success.style.display = 'flex';
                         success.innerText = "Purchase successful!";
+                        purchaseDialog.showModal();
                         reloadPage();
                     } else {
                         showFeedback();

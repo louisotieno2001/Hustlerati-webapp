@@ -317,15 +317,15 @@ app.post('/update-cancelled-quantity', async (req, res) => {
 
         const correctProduct = await getCorrectProduct(productData)
 
-        console.log(correctProduct);
+        // console.log(correctProduct);
 
         const originalValue = correctProduct.data.item_quantity;
 
-        console.log(originalValue)
+        // console.log(originalValue)
 
         const newValue = parseInt(originalValue, 10) + 1;
 
-        console.log(newValue);
+        // console.log(newValue);
 
         // Construct userData object with post information and picture path
         const userData = {
@@ -1753,7 +1753,7 @@ app.post('/clear-cancelled-order', async (req, res) => {
     try {
         const { itemId } = req.body;
 
-        console.log(itemId)
+        // console.log(itemId)
 
         const itemData = {
             id: itemId,

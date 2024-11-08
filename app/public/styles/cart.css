@@ -275,6 +275,49 @@ body {
     color: white;
 }
 
+.purchase-dialog{
+    border-radius: 15px;
+    /* color: white; */
+    border: none;
+    background-color: #4b281d;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: green;
+}
+
+.purchase-dialog.show{
+    border-radius: 15px;
+    color: green;
+    border: none;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.success-icon{
+    background-image: url('/images/success.png');
+    background-position: center;
+    background-size: cover;
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+}
+
+.exit-purchase{
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 45px;
+    margin: 15px;
+    padding: 1em;
+    font-size: medium;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 @media (max-width: 480px) {
     .cart-display {
         width: 98%;
