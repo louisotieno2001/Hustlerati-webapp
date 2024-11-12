@@ -98,13 +98,20 @@
                                                                         <p>
                                                                             <%= product.item_description %>
                                                                         </p>
-                                                                        <p><strong>
-                                                                                <%= product.item_price %>
-                                                                            </strong></p>
-                                                                        <p>Condition: <%= product.item_condition %>
+                                                                        <p style="display: flex;flex-direction: row; justify-content: start; align-items: center;">
+                                                                            <span class="material-symbols-outlined" style="color: yellow;">
+                                                                                universal_currency
+                                                                                </span>@<%= product.item_price %>
+                                                                           
+                                                                       
                                                                         </p>
-                                                                        <p>In stock: <%= product.item_quantity %>
+                                                                        <p style="display: flex;flex-direction: row; justify-content: start; align-items: center;"><span class="material-symbols-outlined" style="color: yellow;">
+                                                                            info
+                                                                            </span> <%= product.item_quantity %> Units left
                                                                         </p>
+                                                                        <p style="display: flex;flex-direction: row; justify-content: start; align-items: center;"><span class="material-symbols-outlined" style="color: yellow;">
+                                                                            check_circle
+                                                                            </span><%= product.item_condition %>
                                                                         <div class="add-to-cart">
                                                                             <button class="add-to-cart-button"
                                                                                 data-product-id="<%= product.id %>"
