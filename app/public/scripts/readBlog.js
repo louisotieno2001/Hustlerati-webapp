@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Set blog title and body
     document.getElementById('blog-title').innerText = title || "No Title Available";
-    document.getElementById('blog-body').innerText = body || "No Content Available.";
+    document.getElementById('blog-body').innerHTML = body || "No Content Available.";
 
     // Set background image
     const blogImageDiv = document.getElementById('blog-image');

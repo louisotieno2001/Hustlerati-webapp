@@ -843,7 +843,7 @@ async function getCorrectUser(userId) {
     }
 }
 
-app.get('/admin-dashboard', async (req, res) => {
+app.get('/admin-dashboard', checkSession, async (req, res) => {
     try {
         const orders = await getAllOrders();
 
