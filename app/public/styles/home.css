@@ -395,6 +395,7 @@ input:focus {
         width: 100%;
         overflow: hidden;
         position: relative;
+        /* background-color: white; */
     }
 
     .add {
@@ -507,6 +508,7 @@ input:focus {
     #profile {
         margin-top: 120px;
         width: 100%;
+        margin-left: -15px;
         overflow-x: hidden;
     }
 
@@ -514,7 +516,7 @@ input:focus {
         width: 100%;
         display: flex;
         flex-direction: column;
-        margin: 5px;
+        margin: 1px;
         box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
     }
 
@@ -556,5 +558,21 @@ input:focus {
         user-select: none;
         -webkit-user-select: none;
         touch-action: manipulation;
+    }
+
+    .menu-items{
+        margin-top: -20px;
+    }
+
+    .menu-items img{
+        margin-left: -125px;
+    }
+
+    .menu-items a{
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
+        margin-left: 30px;
     }
 }

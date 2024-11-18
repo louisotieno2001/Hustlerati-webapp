@@ -49,7 +49,7 @@
         </div>
     </div>
     <div class="display">
-        <div class="business-card">
+        <div class="business-card" data-user-agreement="<%= userData.contract_agreement %>">
             <div class="business-details">
                 <div class="profile-pic" id="profile-pic"
                     style="background-image: url('/uploads/<%= userData.profile_pic %>'); background-size: cover; background-position: center;">
@@ -110,6 +110,15 @@
                             placeholder="What do you wan to say..."></textarea>
                     </div>
                     <button class="button-87" id="post-submit">Submit</button>
+                </dialog>
+                <dialog id="contract-dialog">
+                    <h2>If you can see this screen, don't worry, it could be because of the folloing reason</h2>
+                    <ul>
+                        <li>You are registered as a vendor on this platform but have not accepted our vendor contract agreement</li>
+                        <li>You account may have been banned and has been unbanned after a successful appeal</li>
+                    </ul>
+                    <h2>It is not a cause of concern just proceed below and make you contract agreemnt valid by clicking the button below!</h2>
+                    <button class="button-87" id="contract" style="margin-left: 120px; border: none; outline: none;">Proceed to contract</button>
                 </dialog>
             </div>
         </div>

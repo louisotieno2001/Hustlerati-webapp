@@ -342,10 +342,29 @@ span {
     flex-direction: row;
 }
 
+#contract-dialog {
+    background-color: #5d4037;
+    border-radius: 8px;
+    border: none;
+    width: 500px;
+    align-self: left;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+    color: white;
+}
+
 @media only screen and (max-width: 768px) {
     .sub-items {
         position: static;
         display: none;
+    }
+
+    #contract-dialog {
+        background-color: #36211b;
+        border-radius: 8px;
+        border: none;
+        width: 400px;
+        align-self: left;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
     }
 
     .display {

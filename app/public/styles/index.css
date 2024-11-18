@@ -180,7 +180,7 @@ input::focus {
 .middle-tab {
   flex: 3;
   color: white;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   height: max-content;
 }
 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract | Hustlerati</title>
+    <link rel="icon" href="/images/logo1.png" type="image/x-icon">
+    <link rel="stylesheet" href="/styles/vendor_contract.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <div class="contract-container" data-user-id="<%= user.id %>">
+        <div class="img-container" id="img"></div>
+        <h1>HUSTLERATI</h1>
+        <div class="underline"></div>
+        <h2><%= terms.contract_title %></h2>
+        <div id="body"><%- terms.contract_body %></div>
+        <div class="buttons">
+            <input type="button" value="Accept contract" class="button-87" id="accept">
+            <button class="button-87 down" id="download"><span class="material-symbols-outlined">
+                download
+                </span>Download as PDF</button>
+        </div>
+    </div>
+    <dialog id="back-home-dialog">
+        <p>Contract sucessfully signed. We hope you have understood the implication of each line you have read in the contract. For any further inquiries feel free to reach us anytime at the email provided at the bottom of the contract or <a href="" style="color: yellow;">hustlerati.africa@gmail.com</a>. Any misunderstanding will be cleared then. As you exit this page we assume you understand everything and thus incase of any issue youre explicitly binded by this docment for as long as you are our customer.</p>
+        <input type="button" value="Continue browsing" class="button-87" id="back-home">
+    </dialog>
+    <script src="/scripts/vendor_contract.js"></script>
+</body>
+</html>

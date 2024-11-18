@@ -17,6 +17,22 @@ document.addEventListener('DOMContentLoaded', async function () {
     var removeItemBtn = document.querySelectorAll('.remove-item');
     const error = document.getElementById('error');
     const success = document.getElementById('success');
+    const contractDialog = document.getElementById('contract-dialog');
+    const contractBtn = document.getElementById('contract');
+    const businessCard = document.querySelector('.business-card');
+    
+    const businessAgreement = businessCard.getAttribute('data-user-agreement');
+
+    console.log("Name",businessAgreement);
+
+    if(businessAgreement === 'false'){
+        contractDialog.showModal();
+    }
+
+    contractBtn.addEventListener('click', async(e)=>{
+        e.preventDefault()
+        window.location.href = '/vendor-contract'
+    })
 
     function showFeedback() {
         const feedbackDiv = document.getElementById('feedback-div');

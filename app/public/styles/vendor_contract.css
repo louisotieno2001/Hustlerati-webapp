@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #5d4037;
+    height: 100vh;
+    color: #212121;
+}
+
+@media print {
+    body {
+        width: 21cm;
+        height: 29.7cm;
+        margin: 30mm 45mm 30mm 45mm;
+    }
+}
+
+@page {
+    size: 21cm 29.7cm;
+    margin: 30mm 45mm 30mm 45mm;
+     /* change the margins as you want them to be. */
+}
+
+h1{
+    text-align: center;
+    color: #F09819;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+h2{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 60px;
+    text-align: center;
+}
+
+h3{
+    font-weight: lighter;
+}
+
+.underline{
+    height: 1.5px;
+    width: 100%;
+    background-color: #5d4037;
+}
+
+.img-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    height: 150px;
+    width: 150px;
+    background-image: url('/images/logo1.png');
+    background-position: center; 
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    margin-left: 672px;
+}
+
+.contract-container {
+    padding: 2rem;
+    border-radius: 8px;
+    width: 95%;
+    overflow-x: auto;
+    overflow-wrap: break-word;
+    page-break-after: always;
+    background-color: beige;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-87 {
+    margin: 10px;
+    margin-left: 5px;
+    padding: 15px 40px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    /* border-radius: 10px; */
+    display: block;
+    border: 0px;
+    font-weight: 700;
+    box-shadow: 0px 0px 14px -7px #f09819;
+    background-image: linear-gradient(45deg, #FF512F 0%, #F09819 51%, #FF512F 100%);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.down{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#back-home-dialog{
+    background-color: #5d4037;
+    border-radius: 8px;
+    border: none;
+    width: 400px;
+    color: white;
+}
+
+@media(max-width: 600px) {
+    .buttons {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .img-container {
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        height: 150px;
+        width: 150px;
+        background-image: url('/images/logo1.png');
+        background-position: center; 
+        background-size: cover; 
+        background-repeat: no-repeat; 
+        margin-left: 110px;
+    }
+    
+    .contract-container {
+        padding: 2rem;
+        border-radius: 8px;
+        width: 85%;
+        overflow-x: none;
+        overflow-wrap: break-word;
+        page-break-after: always;
+        background-color: beige;
+    }
+
+    h2{
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 35px;
+    }
+}

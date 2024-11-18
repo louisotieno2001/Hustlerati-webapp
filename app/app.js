@@ -100,6 +100,29 @@ async function getTerms() {
     }
 }
 
+app.get('/terms&conditions', async (req, res) => {
+    try {
+        const terms = await getTerms();
+        console.log("Terms", terms.data[0]);
+        res.render('terms&conditions', { terms: terms.data[0] });
+    } catch (error) {
+        console.error('Error fetching terms and conditions:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/vendor-contract', checkSession, async (req, res) => {
+    try {
+        const terms = await getTerms();
+        const user = req.session.user;
+        console.log("Terms", terms.data[0]);
+        res.render('vendor_contract', { terms: terms.data[0], user});
+    } catch (error) {
+        console.error('Error fetching terms and conditions:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 async function getAds() {
     try {
         const response = await query('/items/users', {
@@ -190,6 +213,44 @@ app.post('/update-business', checkSession, async (req, res) => {
 
         // Send "ok" response to the frontend
         res.status(200).json({ success: true, message: 'Business updated successfully' });
+
+    } catch (error) {
+        console.error('Error in route handler:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+async function updateVendorAgreement(userData) {
+    try {
+        // Use your custom query function to send the update query
+        const res = await query(`/items/users/${userData.id}`, {
+            method: 'PATCH', // Assuming you want to update an existing item
+            body: JSON.stringify(userData) // Convert userData to JSON string
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/update-vendor-agreement', checkSession, async (req, res) => {
+    try {
+        // Destructure data from req.body
+        const {userId} = req.body;
+
+        // Construct userData object
+        const userData = {
+            id: userId,
+            contract_agreement: true
+        };
+
+        // Call updateBusiness function with userData
+        const updatedData = await updateBusiness(userData);
+
+        // Send "ok" response to the frontend
+        res.status(200).json({ success: true, message: 'Agreement updated successfully' });
 
     } catch (error) {
         console.error('Error in route handler:', error);
@@ -824,6 +885,9 @@ app.get('/admin-register', async (req, res) => {
 app.get('/reviews', async (req, res) => {
     res.render('review');
 });
+app.get('/suspend', async (req, res) => {
+    res.render('suspend');
+});
 
 async function getCorrectUser(userId) {
     try {
@@ -868,17 +932,6 @@ app.get('/admin-dashboard', checkSession, async (req, res) => {
     } catch (error) {
         console.error('Error fetching orders or users:', error);
         res.status(500).send('Internal Server Error');
-    }
-});
-
-app.get('/terms&conditions', async (req, res) => {
-    try {
-        const terms = await getTerms();
-        console.log("Terms", terms.data[0]);
-        res.render('terms&conditions', { terms: terms.data[0] });
-    } catch (error) {
-        console.error('Error fetching terms and conditions:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
@@ -1017,11 +1070,14 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        req.session.user = user;
-        // Respond with success message and redirect URL for verified users
-        return res.status(200).json({ message: 'Login successful', redirect: '/home' });
-
-
+          // Check user status
+          if (user.suspend) {
+            req.session.user = user; // Store user data in session
+            return res.status(200).json({ message: 'Login successful', redirect: '/suspend' });
+        } else {
+            req.session.user = user; // Store user data in session
+            return res.status(200).json({ message: 'Login successful', redirect: '/home' });
+        }
     } catch (error) {
         // Handle internal server error
         console.error('Error logging in user:', error);
