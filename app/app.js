@@ -12,6 +12,7 @@ const axios = require('axios');
 const session = require('express-session');
 const multer = require('multer');
 const pgSession = require('connect-pg-simple')(session);
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const port = process.env.PORT || 3000;
 const saltRounds = 10;
 const { v4: uuidv4 } = require('uuid');
@@ -23,7 +24,15 @@ const token = process.env.TOKEN;
 const { promisify } = require('util');
 const { fetch } = require('fetch-ponyfill')();
 const fetchAsync = promisify(fetch);
-// const redisClient = redis
+
+// Proxy configuration
+const apiProxy = createProxyMiddleware({
+    target: 'http://0.0.0.0:8055/assets', // Target server where requests should be proxied
+    changeOrigin: true, // Adjust the origin of the request to the target
+});
+
+// Use the proxy middleware for all requests to /assets
+app.use('/assets', apiProxy);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -96,7 +105,8 @@ async function getTerms() {
         }
     } catch (error) {
         console.error('Error fetching users data:', error);
-        throw error; // You can handle the error in the calling code
+        throw error; 
+        //TODO: HandlE the error in the calling code
     }
 }
 
@@ -116,7 +126,7 @@ app.get('/vendor-contract', checkSession, async (req, res) => {
         const terms = await getTerms();
         const user = req.session.user;
         console.log("Terms", terms.data[0]);
-        res.render('vendor_contract', { terms: terms.data[0], user});
+        res.render('vendor_contract', { terms: terms.data[0], user });
     } catch (error) {
         console.error('Error fetching terms and conditions:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -136,7 +146,7 @@ async function getAds() {
         }
     } catch (error) {
         console.error('Error fetching users data:', error);
-        throw error; // You can handle the error in the calling code
+        throw error;  //TODO: HandlE the error in the calling code
     }
 }
 
@@ -153,7 +163,7 @@ async function getNews() {
         }
     } catch (error) {
         console.error('Error fetching users data:', error);
-        throw error; // You can handle the error in the calling code
+        throw error;  //TODO: HandlE the error in the calling code
     }
 }
 
@@ -171,16 +181,15 @@ async function getInvestorsBlog() {
         }
     } catch (error) {
         console.error('Error fetching users data:', error);
-        throw error; // You can handle the error in the calling code
+        throw error;  //TODO: HandlE the error in the calling code
     }
 }
 
 async function updateBusiness(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', // Assuming you want to update an existing item
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            method: 'PATCH', 
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -222,10 +231,9 @@ app.post('/update-business', checkSession, async (req, res) => {
 
 async function updateVendorAgreement(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', // Assuming you want to update an existing item
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            method: 'PATCH', 
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -238,7 +246,7 @@ async function updateVendorAgreement(userData) {
 app.post('/update-vendor-agreement', checkSession, async (req, res) => {
     try {
         // Destructure data from req.body
-        const {userId} = req.body;
+        const { userId } = req.body;
 
         // Construct userData object
         const userData = {
@@ -247,7 +255,7 @@ app.post('/update-vendor-agreement', checkSession, async (req, res) => {
         };
 
         // Call updateBusiness function with userData
-        const updatedData = await updateBusiness(userData);
+        const updatedData = await updateVendorAgreement(userData);
 
         // Send "ok" response to the frontend
         res.status(200).json({ success: true, message: 'Agreement updated successfully' });
@@ -260,10 +268,9 @@ app.post('/update-vendor-agreement', checkSession, async (req, res) => {
 
 async function updateProfile(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', // Assuming you want to update an existing item
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            method: 'PATCH', 
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -275,10 +282,9 @@ async function updateProfile(userData) {
 
 async function updatePic(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', // Assuming you want to update an existing item
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            method: 'PATCH', 
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -290,10 +296,9 @@ async function updatePic(userData) {
 
 async function updatePosts(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/users/${userData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -305,10 +310,9 @@ async function updatePosts(userData) {
 
 async function updateProductQuantities(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/shelf/${userData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -320,7 +324,6 @@ async function updateProductQuantities(userData) {
 
 async function getCorrectProduct(productData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/shelf/${productData.id}`, {
             method: 'GET',
         });
@@ -408,10 +411,9 @@ app.post('/update-cancelled-quantity', async (req, res) => {
 
 async function cancelOrder(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/orders/${userData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -446,10 +448,9 @@ app.post('/cancel-order', async (req, res) => {
 
 async function completeOrder(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/orders/${userData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -484,7 +485,6 @@ app.post('/complete-order', async (req, res) => {
 
 async function getCorrectOrder(productData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/orders/${productData.id}`, {
             method: 'GET',
         });
@@ -498,10 +498,9 @@ async function getCorrectOrder(productData) {
 
 async function updateItemNumberInCart(orderData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/orders/${orderData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(orderData) // Convert userData to JSON string
+            body: JSON.stringify(orderData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -735,10 +734,9 @@ app.post('/add-order', async (req, res) => {
 
 async function updateNews(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/news/`, {
-            method: 'POST', // Assuming you want to update an existing item
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            method: 'POST', 
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -810,7 +808,6 @@ app.post('/update-pic', upload.single('profilePic'), async (req, res) => {
         res.status(500).json({ message: 'Failed to update profile picture. Please try again.' });
     }
 });
-
 
 app.post('/update-profile', checkSession, async (req, res) => {
     try {
@@ -887,6 +884,12 @@ app.get('/reviews', async (req, res) => {
 });
 app.get('/suspend', async (req, res) => {
     res.render('suspend');
+});
+app.get('/forgot-password', async (req, res) => {
+    res.render('forgot-password');
+});
+app.get('/reset-password', async (req, res) => {
+    res.render('reset-password');
 });
 
 async function getCorrectUser(userId) {
@@ -1065,13 +1068,15 @@ app.post('/login', async (req, res) => {
         // Compare provided password with the hashed password stored in the user's record
         const passwordMatch = await bcrypt.compare(password, user.password);
 
+        console.log(passwordMatch);
+
         // Handle invalid password
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-          // Check user status
-          if (user.suspend) {
+        // Check user status
+        if (user.suspend) {
             req.session.user = user; // Store user data in session
             return res.status(200).json({ message: 'Login successful', redirect: '/suspend' });
         } else {
@@ -1149,7 +1154,7 @@ app.post('/contact-us', checkSession, async (req, res) => {
         const { firstName, lastName, email, phone, message, stars } = req.body;
 
         // Validate required fields
-        if (!firstName || !lastName || !email || !phone || !message ||!stars) {
+        if (!firstName || !lastName || !email || !phone || !message || !stars) {
             return res.status(400).json({ error: 'Please fill in all fields' });
         }
 
@@ -1424,10 +1429,9 @@ app.get('/hustlers/group/home', async (req, res) => {
 
 async function updateGroups(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/groups/${userData.id}`, {
-            method: 'PATCH', // Assuming you want to update an existing item
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            method: 'PATCH', 
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -1504,10 +1508,9 @@ app.post('/delete-group-member', async (req, res) => {
 
 async function updateGroupDescription(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/groups/${userData.id}`, {
-            method: 'PATCH', // Assuming you want to update an existing item
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            method: 'PATCH', 
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -1541,10 +1544,9 @@ app.post('/edit-business-description', async (req, res) => {
 
 async function cartCheckout(userData) {
     try {
-        // Use your custom query function to send the update query
         const res = await query(`/items/orders/${userData.id}`, {
-            method: 'PATCH', // Assuming you want to update an existing item
-            body: JSON.stringify(userData) // Convert userData to JSON string
+            method: 'PATCH', 
+            body: JSON.stringify(userData) 
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -1667,7 +1669,7 @@ app.get('/marketplace', checkSession, async (req, res) => {
         }
         const totalQuantity = orders
             .filter(order => order.order_status === null) // Filter orders with null status
-            .reduce((sum, order) => sum + ( parseInt(order.quantity, 10) || 0), 0); // Sum quantities
+            .reduce((sum, order) => sum + (parseInt(order.quantity, 10) || 0), 0); // Sum quantities
         const products = await getProducts();
 
         // Log the entire products data for debugging
@@ -1714,7 +1716,7 @@ app.get('/cart', checkSession, async (req, res) => {
         }
         const totalQuantity = orders
             .filter(order => order.order_status === null) // Filter orders with null status
-            .reduce((sum, order) => sum + ( parseInt(order.quantity, 10) || 0), 0); // Sum quantities
+            .reduce((sum, order) => sum + (parseInt(order.quantity, 10) || 0), 0); // Sum quantities
         // Render the cart page with orders and total quantity
         res.render('cart', { orders, totalQuantity });
     } catch (error) {
@@ -1823,6 +1825,125 @@ app.post('/clear-cancelled-order', async (req, res) => {
     } catch (error) {
         console.error('Error in deletion:', error);
         res.status(500).json({ message: 'Failed to delete. Please try again.' });
+    }
+});
+
+// Function to check if a user exists by email
+async function userExists(email) {
+    const res = await query(`/items/users?filter[email][_eq]=${email}`, {
+        method: 'GET',
+    });
+
+    if (!res.ok) {
+        throw new Error('Error checking user existence');
+    }
+
+    const data = await res.json();
+    return data.data.length > 0; // Return true if user exists
+}
+
+async function requestPasswordReset(userData) {
+    try {
+        let res = await query(`/items/forgot_password/`, {
+            method: 'POST',
+            body: JSON.stringify(userData) // Send user data in the request body
+        });
+        return await res.json(); // Return parsed JSON response
+    } catch (error) {
+        console.error('Error requesting user pssword reset:', error);
+        throw error; // Rethrow error for handling in the calling function
+    }
+}
+
+app.post('/reset-request', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        // Check if the user already exists
+        const exists = await userExists(email);
+
+        if (!exists) {
+            // Return an error response if user does not exist
+            return res.status(409).json({ error: 'This user email does not exist in Hustlerati' });
+        }
+
+        // Proceed with password reset if user exists
+        const userData = { supplied_email: email };
+        const newPassword = await requestPasswordReset(userData);
+
+        return res.status(200).json({ success: 'Password reset link will be sent to you as soon as possible.' });
+
+    } catch (err) {
+        console.error('Error during reset request:', err);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+// async function getTheCorrectUser(email) {
+//     try {
+//         const response = await query(`/items/users?filter[email][_eq]=${email}`, {
+//             method: 'GET'
+//         });
+
+//         if (response.ok) {
+//             const productsData = await response.json();
+//             return productsData.data;
+//         } else {
+//             throw new Error('Failed to fetch products');
+//         }
+//     } catch (error) {
+//         console.error('Error fetching products:', error);
+//         throw error;
+//     }
+// }
+
+async function resetPassword(userData) {
+    try {
+        const res = await query(`/items/users/${userData.email}`, {
+            method: 'PATCH', 
+            body: JSON.stringify(userData) 
+        });
+        const newPassword = await res.json();
+        return newPassword; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        console.log("Error", error)
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/password-reset', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const exists = await userExists(email);
+
+        // console.log("Exists, exists", exists);
+
+        if (!exists) {
+            // Return an error response if user does not exist
+            return res.status(409).json({ error: 'This user email does not exist in Hustlerati' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // console.log("Hashed", hashedPassword)
+
+        const userData = {
+            email: email,
+            password: hashedPassword,
+        }
+
+        console.log(userData)
+
+        const newPassword = await resetPassword(userData);
+
+        console.log(newPassword);
+
+        res.status(201).json({ message: 'Password reset successfully', newPassword });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).json({ message: 'Failed to reset password. Please try again.' });
     }
 });
 

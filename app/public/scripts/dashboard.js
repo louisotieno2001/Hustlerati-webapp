@@ -20,29 +20,29 @@ document.addEventListener('DOMContentLoaded', async function () {
     const contractDialog = document.getElementById('contract-dialog');
     const contractBtn = document.getElementById('contract');
     const businessCard = document.querySelector('.business-card');
-    
+
     const businessAgreement = businessCard.getAttribute('data-user-agreement');
 
-    console.log("Name",businessAgreement);
+    console.log("Name", businessAgreement);
 
-    if(businessAgreement === 'false'){
+    if (businessAgreement === 'false') {
         contractDialog.showModal();
     }
 
-    contractBtn.addEventListener('click', async(e)=>{
+    contractBtn.addEventListener('click', async (e) => {
         e.preventDefault()
         window.location.href = '/vendor-contract'
     })
 
     function showFeedback() {
         const feedbackDiv = document.getElementById('feedback-div');
-        feedbackDiv.style.display = 'block'; 
+        feedbackDiv.style.display = 'block';
         setTimeout(() => {
             feedbackDiv.style.display = 'none';
         }, 2000);
     }
 
-    function reloadPage(){
+    function reloadPage() {
         setTimeout(() => {
             location.reload();
         }, 2000);
@@ -181,6 +181,21 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     pickImage.addEventListener('click', (e) => {
         e.preventDefault();
+
+        // Request camera access if needed (for mobile browsers or when you want camera input)
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then((stream) => {
+                console.log("Camera access granted.");
+                // You can use the stream for capturing media or create a video preview, etc.
+                // Stop the stream after you're done
+                stream.getTracks().forEach(track => track.stop());
+            })
+            .catch((err) => {
+                console.error("Camera access denied:", err);
+                alert("Camera access is required for media capture.");
+            });
+
+        // Trigger file input click
         fileInput.click();
         previewDiv.style.display = 'block';
     });
