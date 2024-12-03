@@ -328,6 +328,10 @@ input:focus {
     /* Center the title */
 }
 
+.insight-title{
+    font-size: large;
+}
+
 #insights-card {
     display: flex;
     flex-wrap: wrap;

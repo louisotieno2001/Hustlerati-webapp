@@ -327,6 +327,10 @@ body {
         margin-top: 65px;
     }
 
+    .purchase-dialog{
+        width: 300px;
+    }
+
     .image {
         height: 300px;
         width: 100%;
@@ -344,6 +348,16 @@ body {
         border-radius: 5px;
         padding: .5em;
         margin-top: 5px;
+    }
+
+    .purchase-dialog h1{
+        font-size: small;
+    }
+
+    .success-icon{
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
     }
     
 }
