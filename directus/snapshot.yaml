@@ -3825,18 +3825,6 @@ fields:
       foreign_key_table: null
       foreign_key_column: null
 relations:
-  - collection: directus_settings
-    field: public_favicon
-    related_collection: directus_files
-    meta: null
-    schema:
-      table: directus_settings
-      column: public_favicon
-      foreign_key_table: directus_files
-      foreign_key_column: id
-      constraint_name: directus_settings_public_favicon_foreign
-      on_update: NO ACTION
-      on_delete: NO ACTION
   - collection: investors_blog
     field: post_image
     related_collection: directus_files
