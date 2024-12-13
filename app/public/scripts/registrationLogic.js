@@ -53,6 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
             phone,
             password
         };
+
+        console.log(userData)
         try {
             // Send registration data to server
             showLoader();

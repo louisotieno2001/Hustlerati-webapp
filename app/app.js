@@ -1879,31 +1879,32 @@ app.post('/reset-request', async (req, res) => {
     }
 });
 
-// async function getTheCorrectUser(email) {
-//     try {
-//         const response = await query(`/items/users?filter[email][_eq]=${email}`, {
-//             method: 'GET'
-//         });
+async function getTheCorrectUser(email) {
+    try {
+        const response = await query(`/items/users?filter[email][_eq]=${email}`, {
+            method: 'GET'
+        });
 
-//         if (response.ok) {
-//             const productsData = await response.json();
-//             return productsData.data;
-//         } else {
-//             throw new Error('Failed to fetch products');
-//         }
-//     } catch (error) {
-//         console.error('Error fetching products:', error);
-//         throw error;
-//     }
-// }
+        if (response.ok) {
+            const productsData = await response.json();
+            return productsData.data;
+        } else {
+            throw new Error('Failed to fetch products');
+        }
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+    }
+}
 
 async function resetPassword(userData) {
     try {
-        const res = await query(`/items/users/${userData.email}`, {
+        const res = await query(`/items/users/${userData.id}`, {
             method: 'PATCH', 
             body: JSON.stringify(userData) 
         });
         const newPassword = await res.json();
+        // console.log("Error from function", newPassword.errors)
         return newPassword; // Return updated data
     } catch (error) {
         console.error('Error:', error);
@@ -1920,6 +1921,12 @@ app.post('/password-reset', async (req, res) => {
 
         // console.log("Exists, exists", exists);
 
+        const user = await getTheCorrectUser(email)
+
+        const id = user[0]?.id
+        // console.log("My user", user);
+        // console.log("My user id", id);
+
         if (!exists) {
             // Return an error response if user does not exist
             return res.status(409).json({ error: 'This user email does not exist in Hustlerati' });
@@ -1930,17 +1937,17 @@ app.post('/password-reset', async (req, res) => {
         // console.log("Hashed", hashedPassword)
 
         const userData = {
-            email: email,
-            password: hashedPassword,
+            id:id,
+            password: hashedPassword
         }
 
-        console.log(userData)
+        // console.log("Password:",userData.password)
 
         const newPassword = await resetPassword(userData);
 
-        console.log(newPassword);
+        // console.log(newPassword);
 
-        res.status(201).json({ message: 'Password reset successfully', newPassword });
+        res.status(201).json({ message: 'Password reset successfully'});
     } catch (error) {
         console.error('Error resetting password:', error);
         res.status(500).json({ message: 'Failed to reset password. Please try again.' });

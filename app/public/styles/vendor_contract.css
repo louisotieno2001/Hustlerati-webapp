@@ -57,11 +57,12 @@ h3{
 .contract-container {
     padding: 2rem;
     border-radius: 8px;
-    width: 95%;
+    width: 96%;
     overflow-x: auto;
     overflow-wrap: break-word;
     page-break-after: always;
     background-color: beige;
+    margin-bottom: 10px;
 }
 
 .buttons {
