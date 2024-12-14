@@ -29,24 +29,28 @@
                 </span>
                 <input type="text" id="gname" name="gname" required placeholder="Group name">
             </div>
+            <p class="error" id="g-name-error"></p>
             <div class="input-div">
                 <span class="material-symbols-outlined">
                     account_circle
                 </span>
                 <input type="text" id="lname" name="lname" required placeholder="Group leader name">
             </div>
+            <p class="error" id="l-name-error"></p>
             <div class="input-div">
                 <span class="material-symbols-outlined">
                     mail
                 </span>
                 <input type="email" id="email" name="email" required placeholder="Group email address">
             </div>
+            <p class="error" id="mail-error"></p>
             <div class="input-div">
                 <span class="material-symbols-outlined">
                     phone_enabled
                 </span>
                 <input type="tel" name="phone" id="phone" placeholder="Group phone" required>
             </div>
+            <p class="error" id="phone-error"></p>
             <div class="input-div">
                 <span class="material-symbols-outlined">
                     security
@@ -56,6 +60,7 @@
                     visibility
                 </span>
             </div>
+            <p class="error" id="pass-error"></p>
             <p class="feedback" id="error"></p>
             <p class="feedback" id="success"></p>
             <button id="registerButton" class="button-5" role="button">Register</button>
@@ -107,12 +112,72 @@
                     const email = document.getElementById('email').value;
                     const phone = document.getElementById('phone').value;
                     const password = document.getElementById('password').value;
+                    const groupNameError = document.getElementById('g-name-error');
+                    const leaderNameError = document.getElementById('l-name-error');
+                    const mailError = document.getElementById('mail-error');
+                    const passError = document.getElementById('pass-error');
+                    const phoneError = document.getElementById('phone-error');
+
 
                     // Validate input (you may want to implement more robust validation)
                     if (!groupName || !leaderName || !email || !phone || !password) {
                         hideLoader();
                         showError();
                         error.innerText = "All fields are required.";
+                        return;
+                    }
+
+                    // Regex patterns for validation
+                    const groupNameRegex = /^.{2,}$/; // At least 2 characters
+                    const leaderNameRegex = /^.{2,}$/; // At least 2 characters
+                    const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    const phoneRegex = /^\d{10}$/; // 10 digits, only numbers
+
+                    // Validate inputs
+                    if (!groupNameRegex.test(groupName)) {
+                        groupNameError.style.display = 'block';
+                        groupNameError.innerText = "Group name must consist at least 2 characters.";
+                    }
+                    if (!leaderNameRegex.test(leaderName)) {
+                        leaderNameError.style.display = 'block';
+                        leaderNameError.innerText = "Leader name must consist at least 2 characters.";
+                    }
+                    if (!mailRegex.test(email)) {
+                        mailError.style.display = 'block';
+                        mailError.innerText = "Email must have an @ sign.";
+                    }
+                    if (!phoneRegex.test(phone)) {
+                        phoneError.style.display = 'block';
+                        phoneError.innerText = "Phone number must be exactly 10 digits.";
+                    }
+
+                    // Password validation
+                    const passwordErrors = [];
+
+                    if (password.length < 8) {
+                        passwordErrors.push("Password must be at least 8 characters long.");
+                    }
+                    if (!/[A-Z]/.test(password)) {
+                        passwordErrors.push("Password must include at least one uppercase letter.");
+                    }
+                    if (!/[a-z]/.test(password)) {
+                        passwordErrors.push("Password must include at least one lowercase letter.");
+                    }
+                    if (!/\d/.test(password)) {
+                        passwordErrors.push("Password must include at least one number.");
+                    }
+                    if (!/[@$!%*?&(){}^,.;:#<>]/.test(password)) {
+                        passwordErrors.push("Password must include at least one special character.");
+                    }
+
+                    // Display password errors
+                    if (passwordErrors.length > 0) {
+                        passError.style.display = 'block'
+                        passError.innerText = passwordErrors.join(' ');
+                    }
+
+                    // If there are validation errors, stop submission
+                    if (groupNameError.innerText || leaderNameError.innerText || mailError.innerText || phoneError.innerText || passError.innerText) {
                         return;
                     }
 
@@ -151,7 +216,7 @@
                         console.error("Error during registration:", error);
                         showError();
                         error.innerText = "An error occurred. Please try again later.";
-                    }finally{
+                    } finally {
                         hideLoader();
                     }
                 });

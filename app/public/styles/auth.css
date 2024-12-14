@@ -256,6 +256,16 @@ select {
     color: yellow; /* color when clicked */
 }
 
+.error{
+    display: none;
+    color: red;
+    background-color: white;
+    width: 100%;
+    border-radius: 5px;
+    text-align: left;
+    padding: .2em;
+}
+
 /* Media Query for Small Screens */
 @media (max-width: 480px) {
     .login-form {

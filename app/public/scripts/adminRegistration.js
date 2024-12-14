@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const loader = document.getElementById('loader');
     const error = document.getElementById('error');
     const success = document.getElementById('success');
+    const firstNameError = document.getElementById('f-name-error');
+    const secondNameError = document.getElementById('s-name-error');
+    const mailError = document.getElementById('mail-error');
+    const passError = document.getElementById('pass-error');
+    const phoneError = document.getElementById('phone-error');
+
 
     async function showLoader() {
         loader.style.display = 'flex';
@@ -43,6 +49,60 @@ document.addEventListener('DOMContentLoaded', function () {
             showError();
             error.innerText = "All fields are required.";
             hideLoader()
+            return;
+        }
+
+        // Regex patterns for validation
+        const firstNameRegex = /^.{2,}$/; // At least 2 characters
+        const secondNameRegex = /^.{2,}$/; // At least 2 characters
+        const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const phoneRegex = /^\d{10}$/; // 10 digits, only numbers
+
+        // Validate inputs
+        if (!firstNameRegex.test(firstName)) {
+            firstNameError.style.display = 'block';
+            firstNameError.innerText = "First name must consist at least 2 characters.";
+        }
+        if (!secondNameRegex.test(lastName)) {
+            secondNameError.style.display = 'block';
+            secondNameError.innerText = "Second name must consist at least 2 characters.";
+        }
+        if (!mailRegex.test(email)) {
+            mailError.style.display = 'block';
+            mailError.innerText = "Email must have an @ sign.";
+        }
+        if (!phoneRegex.test(phone)) {
+            phoneError.style.display = 'block';
+            phoneError.innerText = "Phone number must be exactly 10 digits.";
+        }
+
+        // Password validation
+        const passwordErrors = [];
+
+        if (password.length < 8) {
+            passwordErrors.push("Password must be at least 8 characters long.");
+        }
+        if (!/[A-Z]/.test(password)) {
+            passwordErrors.push("Password must include at least one uppercase letter.");
+        }
+        if (!/[a-z]/.test(password)) {
+            passwordErrors.push("Password must include at least one lowercase letter.");
+        }
+        if (!/\d/.test(password)) {
+            passwordErrors.push("Password must include at least one number.");
+        }
+        if (!/[@$!%*?&(){}^,.;:#<>]/.test(password)) {
+            passwordErrors.push("Password must include at least one special character.");
+        }
+
+        // Display password errors
+        if (passwordErrors.length > 0) {
+            passError.style.display = 'block'
+            passError.innerText = passwordErrors.join(' ');
+        }
+
+        // If there are validation errors, stop submission
+        if (firstNameError.innerText ||secondNameError.innerText || mailError.innerText || phoneError.innerText  || passError.innerText) {
             return;
         }
 
