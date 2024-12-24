@@ -20,8 +20,8 @@ const { Buffer } = require('buffer');
 const url = process.env.DIRECTUS_URL;
 const token = process.env.TOKEN;
 // Redis setup
-const Redis = require('ioredis'); // Changed import to require
-const redis = new Redis(); // Redis client initialization
+// const Redis = require('ioredis'); // Changed import to require
+// const redis = new Redis(); // Redis client initialization
 const { promisify } = require('util');
 const { fetch } = require('fetch-ponyfill')();
 const fetchAsync = promisify(fetch);
