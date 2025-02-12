@@ -111,7 +111,11 @@
                                                                         </p>
                                                                         <p style="display: flex;flex-direction: row; justify-content: start; align-items: center;"><span class="material-symbols-outlined" style="color: yellow;">
                                                                             check_circle
-                                                                            </span><%= product.item_condition %>
+                                                                            </span><%= product.item_condition %></p>
+                                                                            <p style="display: flex;flex-direction: row; justify-content: start; align-items: center;"><span class="material-symbols-outlined" style="color: yellow;">
+                                                                                info
+                                                                                </span> Product by <%= product.business_name %>
+                                                                            </p>
                                                                         <div class="add-to-cart">
                                                                             <button class="add-to-cart-button"
                                                                                 data-product-id="<%= product.id %>"

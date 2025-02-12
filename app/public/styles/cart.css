@@ -133,6 +133,7 @@ body {
     border-radius: 5px;
     overflow: hidden;
     margin-top: 70px;
+    color: #fff;
 }
 
 .tabs {
@@ -144,7 +145,8 @@ body {
     flex: 1;
     padding: 10px;
     cursor: pointer;
-    background-color: #450F01;
+    background-color: #4b281d;
+    color: #fff;
     border: none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -164,7 +166,7 @@ body {
 
 .tab-content {
     padding: 20px;
-    border: 1px solid #450F01;
+    border: 1px solid #4b281d;
 }
 
 .tab-pane {

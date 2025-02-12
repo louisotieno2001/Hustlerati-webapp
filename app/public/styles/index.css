@@ -251,6 +251,7 @@ input::focus {
 
 .display {
   display: none;
+  overflow: auto;
 }
 
 .active-tab {

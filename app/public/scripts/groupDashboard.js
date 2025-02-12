@@ -367,6 +367,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    document.getElementById('group-loan').addEventListener('click', async () => {
+        alert("Coming soon")
+    })
+
+
+    document.getElementById('personal-loan').addEventListener('click', async () => {
+        alert("Coming soon")
+    })
+
 });
 
 function updateUnderline() {

@@ -420,9 +420,9 @@ input:focus {
     #menu-tab {
         margin-top: 45px;
         height: 1200px;
-        left: -10px;
-        width: 100%;
-        background-color: #4e342e;
+        left: -35px;
+        width: 70%;
+        background-color: #442c27;
         display: none;
         z-index: 3000;
         overflow: auto;
