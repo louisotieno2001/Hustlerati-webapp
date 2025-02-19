@@ -74,6 +74,49 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const sendComment = document.getElementById('sendComment');
+            const likePost = document.getElementById('like');
+            const sharePost = document.getElementById('share');
+
+            sendComment.addEventListener('click', async (e) => {
+                e.preventDefault()
+
+                const comment = document.getElementById('comment').value.trim();
+
+                if (comment === '') {
+                    alert("Cannot send empty comment")
+                } else {
+                    const userData = {
+                        comment: comment
+                    };
+
+                    try {
+                        const response = await fetch('/comments', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(userData),
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            alert("You have successfully sent a comment");
+                            window.location.reload();
+                        } else {
+                            alert("Failed. Please try again.");
+                        }
+                    } catch (error) {
+                        console.error('Error occurred:', error);
+                        alert('An error occurred. Please try again.');
+                    }
+                }
+            })
+        })
+    </script>
     <script src="/scripts/readBlog.js"></script>
     </div>
 </body>

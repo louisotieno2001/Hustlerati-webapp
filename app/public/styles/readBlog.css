@@ -59,11 +59,14 @@ body {
     width: 50%;          
     margin: auto; /* Center horizontally */
     margin-top: 100px; /* Adjust this value to push content down */
+    flex-wrap: wrap;
+    text-wrap: wrap;
 }
 
 .reader-card {
     margin-top: 20px; /* Adjust as necessary for spacing */
     width: 100%;
+    text-wrap: wrap;
 }
 
 .input-div {
@@ -135,6 +138,7 @@ body {
     color: white;
     margin: 5px;
     width: 100%;
+    text-wrap: wrap;
 }
 
 .blog-image {
@@ -146,16 +150,25 @@ body {
 @media (max-width: 600px) {
     .display {
         display: flex;
-        flex-direction: column;
-        justify-content: center; 
-        align-items: center;    
-        height: auto; /* Adjust height */
-        width: 90%;          
-        margin: auto; /* Center horizontally */
-        margin-top: 20px; /* Reduce margin on smaller screens */
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        width: 90%;
+        margin: auto;
+        margin-top: 20px;
     }
 
     .reader-card {
-        margin-top: 20px; /* Adjust as necessary */
+        flex: 1 1 100%;
+        margin-top: 20px;
+        text-wrap: wrap;
+        flex-wrap: wrap;
+    }
+
+    .blog-body{
+        text-wrap: wrap;
+        flex-wrap: wrap;
     }
 }
+

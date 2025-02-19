@@ -163,6 +163,116 @@
             color: #BC8D00;
         }
 
+        .suggestions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2rem;
+            width: 80%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            width: 100%;
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* Internet Explorer and Edge */
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+            /* Chrome, Safari, and Opera */
+        }
+
+        .tab-btn {
+            background-color: #6D4C41;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            border-radius: 8px;
+            color: #f1f1f1;
+            flex-shrink: 0;
+        }
+
+        .tab-btn.active {
+            background-color: #3E2723;
+        }
+
+        .tab-btn::before {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .tab-btn:nth-child(1)::before {
+            background-image: url("/images/trending-searches.png");
+        }
+
+        .tab-btn:nth-child(2)::before {
+            background-image: url("/images/top-searches.png");
+        }
+
+        .tab-btn:nth-child(3)::before {
+            background-image: url("/images/fashion.png");
+        }
+
+        .tab-btn:nth-child(4)::before {
+            background-image: url("/images/electronics.png");
+        }
+
+        .tab-btn:nth-child(5)::before {
+            background-image: url("/images/sports.png");
+        }
+
+        .tab-content {
+            width: 80%;
+            background-color: transparent;
+            padding: 1rem;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .suggestions {
+                width: 90%;
+            }
+
+            .tab-btn {
+                padding: 0.5rem;
+                margin-right: 0.25rem;
+                font-size: 0.9rem;
+            }
+
+            .tab-btn::before {
+                width: 16px;
+                height: 16px;
+                margin-right: 0.25rem;
+            }
+        }
+
         @media screen and (max-width: 700px) {
             .logo {
                 font-size: x-large;
@@ -222,7 +332,8 @@
     <div class="welcome">
         <div class="text">
             <h1 class="title">Karibu Hustlerati!</h1>
-            <h1 class="explain">Sell and Get all your fashion, art and electronics needs met today. Tomorrow is too far!</h1>
+            <h1 class="explain">Sell and Get all your fashion, art and electronics needs met today. Tomorrow is too far!
+            </h1>
         </div>
         <div class="image">
 
@@ -237,17 +348,63 @@
             <button class="reject" onclick="rejectCookies()">Reject</button>
         </div>
     </div>
+    <div class="suggestions">
+        <div class="tabs">
+            <button class="tab-btn active">Trending</button>
+            <button class="tab-btn">Top Searches</button>
+            <button class="tab-btn">Fashion</button>
+            <button class="tab-btn">Electronics</button>
+            <button class="tab-btn">Sports</button>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane active" id="trending">
+                <h2>Nothing yet in Trending-searches</h2>
+            </div>
+            <div class="tab-pane" id="top-searches">
+                <h2>Nothing yet in Top-searches</h2>
+            </div>
+            <div class="tab-pane" id="fashion">
+                <h2>Nothing yet in Fashion</h2>
+            </div>
+            <div class="tab-pane" id="electronics">
+                <h2>Nothing yet in Electronics</h2>
+            </div>
+            <div class="tab-pane" id="sports">
+                <h2>Nothing yet in Sports</h2>
+            </div>
+        </div>
+    </div>
 
     <nav class="social-nav">
-        <a aria-label="Chat on WhatsApp" href="https://wa.me/254746852485"><img src="/images/icon-whatsapp.webp" alt="Whatsapp" ></a>
+        <a aria-label="Chat on WhatsApp" href="https://wa.me/254746852485"><img src="/images/icon-whatsapp.webp"
+                alt="Whatsapp"></a>
         <a href="https://www.tiktok.com/@hustlerati_?lang=en"><img src="/images/tiktok-icon.webp" alt="Linked In"></a>
-        <a href="#"><img src="/images/facebook.png" alt="Facebook" ></a>
-        <a href="https://x.com/Hustlerati30397"><img src="/images/x.jpg" alt="X" ></a>
-        <a href="https://www.instagram.com/hustlerati.africa/?hl=en"><img src="/images/instagram.png" alt="Instagram"></a>
-        <a href="https://www.linkedin.com/in/hustlerati-africa-124b8b338/"><img src="/images/linkedin.png" alt="Linked In"></a>
+        <a href="#"><img src="/images/facebook.png" alt="Facebook"></a>
+        <a href="https://x.com/Hustlerati30397"><img src="/images/x.jpg" alt="X"></a>
+        <a href="https://www.instagram.com/hustlerati.africa/?hl=en"><img src="/images/instagram.png"
+                alt="Instagram"></a>
+        <a href="https://www.linkedin.com/in/hustlerati-africa-124b8b338/"><img src="/images/linkedin.png"
+                alt="Linked In"></a>
     </nav>
-  <p style="text-align: center; color: yellow;">Copyright &COPY; Hustlerati 2024 </p>
+    <p style="text-align: center; color: yellow;">Copyright &COPY; Hustlerati 2024 </p>
     <script>
+        // Get the tab buttons and tab content container
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        // Add event listeners to the tab buttons
+        tabBtns.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and panes
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabPanes.forEach(p => p.classList.remove('active'));
+
+                // Add active class to the clicked button and corresponding pane
+                btn.classList.add('active');
+                tabPanes[index].classList.add('active');
+            });
+        });
+
         // Function to set a cookie
         function setCookie(name, value, days) {
             let expires = "";

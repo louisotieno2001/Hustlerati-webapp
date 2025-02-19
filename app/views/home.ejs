@@ -71,30 +71,43 @@
 
             </div>
             <div class="display push" id="shop">
+                <% function truncateText(text, maxLength) {
+                    if (!text) return ''; // Return empty string if text is null or undefined
+                    if (text.length > maxLength) {
+                      return text.substring(0, maxLength) + '...';
+                    }
+                    return text;
+                  } %>
+                  
                 <div id="ads-container" class="">
-                    <% function truncateText(text, maxLength) {
-                        if (!text) return ''; // Return empty string if text is null or undefined
-                        if (text.length > maxLength) {
-                            return text.substring(0, maxLength) + '...';
-                        }
-                        return text;
-                    } %>
-                    <% ads.forEach((ad, index) => { %>
-                        <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
-                            <div class="product-card" id="card-<%= index %>" style="background-image: url('/uploads/<%= ad.post_image %>');">
-                                <div class="post-data">
-                                    <div class="more-items" id="more-items-<%= index %>">
-                                        <p>See more products</p>
-                                        <span class="material-symbols-outlined">arrow_circle_right</span>
-                                    </div>
-                                    <div class="text"> 
-                                        <strong><p id="title-<%= index %>"><%= ad.post_title %></p></strong> 
-                                        <p id="body-<%= index %>"><%= truncateText(ad.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p>
-                                    </div>
-                                </div>
+                    <%
+                      // Sort ads array based on date and time in descending order
+                      ads.sort((a, b) => {
+                        const dateA = new Date(`${a.date} ${a.time}`);
+                        const dateB = new Date(`${b.date} ${b.time}`);
+                        return dateB - dateA;
+                      });
+                  
+                      // Render ads
+                      ads.forEach((ad, index) => {
+                        if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) {
+                          %>
+                          <div class="product-card" id="card-<%= index %>" style="background-image: url('/uploads/<%= ad.post_image %>');">
+                            <div class="post-data">
+                              <div class="more-items" id="more-items-<%= index %>">
+                                <p>See more products</p>
+                                <span class="material-symbols-outlined">arrow_circle_right</span>
+                              </div>
+                              <div class="text"> 
+                                <strong><p id="title-<%= index %>"><%= ad.post_title %></p></strong> 
+                                <p id="body-<%= index %>"><%= truncateText(ad.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p>
+                              </div>
                             </div>
-                        <% } %>
-                    <% }); %>
+                          </div>
+                          <%
+                        }
+                      });
+                    %>                
                 </div>
             </div>            
             <div class="display" id="investing">
@@ -102,7 +115,19 @@
                     <% if (blogs.length === 0) { %>
                         <p id="no-posts">No post available yet. Great things are coming!</p>
                     <% } else { %>
-                        <% blogs.forEach((blog, index) => { %>
+                        <% 
+                            // Sort blogs by date and time in descending order
+                            blogs.sort(function(a, b) {
+                                // Combine date and time into a single comparison value
+                                let aDateTime = new Date(a.date + ' ' + a.time);  // Assuming time is in 24-hour format (HH:mm:ss)
+                                let bDateTime = new Date(b.date + ' ' + b.time);
+                
+                                // Compare the combined datetime
+                                return bDateTime - aDateTime;
+                            });
+                        
+                            blogs.forEach((blog, index) => { 
+                        %>
                             <% if (blog.post_image !== null && blog.post_title !== null && blog.post_body !== null) { %>
                                 <div class="card" id="card-<%= index %>" style="background-image: url('/assets/<%= blog.post_image %>'); background-position: center; background-size: cover;" data-title="<%- blog.post_title %>" data-body="<%- blog.post_body %>" data-image="/assets/<%= blog.post_image %>">
                                     <div class="text"> 
@@ -113,25 +138,40 @@
                             <% } %>
                         <% }); %>
                     <% } %>
-                </div>
+                </div>                
             </div>            
             <div class="display" id="news">
                 <div class="news-card" id="news-card">
                     <% if (news.length === 0) { %>
                         <p>No news available. Post something!</p>
                     <% } else { %>
-                        <% news.forEach(ad => { %>
+                        <% 
+                            // Sort news by date and time in descending order
+                            news.sort(function(a, b) {
+                                // Combine date and time into a single comparison value
+                                let aDateTime = new Date(a.date + ' ' + a.time);  // Assuming time is in 24-hour format (HH:mm:ss)
+                                let bDateTime = new Date(b.date + ' ' + b.time);
+                
+                                // Compare the combined datetime
+                                return bDateTime - aDateTime;
+                            });
+                        
+                            news.forEach((ad, index) => { 
+                        %>
                             <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
                                 <div class="card" style="background-image: url('/uploads/<%= ad.post_image %>');" data-title="<%= ad.post_title %>" data-body="<%= ad.post_body %>" data-image="/uploads/<%= ad.post_image %>">
                                     <div class="text"> 
                                         <h1><%= ad.post_title %></h1>
-                                        <p><%= truncateText(ad.post_body, 200) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p>
+                                        <p><%- truncateText(ad.post_body, 200) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p>
+                                        <div class="date-time" style="display: flex; flex-direction: row;">
+                                            <p><%= ad.date %>@<%= ad.time %></p>
+                                        </div>
                                     </div>
                                 </div>
                             <% } %>
                         <% }); %>
                     <% } %>
-                </div>     
+                </div>                
                 <div class="add" id="add" title="Post something"><span class="material-symbols-outlined">edit</span></div>
             </div>            
             <div class="display" id="profile">

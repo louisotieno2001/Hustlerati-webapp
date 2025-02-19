@@ -5,10 +5,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     const error = document.getElementById('error');
     const success = document.getElementById('success');
     const cards = document.querySelectorAll('.card');
-    const comment = document.getElementById('comment');
-    const sendComment = document.getElementById('sendComment');
-    const likePost = document.getElementById('like');
-    const sharePost = document.getElementById('share');
 
     // Function to get query parameters
     function getQueryParam(param) {

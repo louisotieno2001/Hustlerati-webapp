@@ -106,7 +106,7 @@ async function getTerms() {
         }
     } catch (error) {
         console.error('Error fetching users data:', error);
-        throw error; 
+        throw error;
         //TODO: HandlE the error in the calling code
     }
 }
@@ -189,8 +189,8 @@ async function getInvestorsBlog() {
 async function updateBusiness(userData) {
     try {
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', 
-            body: JSON.stringify(userData) 
+            method: 'PATCH',
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -208,6 +208,11 @@ app.post('/update-business', checkSession, async (req, res) => {
         // Extract user id from session
         const id = req.session.user.id;
 
+        const currentTime = new Date().toTimeString().slice(0, 8);
+
+        const currentDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+
         // Construct userData object
         const userData = {
             id: id,
@@ -215,7 +220,9 @@ app.post('/update-business', checkSession, async (req, res) => {
             business_niche: businessNiche,
             business_phone: businessPhone,
             location: location,
-            employee_numbers: empNo
+            employee_numbers: empNo,
+            date: currentDate,
+            time: currentTime
         };
 
         // Call updateBusiness function with userData
@@ -233,8 +240,8 @@ app.post('/update-business', checkSession, async (req, res) => {
 async function updateVendorAgreement(userData) {
     try {
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', 
-            body: JSON.stringify(userData) 
+            method: 'PATCH',
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -270,8 +277,8 @@ app.post('/update-vendor-agreement', checkSession, async (req, res) => {
 async function updateProfile(userData) {
     try {
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', 
-            body: JSON.stringify(userData) 
+            method: 'PATCH',
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -284,8 +291,8 @@ async function updateProfile(userData) {
 async function updatePic(userData) {
     try {
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', 
-            body: JSON.stringify(userData) 
+            method: 'PATCH',
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -299,7 +306,7 @@ async function updatePosts(userData) {
     try {
         const res = await query(`/items/users/${userData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(userData) 
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -313,7 +320,7 @@ async function updateProductQuantities(userData) {
     try {
         const res = await query(`/items/shelf/${userData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(userData) 
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -414,7 +421,7 @@ async function cancelOrder(userData) {
     try {
         const res = await query(`/items/orders/${userData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(userData) 
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -451,7 +458,7 @@ async function completeOrder(userData) {
     try {
         const res = await query(`/items/orders/${userData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(userData) 
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -501,7 +508,7 @@ async function updateItemNumberInCart(orderData) {
     try {
         const res = await query(`/items/orders/${orderData.id}`, {
             method: 'PATCH',
-            body: JSON.stringify(orderData) 
+            body: JSON.stringify(orderData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -592,6 +599,26 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
             return res.status(400).json({ message: 'No picture uploaded' });
         }
 
+        const currentTime = new Date().toTimeString().slice(0, 8);
+
+        const currentDate = new Date();
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+        const withOrdinal = formattedDate.replace(/\b(\d{1,2})\b/g, (match, number) => {
+            const lastDigit = number.slice(-1);
+            if (lastDigit === '1' && number !== '11') {
+                return number + 'st';
+            } else if (lastDigit === '2' && number !== '12') {
+                return number + 'nd';
+            } else if (lastDigit === '3' && number !== '13') {
+                return number + 'rd';
+            } else {
+                return number + 'th';
+            }
+        });
+        console.log(withOrdinal); // Output: February 15th, 2025
+
+
         // Use req.file.path or other relevant property to get the file path
         const picturePath = req.file.path;
 
@@ -601,6 +628,8 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
             post_image: picturePath,
             post_title: title,
             post_body: body,
+            time: currentTime,
+            date: currentDate
         };
 
         // console.log(userData);
@@ -736,8 +765,8 @@ app.post('/add-order', async (req, res) => {
 async function updateNews(userData) {
     try {
         const res = await query(`/items/news/`, {
-            method: 'POST', 
-            body: JSON.stringify(userData) 
+            method: 'POST',
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -758,6 +787,25 @@ app.post('/update-news', upload.single('image'), async (req, res) => {
             return res.status(400).json({ message: 'No picture uploaded' });
         }
 
+        const currentTime = new Date().toTimeString().slice(0, 8);
+
+        const currentDate = new Date();
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+        const withOrdinal = formattedDate.replace(/\b(\d{1,2})\b/g, (match, number) => {
+            const lastDigit = number.slice(-1);
+            if (lastDigit === '1' && number !== '11') {
+                return number + 'st';
+            } else if (lastDigit === '2' && number !== '12') {
+                return number + 'nd';
+            } else if (lastDigit === '3' && number !== '13') {
+                return number + 'rd';
+            } else {
+                return number + 'th';
+            }
+        });
+        console.log(withOrdinal); // Output: February 15th, 2025
+
         // Use req.file.path or other relevant property to get the file path
         const picturePath = req.file.path;
 
@@ -767,8 +815,9 @@ app.post('/update-news', upload.single('image'), async (req, res) => {
             post_image: picturePath,
             post_title: title,
             post_body: body,
+            time: currentTime,
+            date: currentDate
         };
-
         // console.log(userData);
 
         // Update user data with the new post data
@@ -1091,6 +1140,46 @@ app.post('/login', async (req, res) => {
     }
 });
 
+async function addComment(userData) {
+    try {
+        let res = await query(`/items/post_interactions/`, {
+            method: 'POST',
+            body: JSON.stringify(userData) // Send user data in the request body
+        });
+        return await res.json(); // Return parsed JSON response
+    } catch (error) {
+        console.error('Error user comments:', error);
+        throw error; // Rethrow error for handling in the calling function
+    }
+}
+
+app.post('/comments', async (req, res) => {
+    try {
+        const { comment } = req.body;
+
+        console.log(req.body)
+
+        // Validate required fields
+        if (!comment) {
+            return res.status(400).json({ error: 'Please fill in all fields' });
+        }
+
+        // Construct user data object
+        const userData = {
+            comment
+        };
+
+        // Register the user using the async function
+        const newComment = await addComment(userData);
+
+        // Send response indicating success
+        res.status(201).json({ message: 'User comment added successfully', comment: newComment });
+    } catch (error) {
+        console.error('Error inserting user comment:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 async function registerUser(userData) {
     try {
         let res = await query(`/items/users/`, {
@@ -1114,6 +1203,26 @@ app.post('/register-user', async (req, res) => {
             return res.status(400).json({ error: 'Please fill in all fields' });
         }
 
+        const currentTime = new Date().toTimeString().slice(0, 8);
+
+        const currentDate = new Date();
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+        const withOrdinal = formattedDate.replace(/\b(\d{1,2})\b/g, (match, number) => {
+            const lastDigit = number.slice(-1);
+            if (lastDigit === '1' && number !== '11') {
+                return number + 'st';
+            } else if (lastDigit === '2' && number !== '12') {
+                return number + 'nd';
+            } else if (lastDigit === '3' && number !== '13') {
+                return number + 'rd';
+            } else {
+                return number + 'th';
+            }
+        });
+        console.log(withOrdinal); // Output: February 15th, 2025
+
+
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -1123,7 +1232,9 @@ app.post('/register-user', async (req, res) => {
             lastname: lastName,
             email: email,
             phone: phone,
-            password: hashedPassword
+            password: hashedPassword,
+            time: currentTime,
+            date: currentDate
         };
 
         // Register the user using the async function
@@ -1431,8 +1542,8 @@ app.get('/hustlers/group/home', async (req, res) => {
 async function updateGroups(userData) {
     try {
         const res = await query(`/items/groups/${userData.id}`, {
-            method: 'PATCH', 
-            body: JSON.stringify(userData) 
+            method: 'PATCH',
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -1510,8 +1621,8 @@ app.post('/delete-group-member', async (req, res) => {
 async function updateGroupDescription(userData) {
     try {
         const res = await query(`/items/groups/${userData.id}`, {
-            method: 'PATCH', 
-            body: JSON.stringify(userData) 
+            method: 'PATCH',
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -1546,8 +1657,8 @@ app.post('/edit-business-description', async (req, res) => {
 async function cartCheckout(userData) {
     try {
         const res = await query(`/items/orders/${userData.id}`, {
-            method: 'PATCH', 
-            body: JSON.stringify(userData) 
+            method: 'PATCH',
+            body: JSON.stringify(userData)
         });
         const updatedData = await res.json();
         return updatedData; // Return updated data
@@ -1901,8 +2012,8 @@ async function getTheCorrectUser(email) {
 async function resetPassword(userData) {
     try {
         const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH', 
-            body: JSON.stringify(userData) 
+            method: 'PATCH',
+            body: JSON.stringify(userData)
         });
         const newPassword = await res.json();
         // console.log("Error from function", newPassword.errors)
@@ -1938,7 +2049,7 @@ app.post('/password-reset', async (req, res) => {
         // console.log("Hashed", hashedPassword)
 
         const userData = {
-            id:id,
+            id: id,
             password: hashedPassword
         }
 
@@ -1948,7 +2059,7 @@ app.post('/password-reset', async (req, res) => {
 
         // console.log(newPassword);
 
-        res.status(201).json({ message: 'Password reset successfully'});
+        res.status(201).json({ message: 'Password reset successfully' });
     } catch (error) {
         console.error('Error resetting password:', error);
         res.status(500).json({ message: 'Failed to reset password. Please try again.' });
