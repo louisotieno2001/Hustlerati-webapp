@@ -52,7 +52,7 @@
         <div class="business-card" data-user-agreement="<%= userData.contract_agreement %>">
             <div class="business-details">
                 <div class="profile-pic" id="profile-pic"
-                    style="background-image: url('/uploads/<%= userData.profile_pic %>'); background-size: cover; background-position: center;">
+                    style="background-image: url('/assets/<%= userData.profile_pic %>'); background-size: cover; background-position: center;">
                 </div>
                 <div class="user-data">
                     <span class="material-symbols-outlined">
@@ -89,28 +89,6 @@
                 <button class="button-87" id="post">Post content</button>
                 <h4>Note that you only post in this section to advertise your presence so everytime you post afresh the previous
                     post get replaed by you new post. To post multiple products that can be accessed by your customers, use the SHELF to the right of this page</h4>
-                <dialog id="post-dialog">
-                    <button class="button-87" id="pick-image">Pick image</button>
-                    <input type="file" id="fileInput" accept="image/*" capture style="display:none;" name="picture"
-                        enctype="multipart/form-data">
-                    <div class="preview" id="preview">
-
-                    </div>
-                    <div class="input-div">
-                        <span class="material-symbols-outlined">
-                            title
-                        </span>
-                        <input type="text" id="title" name="title" required placeholder="Title">
-                    </div>
-                    <div class="body-div">
-                        <span class="material-symbols-outlined">
-                            list_alt
-                        </span>
-                        <textarea name="body" id="body" cols="30" rows="10"
-                            placeholder="What do you wan to say..."></textarea>
-                    </div>
-                    <button class="button-87" id="post-submit">Submit</button>
-                </dialog>
                 <dialog id="contract-dialog">
                     <h2>If you can see this screen, don't worry, it could be because of the folloing reason</h2>
                     <ul>
@@ -128,7 +106,7 @@
                     <% products.forEach(product=> { %>
                         <div class="shelf-item">
                             <div class="product-image"
-                                style="background-image: url('/uploads/<%= product.item_image %>');"></div>
+                                style="background-image: url('/assets/<%= product.item_image %>');"></div>
                             <h3>
                                 <%= product.item_name %>
                             </h3>
@@ -151,60 +129,31 @@
                 <p class="feedback" id="success"></p>
                 <p class="feedback" id="error"></p>
             </div>
-            <dialog id="shelf-dialog">
-                <button class="button-87" id="item_image">Pick image</button>
-                <input type="file" id="itemImageInput" accept="image/*" capture style="display:none;" name="picture"
-                    enctype="multipart/form-data">
-                <div class="preview" id="item_preview">
-
-                </div>
-                <div class="input-div">
-                    <input type="text" id="item_name" name="item_name" required placeholder="Item name">
-                </div>
-                <div class="input-div">
-                    <input type="text" id="item_quantity" name="item_quantity" required placeholder="Item quantity">
-                </div>
-                <div class="input-div">
-                    <input type="text" id="item_price" name="item_price" required placeholder="Item unit price">
-                </div>
-                <div class="input-div">
-                    <select name="item_condition" id="item_condition">
-                        <option value="Brand new">Brand new</option>
-                        <option value="Good">Good</option>
-                        <option value="Refurbished">Refurbished</option>
-                    </select>
-                </div>
-                <div class="input-div">
-                    <select name="item_availability" id="item_availability">
-                        <option value="Available">In stock</option>
-                        <option value="Depleted">Out of stock</option>
-                    </select>
-                </div>
-                <div class="body-div">
-                    <span class="material-symbols-outlined">
-                        list_alt
-                    </span>
-                    <textarea name="item_description" id="item_description" cols="30" rows="10"
-                        placeholder="Item description"></textarea>
-                </div>
-                <button class="button-87" id="submit_item">Submit</button>
-            </dialog>
             <button class="button-87" id="add_to_shelf">+ Add to shelf</button>
         </div> 
     </div>
     <div class="order-display">
         <div class="tabs">
             <button class="tab active" onclick="showTab('all-orders')" title="All time orders">All Orders</button>
-            <button class="tab active" onclick="showTab('new-orders')" title="Orders succesfully purchased by full payment but not yet delivered">Pending</button>
+            <button class="tab" onclick="showTab('new-orders')" title="Orders succesfully purchased by full payment but not yet delivered">Pending</button>
             <button class="tab" onclick="showTab('fulfilled-orders')" title="Orders customer received product for">Fulfilled</button>
             <button class="tab" onclick="showTab('cancelled-orders')" title="Orders purchased but cancelled by customer">Cancelled</button>
         </div>
+        <dialog id="contract-dialog">
+            <h2>If you can see this screen, don't worry, it could be because of the folloing reason</h2>
+            <ul>
+                <li>You are registered as a vendor on this platform but have not accepted our vendor contract agreement</li>
+                <li>You account may have been banned and has been unbanned after a successful appeal</li>
+            </ul>
+            <h2>It is not a cause of concern just proceed below and make you contract agreemnt valid by clicking the button below!</h2>
+            <button class="button-87" id="contract" style="margin-left: 0px; border: none; outline: none;">Proceed to contract</button>
+        </dialog>
         <div class="tab-content">
             <div id="all-orders" class="tab-pane active">
                 <% if (orders && orders.length > 0) { %>
                     <% orders.forEach(order => { %> 
                         <div class="card">
-                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <div class="image" style="background-image: url('/assets/<%= order.product_image %>');"></div>
                                 <h3>Product: <%= order.product_name %></h3>
                                 <p>Order ID: <%= order.id %></p>
                                 <p>Quantity: <%= order.quantity || 'N/A' %></p>
@@ -219,7 +168,7 @@
                     <% orders.forEach(order => { %>
                         <% if (order.order_status === "paid") { %> 
                             <div class="card">
-                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <div class="image" style="background-image: url('/assets/<%= order.product_image %>');"></div>
                                 <h3>Product: <%= order.product_name %></h3>
                                 <p>Order ID: <%= order.id %></p>
                                 <p>Quantity: <%= order.quantity || 'N/A' %></p>

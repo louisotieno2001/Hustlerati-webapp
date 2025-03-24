@@ -58,7 +58,7 @@
                     <% orders.forEach(order => { %>
                         <% if (!order.order_status) { %> 
                             <div class="card">
-                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <div class="image" style="background-image: url('/assets/<%= order.product_image %>');"></div>
                                 <h3>Product: <%= order.product_name %></h3>
                                 <p>Order ID: <%= order.id %></p>
                                 <p>Quantity: <%= order.quantity || 'N/A' %></p>
@@ -84,7 +84,7 @@
                     <% orders.forEach(order => { %>
                         <% if (order.order_status === "paid") { %> 
                             <div class="card">
-                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <div class="image" style="background-image: url('/assets/<%= order.product_image %>');"></div>
                                 <h3>Product: <%= order.product_name %></h3>
                                 <p>Order ID: <%= order.id %></p>
                                 <p>Quantity: <%= order.quantity || 'N/A' %></p>
@@ -117,7 +117,7 @@
                     <% orders.forEach(order => { %>
                         <% if (order.order_status === "cancelled") { %> <!-- Check if order_status is empty -->
                             <div class="card">
-                                <div class="image" style="background-image: url('/uploads/<%= order.product_image %>');"></div>
+                                <div class="image" style="background-image: url('/assets/<%= order.product_image %>');"></div>
                                 <h3>Product: <%= order.product_name %></h3>
                                 <p>Order ID: <%= order.id %></p>
                                 <p>Quantity: <%= order.quantity || 'N/A' %></p>

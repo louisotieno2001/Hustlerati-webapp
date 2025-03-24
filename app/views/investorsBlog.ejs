@@ -53,12 +53,12 @@
     </div>
     <div class="display">
         <div class="reader-card">
-                <% if (news.length === 0) { %>
+                <% if (investorsblog.length === 0) { %>
                     <p>No news available. Post something!</p>
                 <% } else { %>
                     <% 
                         // Sort news by date and time in descending order
-                        news.sort(function(a, b) {
+                        investorsblog.sort(function(a, b) {
                             // Combine date and time into a single comparison value
                             let aDateTime = new Date(a.date + ' ' + a.time);  // Assuming time is in 24-hour format (HH:mm:ss)
                             let bDateTime = new Date(b.date + ' ' + b.time);
@@ -67,20 +67,13 @@
                             return bDateTime - aDateTime;
                         });
                     
-                        news.forEach((ad, index) => { 
+                        investorsblog.forEach((ad, index) => { 
                     %>
                     <% if (ad.post_media !== null && ad.post_title !== null && ad.post_body !== null) { %>
-                        <div class="one-card" data-news-id="<%= ad.id %>"  %>">
+                        <div class="one-card" data-news-id="<%= ad.id %>">
                             <div class="media-container">
                                 <div class="media-preview">
-                                    <% if (ad.post_media.type && /video\/.*$/i.test(ad.post_media.type)) { %>
-                                        <video autoplay muted loop class="news-video">
-                                            <source src="/assets/<%= ad.post_media.id %>">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    <% } else if (ad.post_media) { %>
-                                        <img src="/assets/<%= ad.post_media.id %>" alt="Hustlerati media preview cannot show this media" class="news-media-image">
-                                    <% } %>                                           
+                                    <img src="/assets/<%= ad.post_image %>'" alt="Hustlerati media preview cannot show this media" class="news-media-image">
                                 </div>
                             </div>                                 
                             <div class="post-text"> 
@@ -118,16 +111,45 @@
             const likePost = document.getElementById('like');
             const sharePost = document.getElementById('share');
 
+            // New code to filter news cards based on URL newsId
+            const urlParams = new URLSearchParams(window.location.search);
+            const newsId = urlParams.get('blogId'); // Assuming the URL has a parameter like ?newsId=123
+
+            if (newsId) {
+                const cards = document.querySelectorAll('.one-card');
+                let found = false; // Flag to check if any card matches the newsId
+
+                cards.forEach(card => {
+                    const cardNewsId = card.getAttribute('data-news-id');
+                    if (cardNewsId === newsId) {
+                        found = true; // Set flag to true if a match is found
+                    } else {
+                        card.style.display = 'none'; // Hide cards that do not match
+                    }
+                });
+
+                // Redirect to /home if no matching card is found
+                if (!found) {
+                    window.location.href = '/home';
+                }
+            } else {
+                // Redirect to /home if no newsId is provided in the URL
+                window.location.href = '/home';
+            }
+
             sendComment.addEventListener('click', async (e) => {
                 e.preventDefault()
 
                 const comment = document.getElementById('comment').value.trim();
+                const urlParams = new URLSearchParams(window.location.search);
+                const blogId = urlParams.get('blogId');
 
                 if (comment === '') {
                     alert("Cannot send empty comment")
                 } else {
                     const userData = {
-                        comment: comment
+                        comment: comment,
+                        blogId: blogId
                     };
 
                     try {
@@ -153,35 +175,9 @@
                     }
                 }
             })
-
-            // New code to filter news cards based on URL newsId
-            const urlParams = new URLSearchParams(window.location.search);
-            const newsId = urlParams.get('newsId'); // Assuming the URL has a parameter like ?newsId=123
-
-            if (newsId) {
-                const cards = document.querySelectorAll('.one-card');
-                let found = false; // Flag to check if any card matches the newsId
-
-                cards.forEach(card => {
-                    const cardNewsId = card.getAttribute('data-news-id');
-                    if (cardNewsId === newsId) {
-                        found = true; // Set flag to true if a match is found
-                    } else {
-                        card.style.display = 'none'; // Hide cards that do not match
-                    }
-                });
-
-                // Redirect to /home if no matching card is found
-                if (!found) {
-                    window.location.href = '/home';
-                }
-            } else {
-                // Redirect to /home if no newsId is provided in the URL
-                window.location.href = '/home';
-            }
         })
     </script>
-    <script src="/scripts/blog.js"></script>
+    <script src="/scripts/investorsBlog.js"></script>
     </div>
 </body>
 

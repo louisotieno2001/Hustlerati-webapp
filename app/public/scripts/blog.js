@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', async function () {
+    const closeMenu = document.getElementById('close-menu');
+    const openMenu = document.getElementById('open-menu');
+    const subMenu = document.getElementById('sub-menu');
     const error = document.getElementById('error');
     const success = document.getElementById('success');
     const cards = document.querySelectorAll('.one-card');
@@ -19,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             if (!id) {
                 showFeedback();
-                error.innerText = "This post cannot be retrieved at this time. Try again later";
+                document.getElementById("error").innerText = "This post cannot be retrieved at this time. Try again later";
                 return;
             }
 
@@ -27,4 +30,18 @@ document.addEventListener('DOMContentLoaded', async function () {
             window.location.href = `/blog?newsId=${id}`;
         });
     });
+
+    // Menu toggle event listeners
+    openMenu.addEventListener('click', async (e) => {
+        openMenu.style.display = 'none';
+        closeMenu.style.display = 'block';
+        subMenu.style.display = 'block'; // Show submenu
+    });
+
+    closeMenu.addEventListener('click', async (e) => {
+        closeMenu.style.display = 'none';
+        openMenu.style.display = 'block';
+        subMenu.style.display = 'none'; // Hide submenu
+    });
+
 });

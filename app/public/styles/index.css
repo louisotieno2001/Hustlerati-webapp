@@ -469,3 +469,36 @@ input::focus {
   display: none;
   background-color: red;
 }
+
+.one-card{
+  display: flex;
+  flex-direction: column;
+  border-bottom: #36211b 1px solid;
+  width: 90%;
+  padding: .5em;
+  cursor: pointer;
+}
+
+.media-container{
+  width: 100%;
+  height: max-content;
+  background-color: #36211b;
+}
+
+.media-preview{
+  height: max-content;
+  width: 100%;
+}
+
+.news-video{
+  height: max-content;
+  width: 100%;
+}
+
+.news-media-image{
+  height: max-content;
+  width: 100%;
+}
+
+
+

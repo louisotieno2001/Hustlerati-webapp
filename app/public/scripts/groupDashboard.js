@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedFile = fileInput.files[0];
         if (selectedFile) {
             const formData = new FormData();
-            formData.append('memberImage', selectedFile);
+            formData.append('media', selectedFile);
             formData.append('name', name);
             formData.append('email', email);
             formData.append('phone', phone);

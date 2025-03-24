@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post something!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Hustlerati</title>
+    <link rel="icon" href="/images/logo1.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/styles/loader.css">
+    <link rel="stylesheet" href="/styles/small-devices.css">
+    <link rel="stylesheet" href="/styles/post.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-VCMHYS7QJ4');
+    </script>
+</head>
+
+<body>
+    <div class="body">
+        <img src="/images/placeholder.png" alt="Pick media" title="Pick media" class="pick-media" id="item_image"></img>
+        <input type="file" id="itemImageInput" accept="image/*,video/*" capture style="display:none;" name="picture"
+            enctype="multipart/form-data">
+        <div class="preview" id="item_preview">
+
+        </div>
+        <div class="input-div">
+            <input type="text" id="item_name" name="item_name" required placeholder="Item name">
+        </div>
+        <div class="input-div">
+            <input type="text" id="item_quantity" name="item_quantity" required placeholder="Item quantity">
+        </div>
+        <div class="input-div">
+            <input type="text" id="item_price" name="item_price" required placeholder="Item unit price">
+        </div>
+        <div class="input-div">
+            <select name="item_condition" id="item_condition">
+                <option value="Brand new">Brand new</option>
+                <option value="Good">Good</option>
+                <option value="Refurbished">Refurbished</option>
+            </select>
+        </div>
+        <div class="input-div">
+            <select name="item_availability" id="item_availability">
+                <option value="Available">In stock</option>
+                <option value="Depleted">Out of stock</option>
+            </select>
+        </div>
+        <div class="body-div">
+            <span class="material-symbols-outlined">
+                list_alt
+            </span>
+            <textarea name="item_description" id="item_description" cols="30" rows="10"
+                placeholder="Item description"></textarea>
+        </div>
+        <button class="button-87" id="submit_item">Submit</button>
+    </div>
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+    <div class="feedback-div" id="feedback-div">
+        <p class="feedback" id="error"></p>
+        <p class="feedback" id="success"></p>
+    </div>
+    <script src="/scripts/postShelf.js"></script>
+</body>
+
+</html>

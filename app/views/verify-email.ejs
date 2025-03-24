@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/images/logo1.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #5d4037;
+            color: white;
+        }
+        .message {
+            font-size: 18px;
+            padding: 15px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .success {
+            color: green;
+            background-color: #e8f5e9;
+        }
+        .error {
+            color: red;
+            background-color: #ffebee;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Email Verification</h1>
+    <div class="message <%= success ? 'success' : 'error' %>">
+        <p><%= message %></p>
+    </div>
+
+    <% if (success) { %>
+        <p>You will be redirected to login in <span id="countdown">5</span> seconds...</p>
+        <script>
+            let count = 50;
+            const countdown = document.getElementById("countdown");
+
+            const timer = setInterval(() => {
+                count--;
+                countdown.innerText = count;
+                if (count === 0) {
+                    clearInterval(timer);
+                    window.location.href = "/login"; // Redirect to login page
+                }
+            }, 1000);
+        </script>
+    <% } %>
+
+</body>
+
+</html>

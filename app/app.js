@@ -7,12 +7,15 @@ require('dotenv').config();
 const Fuse = require('fuse.js');
 const cors = require('cors');
 const ejs = require('ejs');
+const crypto = require('crypto')
+const mailer = require('nodemailer');
 const app = express();
 const axios = require('axios');
 const session = require('express-session');
 const multer = require('multer');
 const pgSession = require('connect-pg-simple')(session);
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const FormData = require('form-data');
 const port = process.env.PORT || 3000;
 const saltRounds = 10;
 const { v4: uuidv4 } = require('uuid');
@@ -30,9 +33,12 @@ const fetchAsync = promisify(fetch);
 const apiProxy = createProxyMiddleware({
     target: 'http://0.0.0.0:8055/assets', // Target server where requests should be proxied
     changeOrigin: true, // Adjust the origin of the request to the target
+    headers: {
+        "Authorization": "Bearer "+token
+    }
 });
 
-// Use the proxy middleware for all requests to /assets
+// Us the proxy middleware for all requests to /assets
 app.use('/assets', apiProxy);
 
 app.use(cors());
@@ -43,8 +49,6 @@ app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-const upload = multer({ dest: __dirname + '/uploads/' });
-app.use('/uploads', express.static('/'));
 
 // Configure PostgreSQL database connection using environment variables
 const pool = new Pool({
@@ -92,6 +96,147 @@ const checkSession = (req, res, next) => {
         res.redirect('/login'); // Redirect to the login page if no session is found
     }
 };
+
+app.get('/', async (req, res) => {
+    res.render('landingPage')
+});
+
+app.get('/register', async (req, res) => {
+    res.render('index')
+});
+
+app.get('/register-your-business', async (req, res) => {
+    res.render('register-your-business')
+});
+
+app.get('/blog', async (req, res) => {
+    const news = await getNews()
+    res.render('blog', { news: news.data })
+});
+
+app.get('/investors-blog', async (req, res) => {
+    const investorBlogs = await getInvestorsBlog()
+    res.render('investorsBlog', { investorsblog: investorBlogs.data })
+});
+
+app.get('/login', async (req, res) => {
+    res.render('login');
+});
+
+app.get('/admin', async (req, res) => {
+    res.render('admin-login');
+});
+
+app.get('/admin-register', async (req, res) => {
+    res.render('admin-registration');
+});
+app.get('/reviews', async (req, res) => {
+    res.render('review');
+});
+app.get('/suspend', async (req, res) => {
+    res.render('suspend');
+});
+app.get('/forgot-password', async (req, res) => {
+    res.render('forgot-password');
+});
+app.get('/reset-password', async (req, res) => {
+    res.render('reset-password');
+});
+app.get('/upload-business-ad', async (req, res) => {
+    res.render('uploadbusinessAd');
+});
+app.get('/upload-to-your-shelf', async (req, res) => {
+    res.render('uploadShelf');
+});
+app.get('/email-sent', async (req, res) => {
+    res.render('email-sent');
+});
+
+async function updateNews(userData) {
+    try {
+        const res = await query(`/items/news/`, {
+            method: 'POST',
+            body: JSON.stringify(userData),
+            headers: { 'Content-Type': 'application/json' } // Set the correct content type for JSON
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+// Initialize multer without disk storage
+const upload = multer().single('media'); // Use memory storage
+
+async function uploadToDirectus(file) {
+    const formData = new FormData();
+    formData.append('file', file.buffer, { filename: file.originalname, contentType: file.mimetype }); // Append the file buffer with metadata
+
+    try {
+        const res = await query(`/files`, {
+            method: 'POST',
+            body: formData,
+            headers: formData.getHeaders(), // Set the correct headers for FormData
+        });
+        const uploadedAsset = await res.json();
+        return uploadedAsset; // Return uploaded asset data
+    } catch (error) {
+        console.error('Error uploading to Directus:', error);
+        throw new Error('Failed to upload file to Directus');
+    }
+}
+
+app.post('/update-news', upload, async (req, res) => {
+    try {
+        const { title, body } = req.body;
+        const id = req.session.user.id;
+
+        // Ensure that req.file contains the expected file information
+        if (!req.file) {
+            return res.status(400).json({ message: 'No media uploaded' });
+        }
+
+        console.log(req.file);
+
+        // Upload the file to Directus
+        const uploadedAsset = await uploadToDirectus(req.file);
+
+        console.log(uploadedAsset)
+
+        // Construct userData object with post information and media path
+        const userData = {
+            user_id: id,
+            post_media: uploadedAsset.data.id, // Use the asset ID from the uploaded asset
+            post_title: title,
+            post_body: body,
+            time: new Date().toTimeString().slice(0, 8),
+            date: new Date()
+        };
+
+        console.log("New news", userData);
+
+        // Update user data with the new post data
+        const updatedData = await updateNews(userData);
+
+        console.log("Updated data", updatedData)
+
+        res.status(201).json({ message: 'Post updated successfully', updatedData });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Failed to update post. Please try again.' });
+    }
+});
+
+app.get('/post', checkSession, async (req, res) => {
+    try {
+        res.render('post');
+    } catch (error) {
+        console.error('Error fetching the page:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 async function getTerms() {
     try {
@@ -153,13 +298,16 @@ async function getAds() {
 
 async function getNews() {
     try {
-        const response = await query('/items/news', {
+        let params = new URLSearchParams()
+        params.set("fields", "*.*")
+        const response = await query('/items/news?'+params.toString(), {
             method: 'GET'
         });
         if (response.ok) {
             const usersData = await response.json();
             return usersData;
         } else {
+            console.log(await response.json())
             throw new Error('Failed to fetch users data');
         }
     } catch (error) {
@@ -205,13 +353,28 @@ app.post('/update-business', checkSession, async (req, res) => {
         // Destructure data from req.body
         const { businessName, businessNiche, businessPhone, location, empNo } = req.body;
 
+        console.log(req.body)
+
         // Extract user id from session
         const id = req.session.user.id;
 
         const currentTime = new Date().toTimeString().slice(0, 8);
 
-        const currentDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-
+        const currentDate = new Date();
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+        const withOrdinal = formattedDate.replace(/\b(\d{1,2})\b/g, (match, number) => {
+            const lastDigit = number.slice(-1);
+            if (lastDigit === '1' && number !== '11') {
+                return number + 'st';
+            } else if (lastDigit === '2' && number !== '12') {
+                return number + 'nd';
+            } else if (lastDigit === '3' && number !== '13') {
+                return number + 'rd';
+            } else {
+                return number + 'th';
+            }
+        });
 
         // Construct userData object
         const userData = {
@@ -227,6 +390,8 @@ app.post('/update-business', checkSession, async (req, res) => {
 
         // Call updateBusiness function with userData
         const updatedData = await updateBusiness(userData);
+
+        console.log(updatedData)
 
         // Send "ok" response to the frontend
         res.status(200).json({ success: true, message: 'Business updated successfully' });
@@ -289,20 +454,6 @@ async function updateProfile(userData) {
 }
 
 async function updatePic(userData) {
-    try {
-        const res = await query(`/items/users/${userData.id}`, {
-            method: 'PATCH',
-            body: JSON.stringify(userData)
-        });
-        const updatedData = await res.json();
-        return updatedData; // Return updated data
-    } catch (error) {
-        console.error('Error:', error);
-        throw new Error('Failed to update');
-    }
-}
-
-async function updatePosts(userData) {
     try {
         const res = await query(`/items/users/${userData.id}`, {
             method: 'PATCH',
@@ -589,15 +740,34 @@ app.post('/subtract-item-to-cart', async (req, res) => {
     }
 });
 
-app.post('/update-post', upload.single('image'), async (req, res) => {
+async function updatePosts(userData) {
+    try {
+        const res = await query(`/items/users/${userData.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify(userData)
+        });
+        const updatedData = await res.json();
+        return updatedData; // Return updated data
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Failed to update');
+    }
+}
+
+app.post('/update-post', upload, async (req, res) => {
     try {
         const { title, body } = req.body;
         const id = req.session.user.id;
 
         // Ensure that req.file contains the expected file information
-        if (!req.file || !req.file.path) {
-            return res.status(400).json({ message: 'No picture uploaded' });
+        if (!req.file) {
+            return res.status(400).json({ message: 'No media uploaded' });
         }
+
+        // Upload the file to Directus
+        const uploadedAsset = await uploadToDirectus(req.file);
+
+        console.log(uploadedAsset)
 
         const currentTime = new Date().toTimeString().slice(0, 8);
 
@@ -616,16 +786,11 @@ app.post('/update-post', upload.single('image'), async (req, res) => {
                 return number + 'th';
             }
         });
-        console.log(withOrdinal); // Output: February 15th, 2025
-
-
-        // Use req.file.path or other relevant property to get the file path
-        const picturePath = req.file.path;
 
         // Construct userData object with post information and picture path
         const userData = {
             id: id,
-            post_image: picturePath,
+            post_image: uploadedAsset.data.id,
             post_title: title,
             post_body: body,
             time: currentTime,
@@ -690,7 +855,7 @@ async function getMyProducts(userId) {
     }
 }
 
-app.post('/update-shelf', upload.single('image'), async (req, res) => {
+app.post('/update-shelf', upload, async (req, res) => {
     try {
         const { name, quantity, price, condition, availability, description } = req.body;
         const id = req.session.user.id;
@@ -700,12 +865,16 @@ app.post('/update-shelf', upload.single('image'), async (req, res) => {
         const user_lastname = req.session.user.lastname;
 
         // Ensure that req.file contains the expected file information
-        if (!req.file || !req.file.path) {
-            return res.status(400).json({ message: 'No picture uploaded' });
+        if (!req.file) {
+            return res.status(400).json({ message: 'No media uploaded' });
         }
 
-        // Use req.file.path or other relevant property to get the file path
-        const picturePath = req.file.path;
+        console.log(req.file);
+
+        // Upload the file to Directus
+        const uploadedAsset = await uploadToDirectus(req.file);
+
+        console.log(uploadedAsset)
 
         // Construct userData object with post information and picture path
         const userData = {
@@ -714,7 +883,7 @@ app.post('/update-shelf', upload.single('image'), async (req, res) => {
             user_secondname: user_lastname,
             business_niche: business_niche,
             business_name: business_name,
-            item_image: picturePath,
+            item_image: uploadedAsset.data.id,
             item_name: name,
             item_quantity: quantity,
             item_price: price,
@@ -762,89 +931,26 @@ app.post('/add-order', async (req, res) => {
     }
 });
 
-async function updateNews(userData) {
-    try {
-        const res = await query(`/items/news/`, {
-            method: 'POST',
-            body: JSON.stringify(userData)
-        });
-        const updatedData = await res.json();
-        return updatedData; // Return updated data
-    } catch (error) {
-        console.error('Error:', error);
-        throw new Error('Failed to update');
-    }
-}
-
-app.post('/update-news', upload.single('image'), async (req, res) => {
-    try {
-        const { title, body } = req.body;
-        const id = req.session.user.id;
-
-
-        // Ensure that req.file contains the expected file information
-        if (!req.file || !req.file.path) {
-            return res.status(400).json({ message: 'No picture uploaded' });
-        }
-
-        const currentTime = new Date().toTimeString().slice(0, 8);
-
-        const currentDate = new Date();
-        const options = { month: 'long', day: 'numeric', year: 'numeric' };
-        const formattedDate = currentDate.toLocaleString('en-US', options);
-        const withOrdinal = formattedDate.replace(/\b(\d{1,2})\b/g, (match, number) => {
-            const lastDigit = number.slice(-1);
-            if (lastDigit === '1' && number !== '11') {
-                return number + 'st';
-            } else if (lastDigit === '2' && number !== '12') {
-                return number + 'nd';
-            } else if (lastDigit === '3' && number !== '13') {
-                return number + 'rd';
-            } else {
-                return number + 'th';
-            }
-        });
-        console.log(withOrdinal); // Output: February 15th, 2025
-
-        // Use req.file.path or other relevant property to get the file path
-        const picturePath = req.file.path;
-
-        // Construct userData object with post information and picture path
-        const userData = {
-            user_id: id, // Assuming req.user contains user information
-            post_image: picturePath,
-            post_title: title,
-            post_body: body,
-            time: currentTime,
-            date: currentDate
-        };
-        // console.log(userData);
-
-        // Update user data with the new post data
-        const updatedData = await updateNews(userData);
-
-        res.status(201).json({ message: 'Post updated successfully', updatedData });
-    } catch (error) {
-        console.error('Error updating post:', error);
-        res.status(500).json({ message: 'Failed to update post. Please try again.' });
-    }
-});
-
-app.post('/update-pic', upload.single('profilePic'), async (req, res) => {
+app.post('/update-pic', upload, async (req, res) => {
     try {
         // Ensure that req.file contains the expected file information
         const id = req.session.user.id;
-        if (!req.file || !req.file.path) {
-            return res.status(400).json({ message: 'No picture uploaded' });
+
+        // Ensure that req.file contains the expected file information
+        if (!req.file) {
+            return res.status(400).json({ message: 'No media uploaded' });
         }
 
-        // Use req.file.path or other relevant property to get the file path
-        const picturePath = req.file.path;
+        console.log(req.file);
 
+        // Upload the file to Directus
+        const uploadedAsset = await uploadToDirectus(req.file);
+
+        console.log(uploadedAsset)
         // Update userData object with profile_pic field
         const userData = {
             id: id, // Assuming req.user contains user information
-            profile_pic: picturePath
+            profile_pic: uploadedAsset.data.id,
         };
 
         // console.log(userData);
@@ -900,47 +1006,6 @@ async function getProfile(userId) {
         throw new Error('Error fetching referrals');
     }
 }
-
-app.get('/', async (req, res) => {
-    res.render('landingPage')
-});
-
-app.get('/register', async (req, res) => {
-    res.render('index')
-});
-
-app.get('/register-your-business', async (req, res) => {
-    res.render('register-your-business')
-});
-
-app.get('/blog', async (req, res) => {
-    res.render('blog')
-});
-
-app.get('/login', async (req, res) => {
-    res.render('login');
-});
-
-app.get('/admin', async (req, res) => {
-    res.render('admin-login');
-});
-
-app.get('/admin-register', async (req, res) => {
-    res.render('admin-registration');
-});
-
-app.get('/reviews', async (req, res) => {
-    res.render('review');
-});
-app.get('/suspend', async (req, res) => {
-    res.render('suspend');
-});
-app.get('/forgot-password', async (req, res) => {
-    res.render('forgot-password');
-});
-app.get('/reset-password', async (req, res) => {
-    res.render('reset-password');
-});
 
 async function getCorrectUser(userId) {
     try {
@@ -1098,44 +1163,61 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // console.log('My request', req.body)
+        // console.log('Request body:', req.body); // Log the incoming request body
 
         if (!email || !password) {
+            console.log('Missing fields:', { email, password }); // Log missing fields
             return res.status(400).json({ error: 'Please fill in all fields' });
         }
 
         // Fetch user data from Directus
         const usersResponse = await loginUser(email);
+        // console.log('User response from Directus:', usersResponse); // Log the response from the user fetch
 
         // If no user found, return invalid credentials error
         if (!usersResponse || !usersResponse.data || usersResponse.data.length === 0) {
+            console.log('No user found for email:', email); // Log if no user is found
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         const user = usersResponse.data[0]; // Extract the first user from the response
-        // console.log("Found user",user);
+        // console.log("Found user:", user); // Log the found user
 
         // Compare provided password with the hashed password stored in the user's record
         const passwordMatch = await bcrypt.compare(password, user.password);
-
-        console.log(passwordMatch);
+        // console.log('Password match result:', passwordMatch); // Log the result of the password comparison
 
         // Handle invalid password
         if (!passwordMatch) {
+            console.log('Invalid password for user:', user.email); // Log invalid password attempt
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         // Check user status
+        console.log('User status:', { suspended: user.suspend, verified_email: user.verified_email }); // Log user status
+
+        // Check user status
         if (user.suspend) {
             req.session.user = user; // Store user data in session
+            // console.log('User is suspended, redirecting to /suspend'); // Log suspension
             return res.status(200).json({ message: 'Login successful', redirect: '/suspend' });
-        } else {
-            req.session.user = user; // Store user data in session
-            return res.status(200).json({ message: 'Login successful', redirect: '/home' });
         }
+
+        // Check if the user's email is verified
+        if (!user.verified_email) {
+            // console.log('User email not verified, redirecting to /email-sent'); // Log unverified email
+            return res.status(200).json({ message: 'Login successful', redirect: '/email-sent' });
+        }
+
+        // If the user is not suspended and the email is verified, log them in
+        req.session.user = user; // Store user data in session
+        console.log('User logged in successfully, redirecting to /home'); // Log successful login
+        return res.status(200).json({ message: 'Login successful', redirect: '/home' });
+
+
     } catch (error) {
         // Handle internal server error
-        console.error('Error logging in user:', error);
+        console.error('Error logging in user:', error); // Log the error
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -1193,6 +1275,126 @@ async function registerUser(userData) {
     }
 }
 
+async function VerifyEmail(email) {
+    try {
+        // Fetch the user by email
+        let getUserResponse = await query(`/items/users?filter[email][_eq]=${email}`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        let userData = await getUserResponse.json();
+
+        if (!userData.data || userData.data.length === 0) {
+            console.error("❌ No user found with this email:", email);
+            return { success: false, message: "User not found" };
+        }
+
+        let userId = userData.data[0].id; // Extract the user ID
+
+        // Update the user by ID
+        let updateResponse = await query(`/items/users/${userId}`, {
+            method: 'PATCH',
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                verified_email: true // ✅ No "data" key
+            })
+        });
+
+        let result = await updateResponse.json();
+        console.log("✅ User verification result:", result);
+
+        if (result.errors) {
+            console.error("❌ Error updating user:", result.errors);
+            return { success: false, message: "Error updating user" };
+        }
+
+        return { success: true, message: "User verified successfully" };
+    } catch (error) {
+        console.error("❌ Error updating user:", error);
+        return { success: false, message: "Internal server error" };
+    }
+}
+
+async function getUser(email, token) {
+    try {
+        console.log("🔍 Fetching user with email:", email, "and token:", token);
+
+        let res = await query(`/items/users?filter[email][_eq]=${email}&filter[token][_eq]=${token}`, {
+            method: 'GET',
+        });
+
+        // console.log("📡 API Response:", res);
+
+        const data = await res.json();
+        console.log("📊 Parsed Data:", data);
+
+        // Ensure we have a valid data object
+        if (!data || !data.data || !Array.isArray(data.data)) {
+            console.log("⚠️ No valid user data received.");
+            return null;
+        }
+
+        console.log("✅ User found:", data.data.length > 0 ? data.data[0] : "No user found");
+        return data.data.length > 0 ? data.data[0] : null;
+
+    } catch (error) {
+        console.error("🚨 Error fetching user:", error);
+        throw new Error("Error fetching user");
+    }
+}
+
+app.get('/verify-email', async (req, res) => {
+    try {
+        const { token, email } = req.query;
+        // console.log("🔹 Received verification request with email:", email, "and token:", token);
+
+        if (!token || !email) {
+            // console.log("❌ Missing token or email.");
+            return res.render("verify-email", { success: false, message: "Missing token or email." });
+        }
+
+        // Fetch user from database
+        const user = await getUser(email, token);
+        // console.log("🔍 Retrieved User:", user);
+
+        if (!user) {
+            // console.log("❌ Invalid or expired token.");
+            return res.render("verify-email", { success: false, message: "Invalid or expired token." });
+        }
+
+        // Check if token is expired
+        const tokenExpiration = new Date(user.created_at);
+        tokenExpiration.setMinutes(tokenExpiration.getMinutes() + 30); // Token expires in 30 mins
+        // console.log("⏳ Token expiration time:", tokenExpiration, "| Current time:", new Date());
+
+        if (new Date() > tokenExpiration) {
+            // console.log("🚫 Token has expired.");
+            return res.render("verify-email", { success: false, message: "Token has expired. Please register again." });
+        }
+
+        // Mark user as verified
+        // console.log("✅ Marking user as verified...", email);
+        await VerifyEmail(email);
+        // console.log(await VerifyEmail(email))
+
+        // console.log("🎉 Email verified successfully!");
+
+        // Render the success page with a redirect message
+        return res.render("verify-email", { success: true, message: "🎉 Email verified successfully! You will be redirected to login page......" });
+
+    } catch (error) {
+        console.error("🚨 Error verifying email:", error);
+        return res.render("verify-email", { success: false, message: "🚨 Server error. Please try again later." });
+    }
+});
+
 // Route handler for POST /register
 app.post('/register-user', async (req, res) => {
     try {
@@ -1220,11 +1422,13 @@ app.post('/register-user', async (req, res) => {
                 return number + 'th';
             }
         });
-        console.log(withOrdinal); // Output: February 15th, 2025
+        // console.log(withOrdinal); // Output: February 15th, 2025
 
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const emailToken = new crypto.randomBytes(64).toString('hex');
+        const expiresAt = new Date(Date.now() + 30 * 60 * 100000);
 
         // Construct user data object
         const userData = {
@@ -1234,11 +1438,34 @@ app.post('/register-user', async (req, res) => {
             phone: phone,
             password: hashedPassword,
             time: currentTime,
-            date: currentDate
+            date: currentDate,
+            email_expiry: expiresAt,
+            token: emailToken
         };
 
         // Register the user using the async function
         const newUser = await registerUser(userData);
+
+        const nodemailer = require("nodemailer");
+        const verificationLink = `http://localhost:3000/verify-email?token=${emailToken}&email=${encodeURIComponent(email)}`;
+
+        const transporter = nodemailer.createTransport({
+            host: "localhost",
+            port: 1025, // MailDev default SMTP port
+            ignoreTLS: true // Skip TLS since it's local
+        });
+
+        const mailOptions = {
+            from: "safespeak@co.ke",
+            to: "wendy@gmail.com",
+            subject: "Email Verification",
+            html: `<p>Hello ${firstName},</p>
+                   <p>Please verify your email by clicking the link below. This link will expire in 30 minutes.</p>
+                   <a href="${verificationLink}">Verify Email</a>
+                   <p>If you did not request this, please ignore this email.</p>`
+        };
+
+        await transporter.sendMail(mailOptions);
 
         // Send response indicating success
         res.status(201).json({ message: 'User registered successfully', user: newUser });
@@ -1703,25 +1930,26 @@ async function registerMember(userData) {
     }
 }
 
-app.post('/submit-member', upload.single('memberImage'), async (req, res) => {
+app.post('/submit-member', upload, async (req, res) => {
     try {
         const { name, email, phone } = req.body;
 
         const id = req.session.user.id;
 
-        // console.log(req.body)
-
         // Ensure that req.file contains the expected file information
-        if (!req.file || !req.file.path) {
-            return res.status(400).json({ message: 'No picture uploaded' });
+        if (!req.file) {
+            return res.status(400).json({ message: 'No media uploaded' });
         }
 
-        // Use req.file.path or other relevant property to get the file path
-        const picturePath = req.file.path;
+        // Upload the file to Directus
+        const uploadedAsset = await uploadToDirectus(req.file);
+
+        console.log(uploadedAsset)
+
 
         // Construct userData object with post information and picture path
         const userData = {
-            pic: picturePath,
+            pic: uploadedAsset.data.id,
             name: name,
             phone: phone,
             email: email,
@@ -1954,115 +2182,128 @@ async function userExists(email) {
     return data.data.length > 0; // Return true if user exists
 }
 
-async function requestPasswordReset(userData) {
-    try {
-        let res = await query(`/items/forgot_password/`, {
-            method: 'POST',
-            body: JSON.stringify(userData) // Send user data in the request body
-        });
-        return await res.json(); // Return parsed JSON response
-    } catch (error) {
-        console.error('Error requesting user pssword reset:', error);
-        throw error; // Rethrow error for handling in the calling function
-    }
-}
-
 app.post('/reset-request', async (req, res) => {
-    const { email } = req.body;
-
     try {
+        const { email } = req.body;
+        console.log("Requesting email: ", email)
+
         // Check if the user already exists
         const exists = await userExists(email);
-
         if (!exists) {
-            // Return an error response if user does not exist
-            return res.status(409).json({ error: 'This user email does not exist in Hustlerati' });
+            return res.status(409).json({ error: 'This user email does not exists in our system as a registred account' });
         }
 
-        // Proceed with password reset if user exists
-        const userData = { supplied_email: email };
-        const newPassword = await requestPasswordReset(userData);
+        const resetToken = new crypto.randomBytes(64).toString('hex');
+        const expiresAt = new Date(Date.now() + 30 * 60 * 100000);
 
-        return res.status(200).json({ success: 'Password reset link will be sent to you as soon as possible.' });
+        const nodemailer = require("nodemailer");
+        const verificationLink = `http://localhost:3000/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
 
-    } catch (err) {
-        console.error('Error during reset request:', err);
-        return res.status(500).json({ error: 'Internal server error.' });
-    }
-});
-
-async function getTheCorrectUser(email) {
-    try {
-        const response = await query(`/items/users?filter[email][_eq]=${email}`, {
-            method: 'GET'
+        const transporter = nodemailer.createTransport({
+            host: "localhost",
+            port: 1025, // MailDev default SMTP port
+            ignoreTLS: true // Skip TLS since it's local
         });
 
-        if (response.ok) {
-            const productsData = await response.json();
-            return productsData.data;
-        } else {
-            throw new Error('Failed to fetch products');
-        }
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        throw error;
-    }
-}
+        const mailOptions = {
+            from: "safespeak@co.ke",
+            to: "whoever@gmail.com",
+            subject: "Password Reset Email",
+            html: `<p>Hello ${email},</p>
+               <p>Please find the attached link in this email to reset your password. This link will expire in 30 minutes. Request another link if this one expires</p>
+               <a href="${verificationLink}">Reset your password here</a>
+               <p>If you did not request this, please ignore this email.</p>`
+        };
 
-async function resetPassword(userData) {
+        await transporter.sendMail(mailOptions);
+
+        // Send success response with message
+        return res.status(200).json({ message: 'Reset request successful! Please proceed and log in.' });
+    } catch (error) {
+        console.error('Error inserting user:', error);
+        // Check if it's a connection error
+        if (error.message === 'Database connection failed.') {
+            return res.status(503).json({ error: 'An error occurred. Please try again later.' });
+        }
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+})
+
+async function resetPassword(email, newPassword) {
     try {
-        const res = await query(`/items/users/${userData.id}`, {
+        // Fetch the user by email
+        let getUserResponse = await query(`/items/users?filter[email][_eq]=${email}`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        let userData = await getUserResponse.json();
+
+        if (!userData.data || userData.data.length === 0) {
+            console.error("❌ No user found with this email:", email);
+            return { success: false, message: "User not found" };
+        }
+
+        let userId = userData.data[0].id; // Extract the user ID
+
+        // Hash the new password before storing it
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        // Update the user password by ID (WITHOUT modifying `verified_email`)
+        let updateResponse = await query(`/items/users/${userId}`, {
             method: 'PATCH',
-            body: JSON.stringify(userData)
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                password: hashedPassword // ✅ Only updating password
+            })
         });
-        const newPassword = await res.json();
-        // console.log("Error from function", newPassword.errors)
-        return newPassword; // Return updated data
+
+        let result = await updateResponse.json();
+        console.log("✅ Password reset result:", result);
+
+        if (result.errors) {
+            console.error("❌ Error updating password:", result.errors);
+            return { success: false, message: "Error updating password" };
+        }
+
+        return { success: true, message: "Password reset successfully" };
     } catch (error) {
-        console.error('Error:', error);
-        console.log("Error", error)
-        throw new Error('Failed to update');
+        console.error("❌ Error resetting password:", error);
+        return { success: false, message: "Internal server error" };
     }
 }
 
-app.post('/password-reset', async (req, res) => {
+// ✅ Express route to handle password reset
+app.post('/reset-password', async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        console.log("Request: ", req.body)
+
+        // Check if user exists
         const exists = await userExists(email);
-
-        // console.log("Exists, exists", exists);
-
-        const user = await getTheCorrectUser(email)
-
-        const id = user[0]?.id
-        // console.log("My user", user);
-        // console.log("My user id", id);
-
         if (!exists) {
-            // Return an error response if user does not exist
-            return res.status(409).json({ error: 'This user email does not exist in Hustlerati' });
+            return res.status(404).json({ error: 'This email is not registered in our system' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        // Reset the password
+        const resetResult = await resetPassword(email, password);
 
-        // console.log("Hashed", hashedPassword)
-
-        const userData = {
-            id: id,
-            password: hashedPassword
+        if (resetResult.success) {
+            return res.status(200).json({ success: 'Password changed successfully! You will be redirected to login.....' });
+        } else {
+            return res.status(500).json({ error: resetResult.message });
         }
 
-        // console.log("Password:",userData.password)
-
-        const newPassword = await resetPassword(userData);
-
-        // console.log(newPassword);
-
-        res.status(201).json({ message: 'Password reset successfully' });
     } catch (error) {
-        console.error('Error resetting password:', error);
-        res.status(500).json({ message: 'Failed to reset password. Please try again.' });
+        console.error("❌ Error in /reset-password route:", error);
+        return res.status(500).json({ error: "Internal server error" });
     }
 });
 

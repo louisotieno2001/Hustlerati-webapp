@@ -51,16 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    exitPost.addEventListener('click', async (e) => {
-        e.preventDefault();
-        postDialog.close();
-    })
-
-    exitBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        moreDialog.close();
-    })
-
     mindBtn.addEventListener('click', async (e) => {
         e.preventDefault()
         window.location.href = '/hustler/dashboard'
@@ -125,6 +115,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     })
 
+    exitBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        moreDialog.close();
+    })
+
     editProfileBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         editProfileDialog.showModal();
@@ -153,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedFile = fileInput.files[0];
         if (selectedFile) {
             const formData = new FormData();
-            formData.append('profilePic', selectedFile);
+            formData.append('media', selectedFile);
             console.log(formData)
 
             try {
@@ -308,95 +303,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    const postDialog = document.getElementById('post-dialog');
-    const submitPostBtn = document.getElementById('post-submit');
-    const previewdiv = document.getElementById('add-preview');
-    const pickImage = document.getElementById('pick-image');
     const postBtn = document.getElementById('add');
 
 
     postBtn.addEventListener('click', async (e) => {
         e.preventDefault()
-        postDialog.showModal();
+        window.location.href = '/post'
     })
-
-    pickImage.addEventListener('click', (e) => {
-        e.preventDefault();
-        fileInput.click();
-        previewdiv.style.display = 'block';
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            const reader = new FileReader();
-            reader.onload = function (event) {
-                const imgPreview = document.createElement('img');
-                imgPreview.src = event.target.result;
-                imgPreview.style.maxWidth = '100%';
-                imgPreview.style.maxHeight = '100%';
-                previewdiv.appendChild(imgPreview);
-
-                // Store the selected file
-                selectedFileData = selectedFile;
-            };
-            reader.readAsDataURL(selectedFile);
-        }
-    });
-
-    submitPostBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        showLoader();
-        const title = document.getElementById('title').value;
-        const body = document.getElementById('body').value;
-
-        // Validate input (you may want to implement more robust validation)
-        if (!title || !body) {
-            showFeedback();
-            errorParagraph.style.display = 'flex';
-            errorParagraph.innerText = "Both title and body fields are required.";
-            hideLoader();
-            return;
-        }
-
-        // Create FormData object and append title, body, and selected file
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('body', body);
-        formData.append('image', selectedFileData);
-
-        console.log(formData);
-
-        try {
-            // Send post data to server
-            showLoader();
-            const response = await fetch('/update-news', {
-                method: "POST",
-                body: formData// Send FormData instead of JSON
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                showFeedback();
-                success.style.display = 'flex';
-                success.innerText = "Posted successfully.";
-                reloadPage();
-                // Clear selected file data
-                selectedFileData = null;
-                postDialog.close();
-            } else {
-                showFeedback();
-                errorParagraph.style.display = 'flex';
-                errorParagraph.innerText = "Post update failed. Please try again..";
-            } 
-        } catch (error) {
-            console.error("Error during post update:", error);
-            showFeedback();
-            errorParagraph.style.display = 'flex';
-            errorParagraph.innerText = "An error occurred. Please try again later.";
-        }finally{
-            hideLoader();
-        }
-    });
 });

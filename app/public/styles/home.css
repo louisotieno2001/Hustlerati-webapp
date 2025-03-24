@@ -168,14 +168,6 @@ img {
     margin-left: 7px;
 }
 
-#post-dialog {
-    background-color: #36211b;
-    border-radius: 8px;
-    border: none;
-    align-self: left;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
-}
-
 input,
 textarea {
     background-color: transparent;

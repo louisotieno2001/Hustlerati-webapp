@@ -4,6 +4,7 @@ body {
     padding: 0;
     background-color: #5d4037;
     overflow-y: auto;
+    color: white;
 }
 
 .top-menu {
@@ -171,4 +172,3 @@ body {
         flex-wrap: wrap;
     }
 }
-

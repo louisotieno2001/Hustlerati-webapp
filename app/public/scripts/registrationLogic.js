@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showSuccess();
                 success.innerText = "You have successfully registered on Hustlerati!";
                 // Redirect to login page 
-                window.location.href = "/login";
+                window.location.href = "/email-sent";
             } else {
                 showError();
                 error.innerText = "Registration failed. Please try again.";

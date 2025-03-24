@@ -92,7 +92,7 @@
                       ads.forEach((ad, index) => {
                         if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) {
                           %>
-                          <div class="product-card" id="card-<%= index %>" style="background-image: url('/uploads/<%= ad.post_image %>');">
+                          <div class="product-card" id="card-<%= index %>" style="background-image: url('/assets/<%= ad.post_image %>');">
                             <div class="post-data">
                               <div class="more-items" id="more-items-<%= index %>">
                                 <p>See more products</p>
@@ -129,7 +129,7 @@
                             blogs.forEach((blog, index) => { 
                         %>
                             <% if (blog.post_image !== null && blog.post_title !== null && blog.post_body !== null) { %>
-                                <div class="card" id="card-<%= index %>" style="background-image: url('/assets/<%= blog.post_image %>'); background-position: center; background-size: cover;" data-title="<%- blog.post_title %>" data-body="<%- blog.post_body %>" data-image="/assets/<%= blog.post_image %>">
+                                <div class="card" id="card-<%= index %>" style="background-image: url('/assets/<%= blog.post_image %>'); background-position: center; background-size: cover;" data-news-id="<%= blog.id %>">
                                     <div class="text"> 
                                         <h1 class="insight-title" id="title-<%= index %>"><%- blog.post_title %></h1>
                                         <p id="body-<%= index %>"><%- truncateText(blog.post_body, 250) %> <a href="#" class="read-more" data-post-body="<%- blog.post_body %>">Read more</a></p>
@@ -158,17 +158,28 @@
                         
                             news.forEach((ad, index) => { 
                         %>
-                            <% if (ad.post_pic !== null && ad.post_title !== null && ad.post_body !== null) { %>
-                                <div class="card" style="background-image: url('/uploads/<%= ad.post_image %>');" data-title="<%= ad.post_title %>" data-body="<%= ad.post_body %>" data-image="/uploads/<%= ad.post_image %>">
-                                    <div class="text"> 
-                                        <h1><%= ad.post_title %></h1>
-                                        <p><%- truncateText(ad.post_body, 200) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a></p>
-                                        <div class="date-time" style="display: flex; flex-direction: row;">
-                                            <p><%= ad.date %>@<%= ad.time %></p>
-                                        </div>
+                        <% if (ad.post_media !== null && ad.post_title !== null && ad.post_body !== null) { %>
+                            <div class="one-card" data-news-id="<%= ad.id %>">
+                                <div class="media-container">
+                                    <div class="media-preview">
+                                        <% if (ad.post_media.type && /video\/.*$/i.test(ad.post_media.type)) { %>
+                                            <video autoplay muted loop class="news-video">
+                                                <source src="/assets/<%= ad.post_media.id %>">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        <% } else if (ad.post_media) { %>
+                                            <img src="/assets/<%= ad.post_media.id %>" alt="Hustlerati media preview cannot show this media" class="news-media-image">
+                                        <% } %>                                        
                                     </div>
+                                </div>                                 
+                                <div class="post-text"> 
+                                    <h2><%= ad.post_title %></h2>
+                                    <%- truncateText(ad.post_body, 200) %> <a href="#" class="read-more" data-post-body="<%= ad.post_body %>">Read more</a>
+                                    <p><%= ad.date %> @ <%= ad.time %></p>
                                 </div>
-                            <% } %>
+                            </div>
+                            
+                        <% } %>
                         <% }); %>
                     <% } %>
                 </div>                
@@ -178,8 +189,8 @@
                 <h1>Profile</h1>
                 <div class="profile-card">
                     <div class="profile-pic" id="profile-pic"
-                        style="background-image: url('/uploads/<%= userData.profile_pic %>');"></div>
-                    <input type="file" id="fileInput" accept="image/*" capture style="display:none;" name="picture"
+                        style="background-image: url('/assets/<%= userData.profile_pic %>');"></div>
+                    <input type="file" id="fileInput" accept="image/*,video/*" capture style="display:none;" name="picture"
                         enctype="multipart/form-data">
                     <div class="preview" id="preview">
                         <button class="button" id="edit-pic">Submit</button>
@@ -289,29 +300,6 @@
         <p id="content"></p>
         <a href="#" id="exit">Exit</button>
     </dialog>
-    <dialog id="post-dialog">
-        <button class="button-87 posting" id="pick-image">Pick image</button>
-        <input type="file" id="fileInput" accept="image/*" capture style="display:none;" name="picture"
-            enctype="multipart/form-data">
-        <div class="preview" id="add-preview">
-
-        </div>
-        <div class="input-div">
-            <span class="material-symbols-outlined">
-                title
-            </span>
-            <input type="text" id="title" name="title" required placeholder="Title">
-        </div>
-        <div class="body-div">
-            <span class="material-symbols-outlined">
-                list_alt
-            </span>
-            <textarea name="body" id="body" cols="30" rows="10"
-                placeholder="What do you wan to say..."></textarea>
-        </div>
-        <button class="button-87 posting" id="post-submit">Submit</button>
-        <button class="button-87 posting" id="exit-post">Exit</button>
-    </dialog>
     <dialog id="walk-through">
         <h1>Hello welcome to Hustlerati.com this message</h1>
         <p>This dialog is supposed to help you navigate this website for a newbie. You can choose to follow it to make your navigation easier and much more comfortable</p>
@@ -332,6 +320,8 @@
         <p class="feedback" id="success"></p>
     </div>
    <script src="/scripts/homeFunctionalities.js"></script>
-    <script src="/scripts/readBlog.js"></script>
+    <script src="/scripts/blog.js"></script>
+    <script src="/scripts/investorsBlog.js"></script>
+    <!-- <script src="/scripts/readInvestorsBlog.js"></script> -->
 </body>
 </html>
